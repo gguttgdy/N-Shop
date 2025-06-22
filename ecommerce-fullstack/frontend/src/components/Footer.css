@@ -47,6 +47,23 @@
   color: var(--accent-primary);
 }
 
+.footer-link {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  font-family: inherit;
+}
+
+.footer-link:hover {
+  color: var(--accent-primary);
+}
+
 .newsletter {
   margin-bottom: 30px;
 }

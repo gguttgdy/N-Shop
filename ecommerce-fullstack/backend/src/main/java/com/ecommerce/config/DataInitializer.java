@@ -13,28 +13,41 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
-    private ProductRepository productRepository;
-
-    @Override
+    private ProductRepository productRepository;    @Override
     public void run(String... args) throws Exception {
         try {
             // Добавляем задержку для стабилизации соединения с MongoDB
-            Thread.sleep(2000);
+            Thread.sleep(5000);
             
-            long count = productRepository.count();
-            System.out.println("Current products count in MongoDB sklep: " + count);
+            System.out.println("Attempting to connect to MongoDB sklep database...");
             
-            // Временно всегда пересоздавать продукты для отладки
-            if (count == 0 || true) { // Убираем это условие после отладки
-                System.out.println("Initializing products in MongoDB sklep database...");
-                if (count > 0) {
-                    System.out.println("Deleting existing products for re-initialization");
-                    productRepository.deleteAll();
+            // Проверяем подключение к базе данных с таймаутом
+            long count = -1;
+            int maxRetries = 3;
+            for (int i = 0; i < maxRetries; i++) {
+                try {
+                    count = productRepository.count();
+                    System.out.println("Current products count in MongoDB sklep: " + count);
+                    break;
+                } catch (Exception e) {
+                    System.err.println("Attempt " + (i + 1) + " failed to connect to MongoDB: " + e.getMessage());
+                    if (i < maxRetries - 1) {
+                        Thread.sleep(3000);
+                    } else {
+                        throw e;
+                    }
                 }
+            }
+            
+            // Если подключение успешно, инициализируем продукты
+            if (count == 0) {
+                System.out.println("Initializing products in MongoDB sklep database...");
                 initializeAllProducts();
+                System.out.println("Successfully initialized products in MongoDB!");
             } else {
                 System.out.println("Database already contains " + count + " products. Skipping initialization.");
             }
+            
         } catch (Exception e) {
             System.err.println("Failed to initialize database: " + e.getMessage());
             e.printStackTrace();

@@ -14,6 +14,14 @@ const SectionPage = ({ language, sectionType, addToCart, currency, formatPrice }
     }
   };
 
+  const translations = {
+    ru: { home: 'Главная' },
+    en: { home: 'Home' },
+    pl: { home: 'Strona główna' }
+  };
+
+  const t = translations[language] || translations.en;
+
   const getSectionName = () => {
     const sections = {
       'hot-deals': { ru: 'Горячие предложения', en: 'Hot Deals', pl: 'Gorące oferty' },
@@ -42,9 +50,8 @@ const SectionPage = ({ language, sectionType, addToCart, currency, formatPrice }
         <h1>
           <span className="section-icon">{getSectionIcon()}</span>
           {getSectionName()}
-        </h1>
-        <div className="breadcrumb">
-          <span>Главная</span>
+        </h1>        <div className="breadcrumb">
+          <span>{t.home}</span>
           <span>/</span>
           <span>{getSectionName()}</span>
         </div>

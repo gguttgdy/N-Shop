@@ -20,7 +20,7 @@
 
 .info-header h1 {
   font-size: 32px;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 10px;
 }
 
@@ -29,11 +29,13 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  background: transparent;
 }
 
 .breadcrumb span:last-child {
-  color: #007bff;
+  color: var(--accent-primary);
   font-weight: 500;
 }
 

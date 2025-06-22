@@ -14,6 +14,14 @@ const CategoryPage = ({ language, categoryId, subcategoryId, addToCart, currency
     }
   };
 
+  const translations = {
+    ru: { home: 'Главная' },
+    en: { home: 'Home' },
+    pl: { home: 'Strona główna' }
+  };
+
+  const t = translations[language] || translations.en;
+
   const getCategoryName = () => {
     const categories = {
       electronics: { ru: 'Электроника', en: 'Electronics', pl: 'Elektronika' },
@@ -66,9 +74,8 @@ const CategoryPage = ({ language, categoryId, subcategoryId, addToCart, currency
   return (
     <div className="category-page">
       <div className="category-header">
-        <h1>{getCategoryName()}</h1>
-        <div className="breadcrumb">
-          <span>Главная</span>
+        <h1>{getCategoryName()}</h1>        <div className="breadcrumb">
+          <span>{t.home}</span>
           <span>/</span>
           <span>{getCategoryName()}</span>
         </div>

@@ -4,7 +4,7 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://dwaf:ru5NgM87N5Rv2i8G@sklep.7tdeg.mongodb.net/sklep?retryWrites=true&w=majority&appName=ecommerce
+      uri: mongodb+srv://dwaf:szPt2RsSrsmZdDHl@sklep.7tdeg.mongodb.net/sklep?retryWrites=true&w=majority&appName=ecommerce
       database: sklep
       auto-index-creation: true
   

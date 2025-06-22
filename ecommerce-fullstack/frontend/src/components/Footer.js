@@ -93,10 +93,18 @@ const Footer = ({ language, onNavigate }) => {
   };
 
   const t = translations[language];
-  const currentYear = new Date().getFullYear();
-
-  const handleLinkClick = (type, value) => {
-    onNavigate(type, value);
+  const currentYear = new Date().getFullYear();  const handleLinkClick = (type, value) => {
+    // Исправляем названия категорий для соответствия системе
+    if (type === 'category') {
+      const categoryMapping = {
+        'clothing': 'fashion' // В системе clothing мапится на fashion
+      };
+      const correctedValue = categoryMapping[value] || value;
+      // Передаем объект с categoryId, как ожидает handleNavigation
+      onNavigate(type, { categoryId: correctedValue });
+    } else {
+      onNavigate(type, value);
+    }
   };
 
   const handleExternalLink = (url) => {
@@ -132,14 +140,13 @@ const Footer = ({ language, onNavigate }) => {
 
           {/* Categories */}
           <div className="footer-section">
-            <h3>{t.categories}</h3>
-            <ul>
-              <li><a href="#" onClick={() => handleLinkClick('category', 'electronics')}>{t.electronics}</a></li>
-              <li><a href="#" onClick={() => handleLinkClick('category', 'clothing')}>{t.clothing}</a></li>
-              <li><a href="#" onClick={() => handleLinkClick('category', 'home')}>{t.home}</a></li>
-              <li><a href="#" onClick={() => handleLinkClick('category', 'sports')}>{t.sports}</a></li>
-              <li><a href="#" onClick={() => handleLinkClick('category', 'books')}>{t.books}</a></li>
-              <li><a href="#" onClick={() => handleLinkClick('category', 'beauty')}>{t.beauty}</a></li>
+            <h3>{t.categories}</h3>            <ul>
+              <li><button type="button" onClick={() => handleLinkClick('category', 'electronics')} className="footer-link">{t.electronics}</button></li>
+              <li><button type="button" onClick={() => handleLinkClick('category', 'clothing')} className="footer-link">{t.clothing}</button></li>
+              <li><button type="button" onClick={() => handleLinkClick('category', 'home')} className="footer-link">{t.home}</button></li>
+              <li><button type="button" onClick={() => handleLinkClick('category', 'sports')} className="footer-link">{t.sports}</button></li>
+              <li><button type="button" onClick={() => handleLinkClick('category', 'books')} className="footer-link">{t.books}</button></li>
+              <li><button type="button" onClick={() => handleLinkClick('category', 'beauty')} className="footer-link">{t.beauty}</button></li>
             </ul>
           </div>
 

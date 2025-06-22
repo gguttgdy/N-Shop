@@ -4,6 +4,7 @@ import './InfoPage.css';
 const InfoPage = ({ language, pageType }) => {
   const translations = {
     ru: {
+      home: 'Главная',
       about: {
         title: 'О нас',
         content: 'Мы - ведущий интернет-магазин с широким ассортиментом товаров. Наша миссия - предоставить клиентам лучший сервис и качественные товары по доступным ценам.'
@@ -52,8 +53,8 @@ const InfoPage = ({ language, pageType }) => {
         title: 'Использование файлов cookie',
         content: 'Наш сайт использует файлы cookie для улучшения пользовательского опыта.'
       }
-    },
-    en: {
+    },    en: {
+      home: 'Home',
       about: {
         title: 'About Us',
         content: 'We are a leading online store with a wide range of products. Our mission is to provide customers with the best service and quality products at affordable prices.'
@@ -102,8 +103,8 @@ const InfoPage = ({ language, pageType }) => {
         title: 'Cookie Policy',
         content: 'Our site uses cookies to improve user experience.'
       }
-    },
-    pl: {
+    },    pl: {
+      home: 'Strona główna',
       about: {
         title: 'O nas',
         content: 'Jesteśmy wiodącym sklepem internetowym z szerokim asortymentem produktów. Naszą misją jest zapewnienie klientom najlepszej obsługi i wysokiej jakości produktów w przystępnych cenach.'
@@ -172,9 +173,8 @@ const InfoPage = ({ language, pageType }) => {
     <div className="info-page">
       <div className="info-container">
         <div className="info-header">
-          <h1>{pageData.title}</h1>
-          <div className="breadcrumb">
-            <span>Главная</span>
+          <h1>{pageData.title}</h1>          <div className="breadcrumb">
+            <span>{translations[language]?.home || 'Home'}</span>
             <span>/</span>
             <span>{pageData.title}</span>
           </div>
