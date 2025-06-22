@@ -1,0 +1,55 @@
+.section-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.section-header {
+  margin-bottom: 30px;
+}
+
+.section-header h1 {
+  font-size: 32px;
+  color: #333;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-icon {
+  font-size: 36px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.breadcrumb span:last-child {
+  color: #007bff;
+  font-weight: 500;
+}
+
+.section-content {
+  display: flex;
+  gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .section-header h1 {
+    font-size: 24px;
+  }
+  
+  .section-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .breadcrumb {
+    flex-wrap: wrap;
+  }
+}

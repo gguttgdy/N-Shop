@@ -1,0 +1,23 @@
+.App {
+  min-height: 100vh;
+  background: var(--bg-secondary);
+  transition: background 0.3s ease;
+}
+
+.main-content {
+  padding: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+}

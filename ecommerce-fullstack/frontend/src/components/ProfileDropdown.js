@@ -1,0 +1,105 @@
+import React from 'react';
+import './ProfileDropdown.css';
+
+const ProfileDropdown = ({ user, setUser, language, onClose }) => {
+  const translations = {
+    ru: {
+      login: 'Войти',
+      register: 'Зарегистрироваться',
+      orders: 'Заказы',
+      receipts: 'Чеки',
+      myData: 'Мои данные',
+      discounts: 'Скидки',
+      reviews: 'Отзывы',
+      complaints: 'Рекламации',
+      returns: 'Возвраты',
+      logout: 'Выйти'
+    },
+    en: {
+      login: 'Login',
+      register: 'Register',
+      orders: 'Orders',
+      receipts: 'Receipts',
+      myData: 'My Data',
+      discounts: 'Discounts',
+      reviews: 'Reviews',
+      complaints: 'Complaints',
+      returns: 'Returns',
+      logout: 'Logout'
+    },
+    pl: {
+      login: 'Zaloguj',
+      register: 'Zarejestruj',
+      orders: 'Zamówienia',
+      receipts: 'Paragony',
+      myData: 'Moje dane',
+      discounts: 'Zniżki',
+      reviews: 'Opinie',
+      complaints: 'Reklamacje',
+      returns: 'Zwroty',
+      logout: 'Wyloguj'
+    }
+  };
+
+  const t = translations[language];
+
+  const handleLogin = () => {
+    // Временная имитация входа
+    setUser({ name: 'Иван Иванов', email: 'ivan@example.com' });
+    onClose();
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    onClose();
+  };
+
+  if (!user) {
+    return (
+      <div className="profile-dropdown">
+        <button className="dropdown-item" onClick={handleLogin}>
+          {t.login}
+        </button>
+        <button className="dropdown-item" onClick={onClose}>
+          {t.register}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="profile-dropdown">
+      <div className="dropdown-header">
+        <strong>{user.name}</strong>
+      </div>
+      <hr />
+      <button className="dropdown-item" onClick={onClose}>
+        {t.orders}
+      </button>
+      <button className="dropdown-item" onClick={onClose}>
+        {t.receipts}
+      </button>
+      <button className="dropdown-item" onClick={onClose}>
+        {t.myData}
+      </button>
+      <button className="dropdown-item" onClick={onClose}>
+        {t.discounts}
+      </button>
+      <button className="dropdown-item" onClick={onClose}>
+        {t.reviews}
+      </button>
+      <button className="dropdown-item" onClick={onClose}>
+        {t.complaints}
+      </button>
+      <button className="dropdown-item" onClick={onClose}>
+        {t.returns}
+      </button>
+      <hr />
+      <button className="dropdown-item logout" onClick={handleLogout}>
+        {t.logout}
+      </button>
+    </div>
+  );
+};
+
+export default ProfileDropdown;
