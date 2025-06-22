@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from './Sidebar';
+import SidebarNew from './SidebarNew';
 import ProductGrid from './ProductGrid';
 import './CategoryPage.css';
 
@@ -80,12 +80,14 @@ const CategoryPage = ({ language, categoryId, subcategoryId, addToCart, currency
           <span>{getCategoryName()}</span>
         </div>
       </div>
-      
-      <div className="category-content">
-        <Sidebar 
+        <div className="category-content">
+        <SidebarNew 
           language={language}
           onFilterChange={handleFilterChange}
-        />        <ProductGrid 
+          category={categoryId}
+          subcategory={subcategoryId}
+        />
+        <ProductGrid 
           language={language}
           filters={filters}
           categoryId={categoryId}

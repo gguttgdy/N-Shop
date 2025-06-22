@@ -186,6 +186,80 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<Map<String, Object>> getFilteredProducts(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String subcategory,
+            @RequestParam(required = false) String section,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) List<String> brands,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam(required = false) Boolean inStock,
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Boolean isNew,
+            @RequestParam(required = false) Boolean hasDiscount,
+            @RequestParam(required = false, defaultValue = "name") String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String sortDirection,
+            @RequestParam(required = false, defaultValue = "USD") String currency) {
+        
+        List<Product> products = productService.getFilteredProducts(
+            category, subcategory, section, search, minPrice, maxPrice, 
+            brands, colors, sizes, inStock, minRating, isNew, hasDiscount, 
+            sortBy, sortDirection
+        );
+        
+        String currencySymbol = currencyService.getCurrencySymbol(currency);
+        
+        // Получаем курсы валют один раз для всех товаров
+        Map<String, Double> exchangeRates = currencyService.getExchangeRates();
+        Double rate = exchangeRates.get(currency);
+        
+        // Конвертируем цены для каждого продукта
+        products.forEach(product -> {
+            BigDecimal originalPrice = BigDecimal.valueOf(product.getPrice());
+            // Сохраняем оригинальную цену в USD
+            product.setOriginalPrice(originalPrice.doubleValue());
+            
+            if (rate != null && !"USD".equals(currency)) {
+                BigDecimal convertedPrice = originalPrice.multiply(BigDecimal.valueOf(rate))
+                                                        .setScale(2, RoundingMode.HALF_UP);
+                product.setPrice(convertedPrice.doubleValue());
+            }
+            
+            // Конвертируем также старую цену, если она есть
+            if (product.getOldPrice() != null && product.getOldPrice() > 0) {
+                BigDecimal originalOldPrice = BigDecimal.valueOf(product.getOldPrice());
+                // Сохраняем оригинальную старую цену
+                product.setOriginalOldPrice(originalOldPrice.doubleValue());
+                
+                if (rate != null && !"USD".equals(currency)) {
+                    BigDecimal convertedOldPrice = originalOldPrice.multiply(BigDecimal.valueOf(rate))
+                                                                 .setScale(2, RoundingMode.HALF_UP);
+                    product.setOldPrice(convertedOldPrice.doubleValue());
+                }
+            }
+        });
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", products);
+        response.put("currency", currency);
+        response.put("currencySymbol", currencySymbol);
+        
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/filter-data")
+    public ResponseEntity<Map<String, Object>> getFilterData(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String subcategory) {
+        
+        Map<String, Object> filterData = productService.getFilterData(category, subcategory);
+        return ResponseEntity.ok(filterData);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable String id) {
         Product product = productService.getProductById(id);

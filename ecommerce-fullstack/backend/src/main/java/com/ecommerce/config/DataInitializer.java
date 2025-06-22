@@ -69,12 +69,38 @@ private Product createProduct(String name, String nameRu, String namePl, Double 
     product.setIsNew(isNew);
     product.setDiscount(discount);
     
+    // Извлекаем бренд из названия
+    String brand = extractBrandFromName(name);
+    if (brand != null) {
+        product.setBrand(brand);
+    }
+    
     if (discount > 0) {
         product.setOldPrice(price);
         product.setPrice(price * (100 - discount) / 100);
     }
     
     return product;
+}
+
+// Метод для извлечения бренда из названия продукта
+private String extractBrandFromName(String name) {
+    String[] knownBrands = {
+        "Apple", "Samsung", "Sony", "Google", "Xiaomi", "OnePlus", "Huawei",
+        "Nike", "Adidas", "Puma", "Reebok", "New Balance",
+        "Canon", "Nikon", "Fujifilm", "GoPro",
+        "Dell", "HP", "Lenovo", "ASUS", "Acer", "Microsoft",
+        "Bose", "JBL", "Sennheiser", "Beats",
+        "iPhone", "Galaxy", "Pixel", "MacBook", "ThinkPad", "Surface"
+    };
+    
+    String lowerName = name.toLowerCase();
+    for (String brand : knownBrands) {
+        if (lowerName.contains(brand.toLowerCase())) {
+            return brand;
+        }
+    }
+    return null;
 }
 
 // Full product initialization method

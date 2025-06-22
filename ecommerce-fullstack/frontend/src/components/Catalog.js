@@ -21,24 +21,22 @@ const Catalog = ({ language, onCategorySelect }) => {
     {
       id: 'electronics',
       name: { ru: 'Электроника', en: 'Electronics', pl: 'Elektronika' },
-      icon: '📱',
-      subcategories: [
-        { id: 'phones', name: { ru: 'Смартфоны', en: 'Smartphones', pl: 'Smartfony' } },
+      icon: '📱',      subcategories: [
+        { id: 'smartphones', name: { ru: 'Смартфоны', en: 'Smartphones', pl: 'Smartfony' } },
         { id: 'laptops', name: { ru: 'Ноутбуки', en: 'Laptops', pl: 'Laptopy' } },
         { id: 'tablets', name: { ru: 'Планшеты', en: 'Tablets', pl: 'Tablety' } },
         { id: 'headphones', name: { ru: 'Наушники', en: 'Headphones', pl: 'Słuchawki' } },
         { id: 'cameras', name: { ru: 'Камеры', en: 'Cameras', pl: 'Aparaty' } },
         { id: 'accessories', name: { ru: 'Аксессуары', en: 'Accessories', pl: 'Akcesoria' } }
       ]
-    },
-    {
-      id: 'clothing',
-      name: { ru: 'Одежда', en: 'Clothing', pl: 'Odzież' },
+    },    {
+      id: 'fashion',
+      name: { ru: 'Одежда', en: 'Fashion', pl: 'Moda' },
       icon: '👕',
       subcategories: [
-        { id: 'men-clothing', name: { ru: 'Мужская одежда', en: 'Men\'s Clothing', pl: 'Odzież męska' } },
-        { id: 'women-clothing', name: { ru: 'Женская одежда', en: 'Women\'s Clothing', pl: 'Odzież damska' } },
-        { id: 'kids-clothing', name: { ru: 'Детская одежда', en: 'Kids\' Clothing', pl: 'Odzież dziecięca' } },
+        { id: 'men', name: { ru: 'Мужская одежда', en: 'Men\'s Clothing', pl: 'Odzież męska' } },
+        { id: 'women', name: { ru: 'Женская одежда', en: 'Women\'s Clothing', pl: 'Odzież damska' } },
+        { id: 'kids', name: { ru: 'Детская одежда', en: 'Kids\' Clothing', pl: 'Odzież dziecięca' } },
         { id: 'shoes', name: { ru: 'Обувь', en: 'Shoes', pl: 'Buty' } },
         { id: 'bags', name: { ru: 'Сумки', en: 'Bags', pl: 'Torby' } },
         { id: 'jewelry', name: { ru: 'Украшения', en: 'Jewelry', pl: 'Biżuteria' } }

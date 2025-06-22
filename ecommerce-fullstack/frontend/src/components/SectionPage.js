@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from './Sidebar';
+import SidebarNew from './SidebarNew';
 import ProductGrid from './ProductGrid';
 import './SectionPage.css';
 
@@ -56,12 +56,11 @@ const SectionPage = ({ language, sectionType, addToCart, currency, formatPrice }
           <span>{getSectionName()}</span>
         </div>
       </div>
-      
-      <div className="section-content">
-        <Sidebar 
+        <div className="section-content">
+        <SidebarNew 
           language={language}
           onFilterChange={handleFilterChange}
-        />        <ProductGrid 
+        /><ProductGrid 
           language={language}
           filters={filters}
           sectionType={sectionType}

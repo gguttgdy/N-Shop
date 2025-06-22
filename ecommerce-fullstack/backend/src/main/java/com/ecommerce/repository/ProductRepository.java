@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public interface ProductRepository extends MongoRepository<Product, String> {
@@ -41,4 +42,79 @@ public interface ProductRepository extends MongoRepository<Product, String> {
            "] } " +
            "] }")
     List<Product> findBySearchTermIgnoreCase(String searchTerm);
+
+    // Расширенный метод фильтрации
+    @Query("{ $and: [ " +
+           "{ 'isActive': true }, " +
+           "{ $or: [ " +
+           "{ 'categoryId': { $exists: false } }, " +
+           "{ 'categoryId': null }, " +
+           "{ 'categoryId': ?0 } " +
+           "] }, " +
+           "{ $or: [ " +
+           "{ 'subcategoryId': { $exists: false } }, " +
+           "{ 'subcategoryId': null }, " +
+           "{ 'subcategoryId': ?1 } " +
+           "] }, " +
+           "{ $or: [ " +
+           "{ 'sectionType': { $exists: false } }, " +
+           "{ 'sectionType': null }, " +
+           "{ 'sectionType': ?2 } " +
+           "] }, " +
+           "{ $or: [ " +
+           "{ 'name': { $regex: ?3, $options: 'i' } }, " +
+           "{ 'nameRu': { $regex: ?3, $options: 'i' } }, " +
+           "{ 'namePl': { $regex: ?3, $options: 'i' } } " +
+           "] }, " +
+           "{ 'price': { $gte: ?4, $lte: ?5 } }, " +
+           "{ $or: [ " +
+           "{ 'rating': { $exists: false } }, " +
+           "{ 'rating': null }, " +
+           "{ 'rating': { $gte: ?6 } } " +
+           "] } " +
+           "] }")
+    List<Product> findFilteredProducts(String category, String subcategory, String section, 
+                                     String search, Double minPrice, Double maxPrice, Double minRating);    // Упрощенный метод фильтрации без сложных условий
+    default List<Product> findFilteredProducts(String category, String subcategory, String section, String search,
+                                             Double minPrice, Double maxPrice, List<String> brands, List<String> colors, List<String> sizes,
+                                             Boolean inStock, Double minRating, Boolean isNew, Boolean hasDiscount) {
+        // Получаем базовый список продуктов
+        List<Product> products;
+        
+        if (search != null && !search.trim().isEmpty()) {
+            products = findBySearchTermIgnoreCase(search);
+        } else if (category != null && subcategory != null) {
+            products = findByCategoryAndSubcategory(category, subcategory);
+        } else if (category != null) {
+            products = findByCategoryIdAndIsActiveTrue(category);
+        } else if (subcategory != null) {
+            products = findBySubcategoryIdAndIsActiveTrue(subcategory);
+        } else if (section != null) {
+            products = findBySectionTypeAndIsActiveTrue(section);
+        } else {
+            products = findByIsActiveTrue();
+        }
+          // Применяем фильтры
+        return products.stream()
+            .filter(product -> minPrice == null || product.getPrice() >= minPrice)
+            .filter(product -> maxPrice == null || product.getPrice() <= maxPrice)
+            .filter(product -> brands == null || brands.isEmpty() || 
+                    (product.getBrand() != null && brands.stream().anyMatch(brand -> 
+                        product.getBrand().toLowerCase().contains(brand.toLowerCase()))))
+            .filter(product -> colors == null || colors.isEmpty() || 
+                    (product.getColor() != null && colors.stream().anyMatch(color -> 
+                        product.getColor().toLowerCase().contains(color.toLowerCase()))))
+            .filter(product -> sizes == null || sizes.isEmpty() || 
+                    (product.getSize() != null && sizes.stream().anyMatch(size -> 
+                        product.getSize().toLowerCase().contains(size.toLowerCase()))))
+            .filter(product -> inStock == null || !inStock || 
+                    (product.getStock() != null && product.getStock() > 0))
+            .filter(product -> minRating == null || 
+                    (product.getRating() != null && product.getRating() >= minRating))
+            .filter(product -> isNew == null || 
+                    (product.getIsNew() != null && product.getIsNew().equals(isNew)))
+            .filter(product -> hasDiscount == null || !hasDiscount ||
+                    (product.getDiscount() != null && product.getDiscount() > 0))
+            .collect(Collectors.toList());
+    }
 }

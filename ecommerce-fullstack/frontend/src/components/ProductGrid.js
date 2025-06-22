@@ -7,8 +7,8 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [productsLoaded, setProductsLoaded] = useState(false);
-  const originalProductsRef = useRef(null);  // Загрузка продуктов только один раз (без валюты)
-  const loadInitialProducts = useCallback(async () => {
+  const originalProductsRef = useRef(null);  // Загрузка продуктов с применением фильтров
+  const loadProducts = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -57,8 +57,7 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
         'skin-care': 'skincare',
         'hair-care': 'haircare',
         'perfumes': 'perfume'
-      };
-      
+      };      
       // Исправляем categoryId и subcategoryId если они неправильные
       const correctedCategoryId = categoryMapping[categoryId] || categoryId;
       const correctedSubcategoryId = subcategoryMapping[subcategoryId] || subcategoryId;
@@ -67,11 +66,47 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
       if (correctedCategoryId) params.append('category', correctedCategoryId);
       if (correctedSubcategoryId) params.append('subcategory', correctedSubcategoryId);
       if (sectionType) params.append('section', sectionType);
-      if (filters?.search) params.append('search', filters.search);
-      // Загружаем товары с USD ценами (без конвертации)
+      
+      // Добавляем все параметры фильтрации из Sidebar
+      if (filters) {
+        if (filters.search) params.append('search', filters.search);
+        if (filters.minPrice !== undefined) params.append('minPrice', filters.minPrice);
+        if (filters.maxPrice !== undefined) params.append('maxPrice', filters.maxPrice);
+        if (filters.brands && filters.brands.length > 0) {
+          filters.brands.forEach(brand => params.append('brands', brand));
+        }
+        if (filters.colors && filters.colors.length > 0) {
+          filters.colors.forEach(color => params.append('colors', color));
+        }
+        if (filters.sizes && filters.sizes.length > 0) {
+          filters.sizes.forEach(size => params.append('sizes', size));
+        }
+        if (filters.inStock !== undefined) params.append('inStock', filters.inStock);
+        if (filters.minRating !== undefined) params.append('minRating', filters.minRating);
+        if (filters.isNew !== undefined) params.append('isNew', filters.isNew);
+        if (filters.hasDiscount !== undefined) params.append('hasDiscount', filters.hasDiscount);
+        if (filters.sortBy) params.append('sortBy', filters.sortBy);
+        if (filters.sortDirection) params.append('sortDirection', filters.sortDirection);
+      }
+      
+      // Всегда загружаем товары с USD ценами (для последующей конвертации)
       params.append('currency', 'USD');
       
-      const url = `http://localhost:8080/api/products/with-currency?${params}`;
+      // Используем endpoint фильтрации если есть фильтры, иначе обычный endpoint
+      const hasFilters = filters && (
+        filters.minPrice !== undefined || 
+        filters.maxPrice !== undefined || 
+        (filters.brands && filters.brands.length > 0) ||
+        (filters.colors && filters.colors.length > 0) ||
+        (filters.sizes && filters.sizes.length > 0) ||
+        filters.inStock !== undefined ||
+        filters.minRating !== undefined ||
+        filters.isNew !== undefined ||
+        filters.hasDiscount !== undefined
+      );
+      
+      const endpoint = hasFilters ? '/api/products/filter' : '/api/products/with-currency';
+      const url = `http://localhost:8080${endpoint}?${params}`;
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}: Failed to fetch products`);
@@ -85,12 +120,13 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
       setProductsLoaded(true);
       
     } catch (err) {
-      console.error('Error loading initial products:', err);
+      console.error('Error loading products:', err);
       setError(err.message);
-      setProducts([]);    } finally {
+      setProducts([]);
+    } finally {
       setLoading(false);
     }
-  }, [categoryId, subcategoryId, sectionType, filters?.search]); // Убираем productsLoaded из зависимостей
+  }, [categoryId, subcategoryId, sectionType, filters]); // Добавляем filters в зависимости
 
   // Быстрая конвертация цен при смене валюты
   const convertPricesQuickly = useCallback((productsToConvert, targetCurrency) => {
@@ -141,14 +177,14 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
     // Сбрасываем состояние при изменении параметров поиска
     setProductsLoaded(false);
     setProducts([]);
-  }, [categoryId, subcategoryId, sectionType, filters?.search]);
+  }, [categoryId, subcategoryId, sectionType, filters]);
 
   // Эффект для загрузки товаров когда они не загружены
   useEffect(() => {
     if (!productsLoaded) {
-      loadInitialProducts();
+      loadProducts();
     }
-  }, [productsLoaded, loadInitialProducts]);
+  }, [productsLoaded, loadProducts]);
 
   // Эффект для обновления цен при смене валюты
   useEffect(() => {
@@ -156,11 +192,12 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
       updatePricesForCurrency();
     }
   }, [currency, productsLoaded, updatePricesForCurrency]);
+  
   const handleRetry = () => {
     // Повторная попытка загрузки данных
     setError(null);
     setProductsLoaded(false);
-    loadInitialProducts();
+    loadProducts();
   };
 
   const translations = {

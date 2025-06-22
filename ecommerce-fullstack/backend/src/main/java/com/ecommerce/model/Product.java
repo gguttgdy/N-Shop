@@ -3,6 +3,10 @@ package com.ecommerce.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
+import java.util.List;
+
 @Document(collection = "products")
 public class Product {
     @Id
@@ -26,6 +30,10 @@ public class Product {
     private Double originalOldPrice;
     private Boolean isNew;
     private Boolean isActive;
+    private String brand; // Новое поле для бренда
+    private String color; // Новое поле для цвета
+    private String size; // Новое поле для размера
+    private List<String> tags; // Новое поле для тегов
 
     // Constructors
     public Product() {}
@@ -103,4 +111,16 @@ public class Product {
 
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public String getBrand() { return brand; }
+    public void setBrand(String brand) { this.brand = brand; }
+
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
+
+    public String getSize() { return size; }
+    public void setSize(String size) { this.size = size; }
+
+    public List<String> getTags() { return tags; }
+    public void setTags(List<String> tags) { this.tags = tags; }
 }
