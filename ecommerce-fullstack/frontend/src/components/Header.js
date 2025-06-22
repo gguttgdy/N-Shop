@@ -33,10 +33,8 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
   };
 
   const t = translations[language];
-
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log('Searching for:', searchQuery);
   };
 
   const getTotalItems = () => {
@@ -114,16 +112,14 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
                 onClose={() => setIsCartOpen(false)}
               />
             )}
-          </div>
-
-          <select 
+          </div>          <select 
             className="language-select"
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
           >
-            <option value="ru">🇷🇺 RU</option>
-            <option value="en">🇺🇸 EN</option>
-            <option value="pl">🇵🇱 PL</option>
+            <option value="en">EN</option>
+            <option value="pl">PL</option>
+            <option value="ru">RU</option>
           </select>
         </div>
       </div>

@@ -30,6 +30,12 @@ public class MockDataService {
                     (product.getNamePl() != null && product.getNamePl().toLowerCase().contains(search.toLowerCase())))
                 .collect(Collectors.toList());
     }
+    
+    public List<Product> getProductsBySection(String section) {
+        return mockProducts.stream()
+                .filter(product -> section.equals(product.getSectionType()))
+                .collect(Collectors.toList());
+    }
 
     public Product getProductById(String id) {
         return mockProducts.stream()

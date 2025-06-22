@@ -18,6 +18,11 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     
     List<Product> findBySectionTypeAndIsActiveTrue(String sectionType);
     
+    // Метод для поиска по секции (для совместимости)
+    default List<Product> findBySectionType(String sectionType) {
+        return findBySectionTypeAndIsActiveTrue(sectionType);
+    }
+    
     @Query("{ 'categoryId': ?0, 'subcategoryId': ?1, 'isActive': true }")
     List<Product> findByCategoryAndSubcategory(String categoryId, String subcategoryId);
     

@@ -7,10 +7,11 @@ import SectionPage from './components/SectionPage';
 import Footer from './components/Footer';
 import InfoPage from './components/InfoPage';
 import HelpCenter from './components/HelpCenter';
+import { useCurrency } from './hooks/useCurrency';
 import './App.css';
 
 function App() {
-  const [language, setLanguage] = useState('ru');
+  const [language, setLanguage] = useState('en');
   const [user, setUser] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [currentPage, setCurrentPage] = useState('home');
@@ -18,6 +19,9 @@ function App() {
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null);
   const [selectedInfoPage, setSelectedInfoPage] = useState(null);
+
+  // Хук для управления валютой
+  const { currency, currencySymbol, formatPrice, loading: currencyLoading } = useCurrency(language);
 
   const handleNavigation = (pageType, value) => {
     if (pageType === 'category') {
@@ -95,12 +99,13 @@ function App() {
         language={language}
         onCategorySelect={handleCategorySelect}
       />
-      <main className="main-content">
-        {currentPage === 'home' ? (
+      <main className="main-content">        {currentPage === 'home' ? (
           <HomePage 
             language={language} 
             onNavigate={handleNavigation}
             addToCart={addToCart}
+            currency={currency}
+            formatPrice={formatPrice}
           />
         ) : currentPage === 'category' ? (
           <CategoryPage 
@@ -108,12 +113,16 @@ function App() {
             categoryId={selectedCategory}
             subcategoryId={selectedSubcategory}
             addToCart={addToCart}
+            currency={currency}
+            formatPrice={formatPrice}
           />
         ) : currentPage === 'section' ? (
           <SectionPage 
             language={language}
             sectionType={selectedSection}
             addToCart={addToCart}
+            currency={currency}
+            formatPrice={formatPrice}
           />
         ) : currentPage === 'info' ? (
           selectedInfoPage === 'help-center' ? (

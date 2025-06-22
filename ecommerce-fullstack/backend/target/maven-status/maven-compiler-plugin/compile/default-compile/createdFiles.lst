@@ -1,0 +1,13 @@
+com\ecommerce\service\MockDataService.class
+com\ecommerce\controller\ProductController.class
+com\ecommerce\service\ProductService.class
+com\ecommerce\repository\ProductRepository.class
+com\ecommerce\service\CurrencyService.class
+com\ecommerce\config\DataInitializer.class
+com\ecommerce\config\CorsConfig$1.class
+com\ecommerce\model\Product.class
+com\ecommerce\EcommerceApplication.class
+com\ecommerce\config\SecurityConfig.class
+com\ecommerce\config\CorsConfig.class
+com\ecommerce\controller\CurrencyController.class
+com\ecommerce\config\CacheConfig.class

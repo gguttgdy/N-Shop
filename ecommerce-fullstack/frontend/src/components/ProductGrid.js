@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import CurrencyService from '../services/CurrencyService';
 import './ProductGrid.css';
 
-const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType, addToCart }) => {
+const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType, addToCart, currency, formatPriceWithCurrency }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    console.log('ProductGrid props:', { categoryId, subcategoryId, sectionType, filters }); // Debug log
-    fetchProducts();
-  }, [categoryId, subcategoryId, sectionType, filters]);
-
-  const fetchProducts = async () => {
+  const [productsLoaded, setProductsLoaded] = useState(false);
+  const originalProductsRef = useRef(null);  // Загрузка продуктов только один раз (без валюты)
+  const loadInitialProducts = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -71,27 +68,99 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
       if (correctedSubcategoryId) params.append('subcategory', correctedSubcategoryId);
       if (sectionType) params.append('section', sectionType);
       if (filters?.search) params.append('search', filters.search);
+      // Загружаем товары с USD ценами (без конвертации)
+      params.append('currency', 'USD');
       
-      const url = `http://localhost:8080/api/products?${params}`;
-      console.log('Original category:', categoryId, '-> Corrected:', correctedCategoryId);
-      console.log('Original subcategory:', subcategoryId, '-> Corrected:', correctedSubcategoryId);
-      console.log('Fetching products from URL:', url);
+      const url = `http://localhost:8080/api/products/with-currency?${params}`;
       
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}: Failed to fetch products`);
       
-      const data = await response.json();
-      console.log('Received products count:', data.length);
-      console.log('Received products:', data);
+      const responseData = await response.json();
+      const data = responseData.products || responseData;
       
-      setProducts(Array.isArray(data) ? data : []);
+      // Сохраняем оригинальные товары
+      originalProductsRef.current = Array.isArray(data) ? data : [];
+      setProducts(originalProductsRef.current);
+      setProductsLoaded(true);
+      
     } catch (err) {
-      console.error('Error fetching products:', err);
+      console.error('Error loading initial products:', err);
       setError(err.message);
-      setProducts([]);
-    } finally {
+      setProducts([]);    } finally {
       setLoading(false);
     }
+  }, [categoryId, subcategoryId, sectionType, filters?.search]); // Убираем productsLoaded из зависимостей
+
+  // Быстрая конвертация цен при смене валюты
+  const convertPricesQuickly = useCallback((productsToConvert, targetCurrency) => {
+    if (!productsToConvert || targetCurrency === 'USD') {
+      return productsToConvert;
+    }
+
+    // Простые курсы для быстрой конвертации
+    const quickRates = {
+      'RUB': 95.0,
+      'PLN': 4.2,
+      'EUR': 0.92,
+      'GBP': 0.78
+    };
+
+    const rate = quickRates[targetCurrency];
+    if (!rate) return productsToConvert;
+
+    return productsToConvert.map(product => ({
+      ...product,
+      price: product.originalPrice ? (product.originalPrice * rate) : product.price,
+      oldPrice: product.originalOldPrice ? (product.originalOldPrice * rate) : product.oldPrice
+    }));
+  }, []);
+
+  // Обновление цен при смене валюты
+  const updatePricesForCurrency = useCallback(async () => {
+    if (!productsLoaded || !currency || !originalProductsRef.current) {
+      return;
+    }
+
+    // Быстрая конвертация на клиенте
+    const quickConverted = convertPricesQuickly(originalProductsRef.current, currency);
+    setProducts(quickConverted);
+
+    // Точная конвертация с сервера в фоне
+    try {
+      const converted = await CurrencyService.convertProductPrices(originalProductsRef.current, currency);
+      if (converted && converted.products) {
+        setProducts(converted.products);
+      }
+    } catch (err) {
+      console.error('Error updating prices for currency:', err);
+      // При ошибке оставляем быструю конвертацию
+    }
+  }, [currency, productsLoaded, convertPricesQuickly]);  // Эффект для первичной загрузки товаров
+  useEffect(() => {
+    // Сбрасываем состояние при изменении параметров поиска
+    setProductsLoaded(false);
+    setProducts([]);
+  }, [categoryId, subcategoryId, sectionType, filters?.search]);
+
+  // Эффект для загрузки товаров когда они не загружены
+  useEffect(() => {
+    if (!productsLoaded) {
+      loadInitialProducts();
+    }
+  }, [productsLoaded, loadInitialProducts]);
+
+  // Эффект для обновления цен при смене валюты
+  useEffect(() => {
+    if (productsLoaded && currency) {
+      updatePricesForCurrency();
+    }
+  }, [currency, productsLoaded, updatePricesForCurrency]);
+  const handleRetry = () => {
+    // Повторная попытка загрузки данных
+    setError(null);
+    setProductsLoaded(false);
+    loadInitialProducts();
   };
 
   const translations = {
@@ -229,13 +298,18 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
       default: return product.name;
     }
   };
-
-  const formatPrice = (price) => {
-    if (typeof price !== 'number') return '0';
-    return price.toLocaleString(language === 'ru' ? 'ru-RU' : language === 'pl' ? 'pl-PL' : 'en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2
-    });
+  const formatPriceDisplay = (price) => {
+    if (formatPriceWithCurrency) {
+      // Используем новую систему валют если передана
+      return formatPriceWithCurrency(price);
+    } else {
+      // Fallback к старому форматированию
+      if (typeof price !== 'number') return '0';
+      return price.toLocaleString(language === 'ru' ? 'ru-RU' : language === 'pl' ? 'pl-PL' : 'en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
   };
 
   const getSectionTitle = () => {
@@ -308,13 +382,11 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
         'water': t.water,
         'water-sports': t.water,
         'clothing': { ru: 'Спортивная одежда', en: 'Sports Clothing', pl: 'Odzież sportowa' }[language],
-        
-        // Books - исправляем названия подкатегорий
+          // Books - исправляем названия подкатегорий
         'fiction': t.fiction,
         'non-fiction': t['non-fiction'],
         'education': t.education,
         'educational': t.education,
-        'children': t.children,
         'children-books': t.children,  // children-books отображается как children
         'kids-books': t.children,      // kids-books отображается как children
         'childrens-books': t.children, // childrens-books отображается как children
@@ -325,26 +397,22 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
     
     return t.popularProducts;
   };
-
   if (loading) {
     return (
       <div className="product-grid">
         <div className="loading">
           <h2>{t.loading}</h2>
-          <p>Loading products for: category={categoryId}, subcategory={subcategoryId}</p>
         </div>
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="product-grid">
         <div className="error">
           <h2>{t.error}</h2>
           <p>{error}</p>
-          <p>Debug: category={categoryId}, subcategory={subcategoryId}</p>
-          <button onClick={fetchProducts} style={{marginTop: '10px', padding: '8px 16px'}}>
+          <button onClick={handleRetry} style={{marginTop: '10px', padding: '8px 16px'}}>
             Try Again
           </button>
         </div>
@@ -354,12 +422,10 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
 
   if (products.length === 0) {
     return (
-      <div className="product-grid">
-        <div className="no-products">
+      <div className="product-grid">        <div className="no-products">
           <h2>{t.noProducts}</h2>
           <p>{t.tryChangeFilters}</p>
-          <p>Debug info: category={categoryId}, subcategory={subcategoryId}, products length={products.length}</p>
-          <button onClick={fetchProducts} style={{marginTop: '10px', padding: '8px 16px'}}>
+          <button onClick={handleRetry} style={{marginTop: '10px', padding: '8px 16px'}}>
             Reload Products
           </button>
         </div>
@@ -397,11 +463,11 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
             <h3 className="product-name">{getLocalizedProductName(product)}</h3>
             <div className="product-price-section">
               <span className="product-price">
-                {formatPrice(product.price)} {t.currency}
+                {formatPriceDisplay(product.price)}{!formatPriceWithCurrency && ` ${t.currency}`}
               </span>
               {product.oldPrice && (
                 <span className="old-price">
-                  {formatPrice(product.oldPrice)} {t.currency}
+                  {formatPriceDisplay(product.oldPrice)}{!formatPriceWithCurrency && ` ${t.currency}`}
                 </span>
               )}
             </div>

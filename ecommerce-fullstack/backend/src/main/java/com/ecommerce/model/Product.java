@@ -22,6 +22,8 @@ public class Product {
     private String sectionType;
     private Double rating;
     private Integer stock;
+    private Double originalPrice;
+    private Double originalOldPrice;
     private Boolean isNew;
     private Boolean isActive;
 
@@ -89,6 +91,12 @@ public class Product {
 
     public Integer getStock() { return stock; }
     public void setStock(Integer stock) { this.stock = stock; }
+
+    public Double getOriginalPrice() { return originalPrice; }
+    public void setOriginalPrice(Double originalPrice) { this.originalPrice = originalPrice; }
+
+    public Double getOriginalOldPrice() { return originalOldPrice; }
+    public void setOriginalOldPrice(Double originalOldPrice) { this.originalOldPrice = originalOldPrice; }
 
     public Boolean getIsNew() { return isNew; }
     public void setIsNew(Boolean isNew) { this.isNew = isNew; }

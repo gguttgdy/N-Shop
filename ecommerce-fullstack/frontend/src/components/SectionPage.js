@@ -3,7 +3,7 @@ import Sidebar from './Sidebar';
 import ProductGrid from './ProductGrid';
 import './SectionPage.css';
 
-const SectionPage = ({ language, sectionType, addToCart }) => {
+const SectionPage = ({ language, sectionType, addToCart, currency, formatPrice }) => {
   const [filters, setFilters] = useState({});
 
   const handleFilterChange = (newFilters) => {
@@ -54,12 +54,13 @@ const SectionPage = ({ language, sectionType, addToCart }) => {
         <Sidebar 
           language={language}
           onFilterChange={handleFilterChange}
-        />
-        <ProductGrid 
+        />        <ProductGrid 
           language={language}
           filters={filters}
           sectionType={sectionType}
           addToCart={addToCart}
+          currency={currency}
+          formatPriceWithCurrency={formatPrice}
         />
       </div>
     </div>

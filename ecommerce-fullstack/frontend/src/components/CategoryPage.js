@@ -3,7 +3,7 @@ import Sidebar from './Sidebar';
 import ProductGrid from './ProductGrid';
 import './CategoryPage.css';
 
-const CategoryPage = ({ language, categoryId, subcategoryId, addToCart }) => {
+const CategoryPage = ({ language, categoryId, subcategoryId, addToCart, currency, formatPrice }) => {
   const [filters, setFilters] = useState({});
 
   const handleFilterChange = (newFilters) => {
@@ -78,13 +78,14 @@ const CategoryPage = ({ language, categoryId, subcategoryId, addToCart }) => {
         <Sidebar 
           language={language}
           onFilterChange={handleFilterChange}
-        />
-        <ProductGrid 
+        />        <ProductGrid 
           language={language}
           filters={filters}
           categoryId={categoryId}
           subcategoryId={subcategoryId}
           addToCart={addToCart}
+          currency={currency}
+          formatPriceWithCurrency={formatPrice}
         />
       </div>
     </div>
