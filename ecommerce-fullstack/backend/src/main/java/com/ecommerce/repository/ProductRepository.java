@@ -28,4 +28,17 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     
     @Query("{ 'name': { $regex: ?0, $options: 'i' }, 'isActive': true }")
     List<Product> findByNameContainingIgnoreCase(String name);
+    
+    // Расширенный поиск по названию на всех языках
+    @Query("{ $and: [ " +
+           "{ 'isActive': true }, " +
+           "{ $or: [ " +
+           "{ 'name': { $regex: ?0, $options: 'i' } }, " +
+           "{ 'nameRu': { $regex: ?0, $options: 'i' } }, " +
+           "{ 'namePl': { $regex: ?0, $options: 'i' } }, " +
+           "{ 'categoryId': { $regex: ?0, $options: 'i' } }, " +
+           "{ 'subcategoryId': { $regex: ?0, $options: 'i' } } " +
+           "] } " +
+           "] }")
+    List<Product> findBySearchTermIgnoreCase(String searchTerm);
 }

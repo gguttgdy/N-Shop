@@ -36,28 +36,37 @@
 
 .products-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .product-card {
   background: var(--bg-primary);
-  border-radius: 10px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 24px;
   text-align: center;
-  box-shadow: 0 2px 10px var(--shadow);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: all 0.3s ease;
   border: 1px solid var(--border-secondary);
+  display: flex;
+  flex-direction: column;
+  height: 400px; /* Фиксированная высота для всех карточек */
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 20px var(--shadow-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px var(--shadow-hover);
 }
 
 .product-image {
-  font-size: 60px;
-  margin-bottom: 15px;
+  font-size: 64px;
+  margin-bottom: 16px;
+  height: 100px; /* Фиксированная высота для изображений */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-image img {
@@ -69,28 +78,54 @@
 
 .product-name {
   font-size: 18px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: var(--text-primary);
+  height: 48px; /* Фиксированная высота для названий */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.3;
+  overflow: hidden;
+  font-weight: 600;
 }
 
 .product-price {
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 700;
   color: var(--accent-primary);
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.5px;
 }
 
 .add-to-cart-btn {
-  background: var(--accent-primary);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
   color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 14px;
-  transition: background 0.2s;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  width: 100%;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: auto; /* Прижимает кнопку к низу карточки */
 }
 
 .add-to-cart-btn:hover {
-  background: var(--accent-hover);
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-primary));
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.add-to-cart-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .add-to-cart-btn:disabled {
@@ -181,6 +216,50 @@
   transform: translateY(0);
 }
 
+/* Product badges */
+.new-badge, .discount-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 10px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.new-badge {
+  background: linear-gradient(135deg, #27ae60, #229954);
+}
+
+.discount-badge {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+/* Если есть оба бейджа, смещаем NEW вниз */
+.product-image .new-badge + .discount-badge,
+.product-image .discount-badge + .new-badge {
+  top: 40px;
+}
+
+/* Responsive design для products-container */
+@media (max-width: 1200px) {
+  .products-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .products-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
 @media (max-width: 768px) {
   .products-header {
     flex-direction: column;
@@ -189,8 +268,26 @@
   }
   
   .products-container {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .product-card {
+    padding: 20px;
+    height: 360px;
+  }
+  
+  .product-image {
+    font-size: 56px;
+  }
+  
+  .product-name {
+    font-size: 16px;
+    height: 44px;
+  }
+  
+  .product-price {
+    font-size: 18px;
   }
   
   .subcategory-filters {
@@ -200,5 +297,35 @@
   .subcategory-btn {
     font-size: 12px;
     padding: 10px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .product-card {
+    padding: 16px;
+    height: 340px;
+  }
+  
+  .product-image {
+    font-size: 48px;
+  }
+  
+  .product-name {
+    font-size: 15px;
+    height: 40px;
+  }
+  
+  .product-price {
+    font-size: 17px;
+  }
+  
+  .add-to-cart-btn {
+    padding: 10px 20px;
+    font-size: 14px;
   }
 }

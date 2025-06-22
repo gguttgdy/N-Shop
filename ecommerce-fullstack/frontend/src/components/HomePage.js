@@ -200,23 +200,21 @@ const HomePage = ({ language, onNavigate, addToCart, currency, formatPrice }) =>
         case 'ru': return product.nameRu || product.name;
         case 'pl': return product.namePl || product.name;
         default: return product.name;
-      }
-    };    // Вычисляем скидку от оригинальных цен (в USD)
-    const discount = (product.originalOldPrice && product.originalPrice) ? 
-      Math.round(((product.originalOldPrice - product.originalPrice) / product.originalOldPrice) * 100) : 
-      (product.oldPrice && product.price) ? 
-        Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) :
-        product.discount;
+      }    };
 
     return (
       <div className="product-card">
-        {showDiscount && discount && (
-          <div className="discount-badge">-{discount}%</div>
-        )}
-        {showNew && (product.isNew || product.isActive) && (
-          <div className="new-badge">NEW</div>
-        )}
-        <div className="product-image">{product.emoji || product.image || '📦'}</div>
+        <div className="product-image">
+          {product.emoji || product.image || '📦'}
+          {showNew && (product.isNew || product.isActive) && (
+            <span className="new-badge">NEW</span>
+          )}
+          {showDiscount && product.oldPrice && product.oldPrice > product.price && (
+            <span className="discount-badge">
+              -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
+            </span>
+          )}
+        </div>
         <h3 className="product-name">{getProductName(product)}</h3>
         <div className="product-price-section">
           <span className="product-price">
@@ -290,11 +288,10 @@ const HomePage = ({ language, onNavigate, addToCart, currency, formatPrice }) =>
               <button className="see-all-btn" onClick={() => handleSectionClick('hot-deals')}>
                 {t.seeAll}
               </button>
-            </div>
-            <div className="products-grid">
+            </div>            <div className="products-grid">
               {hotDeals.length > 0 ? (
                 hotDeals.map(product => (
-                  <ProductCard key={product.id} product={product} showDiscount={true} />
+                  <ProductCard key={product.id} product={product} showDiscount={true} showRating={true} />
                 ))
               ) : (
                 <p>No hot deals available</p>
@@ -309,11 +306,10 @@ const HomePage = ({ language, onNavigate, addToCart, currency, formatPrice }) =>
               <button className="see-all-btn" onClick={() => handleSectionClick('new-arrivals')}>
                 {t.seeAll}
               </button>
-            </div>
-            <div className="products-grid">
+            </div>            <div className="products-grid">
               {newArrivals.length > 0 ? (
                 newArrivals.map(product => (
-                  <ProductCard key={product.id} product={product} showNew={true} />
+                  <ProductCard key={product.id} product={product} showNew={true} showRating={true} />
                 ))
               ) : (
                 <p>No new arrivals available</p>

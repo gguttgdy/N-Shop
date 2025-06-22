@@ -4,6 +4,7 @@ import Catalog from './components/Catalog';
 import HomePage from './components/HomePage';
 import CategoryPage from './components/CategoryPage';
 import SectionPage from './components/SectionPage';
+import SearchPage from './components/SearchPage';
 import Footer from './components/Footer';
 import InfoPage from './components/InfoPage';
 import HelpCenter from './components/HelpCenter';
@@ -19,11 +20,10 @@ function App() {
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null);
   const [selectedInfoPage, setSelectedInfoPage] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Хук для управления валютой
-  const { currency, currencySymbol, formatPrice, loading: currencyLoading } = useCurrency(language);
-
-  const handleNavigation = (pageType, value) => {
+  const { currency, currencySymbol, formatPrice, loading: currencyLoading } = useCurrency(language);  const handleNavigation = (pageType, value) => {
     if (pageType === 'category') {
       setSelectedCategory(value.categoryId);
       setSelectedSubcategory(value.subcategoryId || null);
@@ -35,20 +35,40 @@ function App() {
       setSelectedInfoPage(value);
       setCurrentPage('info');
     }
-  };
-
-  const handleCategorySelect = (categoryId, subcategoryId = null) => {
-    setSelectedCategory(categoryId);
+  };  const handleCategorySelect = (categoryId, subcategoryId = null) => {
+    console.log('Category selected:', categoryId, 'Subcategory:', subcategoryId);    setSelectedCategory(categoryId);
     setSelectedSubcategory(subcategoryId);
     setCurrentPage('category');
+    // Очищаем поиск при переходе на категорию
+    setSearchQuery('');
+    setSelectedSection(null);
+    setSelectedInfoPage(null);
   };
-
   const handleHomeClick = () => {
     setCurrentPage('home');
     setSelectedCategory(null);
     setSelectedSubcategory(null);
     setSelectedSection(null);
     setSelectedInfoPage(null);
+    // Очищаем searchQuery последним
+    setSearchQuery('');
+  };const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (query && query.trim().length > 0) {
+      setCurrentPage('search');
+      setSelectedCategory(null);
+      setSelectedSubcategory(null);
+      setSelectedSection(null);
+      setSelectedInfoPage(null);
+    } else if (currentPage === 'search') {
+      // Если мы были на странице поиска и запрос очищен, возвращаемся на главную
+      setCurrentPage('home');
+      setSelectedCategory(null);
+      setSelectedSubcategory(null);
+      setSelectedSection(null);
+      setSelectedInfoPage(null);
+    }
+    // Если мы на другой странице (например, категории), не меняем currentPage
   };
 
   const addToCart = (product) => {
@@ -83,8 +103,7 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <Header 
+    <div className="App">      <Header 
         language={language}
         setLanguage={setLanguage}
         user={user}
@@ -94,12 +113,16 @@ function App() {
         updateCartQuantity={updateCartQuantity}
         onHomeClick={handleHomeClick}
         onNavigate={handleNavigation}
+        onSearch={handleSearch}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
-      <Catalog 
-        language={language}
+        <Catalog 
+        language={language} 
         onCategorySelect={handleCategorySelect}
       />
-      <main className="main-content">        {currentPage === 'home' ? (
+      
+      <main className="main-content">{currentPage === 'home' ? (
           <HomePage 
             language={language} 
             onNavigate={handleNavigation}
@@ -132,7 +155,15 @@ function App() {
               language={language}
               pageType={selectedInfoPage}
             />
-          )
+          )        ) : currentPage === 'search' ? (
+          <SearchPage 
+            language={language}
+            searchQuery={searchQuery}
+            addToCart={addToCart}
+            currency={currency}
+            formatPriceWithCurrency={formatPrice}
+            onHomeClick={handleHomeClick}
+          />
         ) : null}
       </main>
       <Footer 

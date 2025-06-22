@@ -1,29 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProfileDropdown from './ProfileDropdown';
 import CartDropdown from './CartDropdown';
 import './Header.css';
 
-const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCart, updateCartQuantity, onHomeClick, onNavigate }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCart, updateCartQuantity, onHomeClick, onNavigate, onSearch, searchQuery, setSearchQuery }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const translations = {
-    ru: {
+  // Динамический поиск с debounce
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchQuery.trim().length >= 2) {
+        onSearch(searchQuery.trim());
+      } else if (searchQuery.trim().length === 0) {
+        // Очищаем результаты поиска когда поле пустое
+        onSearch('');
+      }
+    }, 300); // Задержка 300ms
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, onSearch]);
+
+  const translations = {    ru: {
       search: 'Поиск товаров...',
       profile: 'Профиль',
       login: 'Войти',
       cart: 'Корзина',
       helpCenter: 'Центр помощи'
-    },
-    en: {
+    },    en: {
       search: 'Search products...',
       profile: 'Profile',
       login: 'Login',
       cart: 'Cart',
       helpCenter: 'Help Center'
-    },
-    pl: {
+    },    pl: {
       search: 'Szukaj produktów...',
       profile: 'Profil',
       login: 'Zaloguj',
@@ -31,10 +41,14 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
       helpCenter: 'Centrum pomocy'
     }
   };
-
   const t = translations[language];
+
   const handleSearch = (e) => {
     e.preventDefault();
+    // При нажатии Enter или кнопки поиска - сразу выполняем поиск
+    if (searchQuery.trim()) {
+      onSearch(searchQuery.trim());
+    }
   };
 
   const getTotalItems = () => {
@@ -43,8 +57,7 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
 
   return (
     <header className="header">
-      <div className="header-container">
-        <div className="logo" onClick={onHomeClick}>
+      <div className="header-container">        <div className="logo" onClick={() => { setSearchQuery(''); onHomeClick(); }}>
           <h1>ShopLogo</h1>
         </div>
         

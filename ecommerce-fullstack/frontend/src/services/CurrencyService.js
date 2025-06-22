@@ -110,3 +110,5 @@ class CurrencyService {
 
 const currencyService = new CurrencyService();
 export default currencyService;
+export { currencyService, CurrencyService };
+export const convertProductPrices = currencyService.convertProductPrices.bind(currencyService);

@@ -3,6 +3,7 @@ import './Catalog.css';
 
 const Catalog = ({ language, onCategorySelect }) => {
   const [activeCategory, setActiveCategory] = useState(null);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const translations = {
     ru: {
@@ -92,32 +93,54 @@ const Catalog = ({ language, onCategorySelect }) => {
   ];
 
   const t = translations[language];
-
   const handleCategoryEnter = (categoryId) => {
-    setActiveCategory(categoryId);
+    if (!isNavigating) {
+      setActiveCategory(categoryId);
+    }
   };
 
   const handleCatalogLeave = () => {
-    setActiveCategory(null);
+    if (!isNavigating) {
+      setActiveCategory(null);
+    }
   };
-
-  const handleCategoryClick = (categoryId) => {
+  const handleCategoryClick = (categoryId, event) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setIsNavigating(true);
     onCategorySelect(categoryId);
+    // Задержка перед сбросом флага навигации
+    setTimeout(() => {
+      setIsNavigating(false);
+      setActiveCategory(null);
+    }, 100);
   };
 
-  const handleSubcategoryClick = (categoryId, subcategoryId) => {
+  const handleSubcategoryClick = (categoryId, subcategoryId, event) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setIsNavigating(true);
     onCategorySelect(categoryId, subcategoryId);
+    // Задержка перед сбросом флага навигации
+    setTimeout(() => {
+      setIsNavigating(false);
+      setActiveCategory(null);
+    }, 100);
   };
 
   return (
     <div className="catalog" onMouseLeave={handleCatalogLeave}>
-      <div className="catalog-container">
-        <nav className="catalog-nav">
-          {categories.map(category => (
-            <div
+      <div className="catalog-container">        <nav className="catalog-nav">
+          {categories.map(category => (            <div
               key={category.id}
               className={`catalog-item ${activeCategory === category.id ? 'active' : ''}`}
               onMouseEnter={() => handleCategoryEnter(category.id)}
+              onClick={(e) => handleCategoryClick(category.id, e)}
+              style={{ cursor: 'pointer' }}
             >
               <span className="catalog-item-icon">{category.icon}</span>
               <span className="catalog-item-text">{category.name[language]}</span>
@@ -128,10 +151,9 @@ const Catalog = ({ language, onCategorySelect }) => {
         {activeCategory && (
           <div className="catalog-mega-menu">
             <div className="mega-menu-content">
-              <div className="view-all-section">
-                <button 
+              <div className="view-all-section">                <button 
                   className="view-all-btn"
-                  onClick={() => handleCategoryClick(activeCategory)}
+                  onClick={(e) => handleCategoryClick(activeCategory, e)}
                 >
                   <span className="view-all-icon">
                     {categories.find(cat => cat.id === activeCategory)?.icon}
@@ -144,13 +166,12 @@ const Catalog = ({ language, onCategorySelect }) => {
                   </div>
                 </button>
               </div>
-              
-              <div className="subcategories-grid">
-                {categories.find(cat => cat.id === activeCategory)?.subcategories.map(subcat => (
-                  <div 
+                <div className="subcategories-grid">
+                {categories.find(cat => cat.id === activeCategory)?.subcategories.map(subcat => (                  <div 
                     key={subcat.id} 
                     className="subcategory-link"
-                    onClick={() => handleSubcategoryClick(activeCategory, subcat.id)}
+                    onClick={(e) => handleSubcategoryClick(activeCategory, subcat.id, e)}
+                    style={{ cursor: 'pointer' }}
                   >
                     {subcat.name[language]}
                   </div>

@@ -11,17 +11,16 @@
 .header-container {
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 15px 20px;
-  gap: 40px;
+  gap: 20px;
 }
 
 .logo {
   flex-shrink: 0;
   cursor: pointer;
-  justify-self: start;
 }
 
 .logo h1 {
@@ -37,9 +36,9 @@
 
 .search-form {
   display: flex;
-  width: 100%;
+  flex: 1;
   max-width: 600px;
-  justify-self: center;
+  margin: 0 20px;
 }
 
 .search-input {
@@ -83,7 +82,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  justify-self: end;
+  flex-shrink: 0;
 }
 
 .profile-section {
@@ -103,6 +102,7 @@
   cursor: pointer;
   white-space: nowrap;
   color: var(--text-primary);
+  height: 40px;
 }
 
 .profile-button:hover {
@@ -111,48 +111,29 @@
 
 .help-center-button,
 .cart-button {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 8px !important;
-  background: var(--bg-secondary) !important;
-  font-size: 20px !important;
-  transition: background 0.2s !important;
-  border: none !important;
-  cursor: pointer !important;
-  flex-shrink: 0 !important;
-  position: relative !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  font-size: 20px;
+  transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
 }
 
 .help-center-button:hover,
 .cart-button:hover {
-  background: var(--bg-tertiary) !important;
+  background: var(--bg-tertiary);
 }
 
 .cart-section {
   position: relative;
   flex-shrink: 0;
-}
-
-.cart-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 15px;
-  border-radius: 20px;
-  background: #f8f9fa;
-  font-size: 14px;
-  transition: background 0.2s;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  position: relative;
-}
-
-.cart-button:hover {
-  background: #e9ecef;
 }
 
 .cart-count {
@@ -173,88 +154,89 @@
   z-index: 1;
 }
 
-.language-select {
-  padding: 8px;
-  border: 1px solid var(--border-primary);
-  border-radius: 8px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 14px;
+
+
+.catalog-button {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
   cursor: pointer;
-  flex-shrink: 0;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.catalog-button:hover {
+  background: var(--accent-hover);
 }
 
 @media (max-width: 768px) {
   .header-container {
-    grid-template-columns: 1fr;
+    flex-wrap: wrap;
     gap: 15px;
-    text-align: center;
-  }
-  
-  .logo,
-  .search-form,
-  .header-actions {
-    justify-self: center;
   }
   
   .search-form {
-    order: 2;
+    order: 3;
     width: 100%;
+    margin: 0;
     max-width: none;
   }
   
   .header-actions {
-    order: 3;
+    gap: 10px;
   }
   
-  .profile-button {
-    padding: 6px 12px;
-    font-size: 13px;
+  .profile-button span:not(.profile-icon):not(.dropdown-arrow) {
+    display: none;
   }
   
   .help-center-button,
   .cart-button {
-    width: 35px;
-    height: 35px;
+    width: 35px !important;
+    height: 35px !important;
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-container {
+    padding: 12px 15px;
+  }
+  
+  .logo h1 {
+    font-size: 20px;
+  }
+  
+  .language-select {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 10px 15px;
+  }
+  
+  .logo h1 {
     font-size: 18px;
   }
-}
-
-@media (max-width: 480px) {
-  .header-container {
-    padding: 10px 15px;
+  
+  .help-center-button,
+  .cart-button {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 16px !important;
   }
   
-  .logo h1 {
-    font-size: 20px;
-  }
-  
-  .help-center-button span:last-child,
-  .cart-button span:last-child {
-    display: none;
+  .profile-button {
+    padding: 6px 10px;
+    font-size: 12px;
   }
 }
-
-@media (max-width: 480px) {
-  .header-container {
-    padding: 10px 15px;
-  }
-  
-  .logo h1 {
-    font-size: 20px;
-  }
-  
-  .help-center-button span:last-child,
-  .cart-button span:last-child {
-    display: none;
-  }
-}
-  
-  .help-center-button span:last-child,
-  .cart-button span:last-child {
-    display: none;
-  }
 
 
 

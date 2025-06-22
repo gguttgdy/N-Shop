@@ -448,17 +448,16 @@ const ProductGrid = ({ language, filters, categoryId, subcategoryId, sectionType
       
       {/* Убираем кнопки подкатегорий - они не нужны на общей странице */}
       
-      <div className="products-container">
-        {products.map(product => (
+      <div className="products-container">        {products.map(product => (
           <div key={product.id} className="product-card">
-            {product.discount > 0 && (
-              <div className="discount-badge">-{product.discount}%</div>
-            )}
-            {product.isNew && (
-              <div className="new-badge">NEW</div>
-            )}
             <div className="product-image">
               {product.image}
+              {product.isNew && <span className="new-badge">NEW</span>}
+              {product.oldPrice && product.oldPrice > product.price && (
+                <span className="discount-badge">
+                  -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
+                </span>
+              )}
             </div>
             <h3 className="product-name">{getLocalizedProductName(product)}</h3>
             <div className="product-price-section">

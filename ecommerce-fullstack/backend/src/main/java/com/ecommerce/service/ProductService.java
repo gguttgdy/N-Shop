@@ -22,9 +22,8 @@ public class ProductService {
             if (isDatabaseAvailable) {
                 // Добавим проверку общего количества продуктов
                 long totalCount = productRepository.count();
-                
-                if (search != null && !search.isEmpty()) {
-                    List<Product> result = productRepository.findByNameContainingIgnoreCase(search);
+                  if (search != null && !search.isEmpty()) {
+                    List<Product> result = productRepository.findBySearchTermIgnoreCase(search);
                     return result;
                 }
                 

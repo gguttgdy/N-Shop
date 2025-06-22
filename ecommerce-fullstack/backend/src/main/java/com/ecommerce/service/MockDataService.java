@@ -17,9 +17,7 @@ public class MockDataService {
 
     public MockDataService() {
         this.mockProducts = initializeMockProducts();
-    }
-
-    public List<Product> getProducts(String category, String subcategory, String section, String search) {
+    }    public List<Product> getProducts(String category, String subcategory, String section, String search) {
         return mockProducts.stream()
                 .filter(product -> category == null || category.equals(product.getCategoryId()))
                 .filter(product -> subcategory == null || subcategory.equals(product.getSubcategoryId()))
@@ -27,7 +25,9 @@ public class MockDataService {
                 .filter(product -> search == null || 
                     product.getName().toLowerCase().contains(search.toLowerCase()) ||
                     (product.getNameRu() != null && product.getNameRu().toLowerCase().contains(search.toLowerCase())) ||
-                    (product.getNamePl() != null && product.getNamePl().toLowerCase().contains(search.toLowerCase())))
+                    (product.getNamePl() != null && product.getNamePl().toLowerCase().contains(search.toLowerCase())) ||
+                    (product.getCategoryId() != null && product.getCategoryId().toLowerCase().contains(search.toLowerCase())) ||
+                    (product.getSubcategoryId() != null && product.getSubcategoryId().toLowerCase().contains(search.toLowerCase())))
                 .collect(Collectors.toList());
     }
     
