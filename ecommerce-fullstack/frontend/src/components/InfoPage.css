@@ -6,15 +6,16 @@
 }
 
 .info-container {
-  background: white;
+  background: var(--bg-primary);
   border-radius: 10px;
   padding: 40px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px var(--shadow);
+  border: 1px solid var(--border-primary);
 }
 
 .info-header {
   margin-bottom: 30px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-primary);
   padding-bottom: 20px;
 }
 
@@ -41,26 +42,29 @@
 
 .info-content {
   line-height: 1.6;
-  color: #555;
+  color: var(--text-primary);
 }
 
 .info-content p {
   font-size: 16px;
   margin-bottom: 20px;
+  color: var(--text-primary);
 }
 
 .contact-info,
 .shipping-info {
   margin-top: 30px;
   padding: 20px;
-  background: #f8f9fa;
+  background: var(--bg-secondary);
   border-radius: 8px;
+  border: 1px solid var(--border-primary);
 }
 
 .contact-info h3,
 .shipping-info h3 {
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 15px;
+  font-weight: 600;
 }
 
 .contact-info ul,
@@ -73,6 +77,10 @@
 .shipping-info ul li {
   padding: 8px 0;
   font-size: 14px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 @media (max-width: 768px) {

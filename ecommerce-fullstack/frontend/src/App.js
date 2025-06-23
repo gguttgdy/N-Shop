@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Catalog from './components/Catalog';
 import HomePage from './components/HomePage';
@@ -23,7 +23,34 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Хук для управления валютой
-  const { currency, currencySymbol, formatPrice, loading: currencyLoading } = useCurrency(language);  const handleNavigation = (pageType, value) => {
+  const { currency, currencySymbol, formatPrice, loading: currencyLoading } = useCurrency(language);
+  // Загружаем корзину из localStorage при загрузке компонента
+  useEffect(() => {
+    try {
+      const savedCart = localStorage.getItem('cartItems');
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        // Проверяем, что данные корректны
+        if (Array.isArray(parsedCart)) {
+          setCartItems(parsedCart);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+      // При ошибке просто оставляем пустую корзину
+      localStorage.removeItem('cartItems');
+    }
+  }, []);
+
+  // Сохраняем корзину в localStorage при изменении
+  useEffect(() => {
+    try {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+      // При ошибке сохранения просто логируем, но не прерываем работу
+    }
+  }, [cartItems]);const handleNavigation = (pageType, value) => {
     if (pageType === 'category') {
       setSelectedCategory(value.categoryId);
       setSelectedSubcategory(value.subcategoryId || null);
@@ -89,7 +116,6 @@ function App() {
   const removeFromCart = (productId) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
   };
-
   const updateCartQuantity = (productId, quantity) => {
     if (quantity <= 0) {
       removeFromCart(productId);
@@ -102,6 +128,10 @@ function App() {
     }
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   return (
     <div className="App">      <Header 
         language={language}
@@ -111,6 +141,7 @@ function App() {
         cartItems={cartItems}
         removeFromCart={removeFromCart}
         updateCartQuantity={updateCartQuantity}
+        clearCart={clearCart}
         onHomeClick={handleHomeClick}
         onNavigate={handleNavigation}
         onSearch={handleSearch}

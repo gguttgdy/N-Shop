@@ -2,9 +2,20 @@ import React from 'react';
 import './InfoPage.css';
 
 const InfoPage = ({ language, pageType }) => {
-  const translations = {
-    ru: {
+  const translations = {    ru: {
       home: 'Главная',
+      contactInfo: 'Контактная информация:',
+      deliveryMethods: 'Способы доставки:',
+      phone: 'Телефон',
+      email: 'Email',
+      workingHours: 'Время работы',
+      onlineChat: 'Онлайн-чат',
+      available247: 'круглосуточно',
+      availableOnSite: 'доступен на сайте',
+      courierDelivery: 'Курьерская доставка - 1-2 дня',
+      russiaPost: 'Почта России - 3-7 дней',
+      pickupFree: 'Самовывоз из пунктов выдачи - бесплатно',
+      expressDelivery: 'Экспресс-доставка - в день заказа',
       about: {
         title: 'О нас',
         content: 'Мы - ведущий интернет-магазин с широким ассортиментом товаров. Наша миссия - предоставить клиентам лучший сервис и качественные товары по доступным ценам.'
@@ -55,6 +66,18 @@ const InfoPage = ({ language, pageType }) => {
       }
     },    en: {
       home: 'Home',
+      contactInfo: 'Contact Information:',
+      deliveryMethods: 'Delivery Methods:',
+      phone: 'Phone',
+      email: 'Email',
+      workingHours: 'Working Hours',
+      onlineChat: 'Online Chat',
+      available247: '24/7',
+      availableOnSite: 'available on site',
+      courierDelivery: 'Courier delivery - 1-2 days',
+      standardPost: 'Standard post - 3-7 days',
+      pickupFree: 'Pickup from points - free',
+      expressDelivery: 'Express delivery - same day',
       about: {
         title: 'About Us',
         content: 'We are a leading online store with a wide range of products. Our mission is to provide customers with the best service and quality products at affordable prices.'
@@ -105,6 +128,18 @@ const InfoPage = ({ language, pageType }) => {
       }
     },    pl: {
       home: 'Strona główna',
+      contactInfo: 'Informacje kontaktowe:',
+      deliveryMethods: 'Metody dostawy:',
+      phone: 'Telefon',
+      email: 'Email',
+      workingHours: 'Godziny pracy',
+      onlineChat: 'Chat online',
+      available247: '24/7',
+      availableOnSite: 'dostępny na stronie',
+      courierDelivery: 'Dostawa kurierska - 1-2 dni',
+      standardPost: 'Poczta standardowa - 3-7 dni',
+      pickupFree: 'Odbiór z punktów - bezpłatnie',
+      expressDelivery: 'Dostawa ekspresowa - tego samego dnia',
       about: {
         title: 'O nas',
         content: 'Jesteśmy wiodącym sklepem internetowym z szerokim asortymentem produktów. Naszą misją jest zapewnienie klientom najlepszej obsługi i wysokiej jakości produktów w przystępnych cenach.'
@@ -173,7 +208,8 @@ const InfoPage = ({ language, pageType }) => {
     <div className="info-page">
       <div className="info-container">
         <div className="info-header">
-          <h1>{pageData.title}</h1>          <div className="breadcrumb">
+          <h1>{pageData.title}</h1>
+          <div className="breadcrumb">
             <span>{translations[language]?.home || 'Home'}</span>
             <span>/</span>
             <span>{pageData.title}</span>
@@ -182,27 +218,26 @@ const InfoPage = ({ language, pageType }) => {
         
         <div className="info-content">
           <p>{pageData.content}</p>
-          
-          {pageType === 'support' && (
+            {pageType === 'support' && (
             <div className="contact-info">
-              <h3>Контактная информация:</h3>
+              <h3>{translations[language].contactInfo}</h3>
               <ul>
-                <li>📞 Телефон: 8-800-123-45-67</li>
-                <li>📧 Email: support@shop.com</li>
-                <li>⏰ Время работы: круглосуточно</li>
-                <li>💬 Онлайн-чат: доступен на сайте</li>
+                <li>📞 {translations[language].phone}: 8-800-123-45-67</li>
+                <li>📧 {translations[language].email}: support@shop.com</li>
+                <li>⏰ {translations[language].workingHours}: {translations[language].available247}</li>
+                <li>💬 {translations[language].onlineChat}: {translations[language].availableOnSite}</li>
               </ul>
             </div>
           )}
           
           {pageType === 'shipping' && (
             <div className="shipping-info">
-              <h3>Способы доставки:</h3>
+              <h3>{translations[language].deliveryMethods}</h3>
               <ul>
-                <li>🚚 Курьерская доставка - 1-2 дня</li>
-                <li>📮 Почта России - 3-7 дней</li>
-                <li>🏪 Самовывоз из пунктов выдачи - бесплатно</li>
-                <li>⚡ Экспресс-доставка - в день заказа</li>
+                <li>🚚 {translations[language].courierDelivery}</li>
+                <li>📮 {language === 'ru' ? translations[language].russiaPost : translations[language].standardPost}</li>
+                <li>🏪 {translations[language].pickupFree}</li>
+                <li>⚡ {translations[language].expressDelivery}</li>
               </ul>
             </div>
           )}

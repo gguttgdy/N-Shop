@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ProfileDropdown from './ProfileDropdown';
 import CartDropdown from './CartDropdown';
 import './Header.css';
 
-const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCart, updateCartQuantity, onHomeClick, onNavigate, onSearch, searchQuery, setSearchQuery }) => {
+const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCart, updateCartQuantity, clearCart, onHomeClick, onNavigate, onSearch, searchQuery, setSearchQuery }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  
+  // Рефы для отслеживания элементов
+  const profileRef = useRef(null);
+  const cartRef = useRef(null);
 
   // Динамический поиск с debounce
   useEffect(() => {
@@ -14,12 +18,34 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
         onSearch(searchQuery.trim());
       } else if (searchQuery.trim().length === 0) {
         // Очищаем результаты поиска когда поле пустое
-        onSearch('');
-      }
+        onSearch('');      }
     }, 300); // Задержка 300ms
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery, onSearch]);
+
+  // Обработчик кликов вне области для закрытия дропдаунов
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Закрываем корзину если клик вне её области
+      if (cartRef.current && !cartRef.current.contains(event.target)) {
+        setIsCartOpen(false);
+      }
+      
+      // Закрываем профиль если клик вне его области
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    // Добавляем обработчик только если есть открытые дропдауны
+    if (isCartOpen || isProfileOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isCartOpen, isProfileOpen]);
 
   const translations = {    ru: {
       search: 'Поиск товаров...',
@@ -77,8 +103,7 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
           </button>
         </form>
 
-        <div className="header-actions">
-          <div className="profile-section">
+        <div className="header-actions">          <div className="profile-section" ref={profileRef}>
             <button 
               className="profile-button"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -103,9 +128,7 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
             title={t.helpCenter}
           >
             ❓
-          </button>
-
-          <div className="cart-section">
+          </button>          <div className="cart-section" ref={cartRef}>
             <button 
               className="cart-button"
               onClick={() => setIsCartOpen(!isCartOpen)}
@@ -115,12 +138,12 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
               {getTotalItems() > 0 && (
                 <span className="cart-count">{getTotalItems()}</span>
               )}
-            </button>
-            {isCartOpen && (
+            </button>{isCartOpen && (
               <CartDropdown 
                 cartItems={cartItems}
                 removeFromCart={removeFromCart}
                 updateCartQuantity={updateCartQuantity}
+                clearCart={clearCart}
                 language={language}
                 onClose={() => setIsCartOpen(false)}
               />

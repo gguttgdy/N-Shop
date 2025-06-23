@@ -123,4 +123,20 @@ public class Product {
 
     public List<String> getTags() { return tags; }
     public void setTags(List<String> tags) { this.tags = tags; }
+    
+    /**
+     * Возвращает актуальную цену товара.
+     * Если есть oldPrice (товар со скидкой), возвращает текущую цену (price).
+     * Если нет oldPrice, возвращает обычную цену (price).
+     */
+    public Double getActualPrice() {
+        return this.price; // price уже содержит актуальную цену (со скидкой, если применима)
+    }
+    
+    /**
+     * Проверяет, есть ли у товара скидка
+     */
+    public Boolean hasDiscount() {
+        return this.oldPrice != null && this.oldPrice > 0 && this.oldPrice > this.price;
+    }
 }

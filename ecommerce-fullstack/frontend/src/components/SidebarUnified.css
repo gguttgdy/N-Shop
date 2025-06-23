@@ -148,23 +148,42 @@
 
 .price-inputs {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   flex-wrap: nowrap;
+  width: 100%;
+}
+
+.price-input-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 110px; /* Увеличена минимальная ширина */
 }
 
 .price-input {
-  flex: 1;
-  min-width: 0; /* Позволяет сжиматься */
-  padding: 8px 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 40px 10px 12px; /* Увеличены отступы */
   border: 1px solid var(--border-primary);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-size: 14px;
   transition: all 0.2s ease;
   box-sizing: border-box;
+}
+
+.currency-symbol {
+  position: absolute;
+  right: 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .price-input:focus {
@@ -196,17 +215,14 @@
   -webkit-appearance: none;
   appearance: none;
   cursor: pointer;
-  pointer-events: none;
 }
 
 .price-slider:first-child {
   background: var(--bg-tertiary);
-  pointer-events: auto;
   z-index: 1;
 }
 
 .price-slider:last-child {
-  pointer-events: auto;
   z-index: 2;
 }
 
@@ -220,13 +236,13 @@
   cursor: pointer;
   border: 2px solid var(--bg-primary);
   box-shadow: 0 2px 4px var(--shadow);
-  pointer-events: auto;
   position: relative;
   z-index: 3;
 }
 
 .price-slider::-webkit-slider-thumb:hover {
   background: var(--accent-hover);
+  transform: scale(1.1);
 }
 
 .price-slider::-moz-range-thumb {
@@ -237,6 +253,12 @@
   cursor: pointer;
   border: 2px solid var(--bg-primary);
   box-shadow: 0 2px 4px var(--shadow);
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.price-slider::-moz-range-thumb:hover {
+  background: var(--accent-hover);
 }
 
 /* Бренды */

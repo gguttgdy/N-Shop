@@ -50,16 +50,18 @@
 
 .hero-btn {
   background: white;
-  color: #667eea;
+  color: var(--accent-primary);
   padding: 15px 40px;
   border-radius: 50px;
   font-size: 16px;
   font-weight: 600;
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
 }
 
 .hero-btn:hover {
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
 }
 
 .product-section {
@@ -77,6 +79,18 @@
   font-size: 28px;
   color: var(--text-primary);
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Стили для иконок эмодзи в заголовках секций */
+.section-header h2 {
+  text-shadow: 0 1px 2px var(--shadow);
+}
+
+.section-header h2:first-child {
+  filter: brightness(1.1) contrast(1.1);
 }
 
 .see-all-btn {
@@ -155,6 +169,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  filter: brightness(1.1) contrast(1.1);
+  text-shadow: 0 2px 4px var(--shadow);
 }
 
 .product-name {
@@ -274,4 +291,62 @@
     height: 340px;
     padding: 16px;
   }
+}
+
+/* Loading и Error состояния */
+.loading-state, .error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  margin: 40px 0;
+  border: 1px solid var(--border-primary);
+}
+
+.loading-state h2, .error-state h2 {
+  color: var(--text-primary);
+  font-size: 24px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.error-state p {
+  color: var(--text-secondary);
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.error-state button {
+  background: var(--accent-primary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.error-state button:hover {
+  background: var(--accent-hover);
+}
+
+/* Анимация загрузки */
+.loading-state::before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-primary);
+  border-top: 3px solid var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

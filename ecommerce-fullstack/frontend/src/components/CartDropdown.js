@@ -1,13 +1,14 @@
 import React from 'react';
 import './CartDropdown.css';
 
-const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, language, onClose }) => {
-  const translations = {
-    ru: {
+const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, clearCart, language, onClose }) => {
+  const translations = {    ru: {
       cart: 'Корзина',
       empty: 'Корзина пуста',
       total: 'Итого',
       checkout: 'Оформить заказ',
+      clearCart: 'Очистить корзину',
+      confirmClear: 'Вы уверены, что хотите очистить корзину?',
       currency: 'руб.',
       remove: 'Удалить'
     },
@@ -16,6 +17,8 @@ const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, language,
       empty: 'Cart is empty',
       total: 'Total',
       checkout: 'Checkout',
+      clearCart: 'Clear Cart',
+      confirmClear: 'Are you sure you want to clear the cart?',
       currency: 'USD',
       remove: 'Remove'
     },
@@ -24,15 +27,22 @@ const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, language,
       empty: 'Koszyk jest pusty',
       total: 'Suma',
       checkout: 'Do kasy',
+      clearCart: 'Wyczyść koszyk',
+      confirmClear: 'Czy na pewno chcesz wyczyścić koszyk?',
       currency: 'zł',
       remove: 'Usuń'
     }
   };
 
   const t = translations[language];
-
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  const handleClearCart = () => {
+    if (window.confirm(t.confirmClear)) {
+      clearCart();
+    }
   };
 
   if (cartItems.length === 0) {
@@ -89,14 +99,17 @@ const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, language,
           </div>
         ))}
       </div>
-      
-      <div className="cart-footer">
+        <div className="cart-footer">
         <div className="cart-total">
           <strong>{t.total}: {getTotalPrice().toLocaleString()} {t.currency}</strong>
+        </div>        <div className="cart-actions">
+          <button className="clear-cart-btn" onClick={handleClearCart}>
+            {t.clearCart}
+          </button>
+          <button className="checkout-btn" onClick={onClose}>
+            {t.checkout}
+          </button>
         </div>
-        <button className="checkout-btn" onClick={onClose}>
-          {t.checkout}
-        </button>
       </div>
     </div>
   );

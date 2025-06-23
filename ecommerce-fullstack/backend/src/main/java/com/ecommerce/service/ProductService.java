@@ -200,10 +200,9 @@ public class ProductService {
                 
                 // Извлекаем уникальные бренды из названий продуктов
                 Set<String> brands = extractBrands(products);
-                
-                // Находим диапазон цен
+                  // Находим диапазон цен (используем актуальные цены)
                 DoubleSummaryStatistics priceStats = products.stream()
-                    .mapToDouble(Product::getPrice)
+                    .mapToDouble(Product::getActualPrice)
                     .summaryStatistics();
                 
                 // Находим диапазон рейтингов

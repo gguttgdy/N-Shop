@@ -56,10 +56,11 @@ const SectionPage = ({ language, sectionType, addToCart, currency, formatPrice }
           <span>{getSectionName()}</span>
         </div>
       </div>
-        <div className="section-content">
-        <SidebarNew 
+        <div className="section-content">        <SidebarNew 
           language={language}
           onFilterChange={handleFilterChange}
+          currency={currency}
+          formatPrice={formatPrice}
         /><ProductGrid 
           language={language}
           filters={filters}

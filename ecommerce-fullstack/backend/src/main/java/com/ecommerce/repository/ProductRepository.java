@@ -43,7 +43,9 @@ public interface ProductRepository extends MongoRepository<Product, String> {
            "] }")
     List<Product> findBySearchTermIgnoreCase(String searchTerm);
 
-    // Расширенный метод фильтрации
+    // Расширенный метод фильтрации    // DEPRECATED: Этот метод не учитывает скидки правильно
+    // Используется default метод findFilteredProducts с правильной логикой
+    /*
     @Query("{ $and: [ " +
            "{ 'isActive': true }, " +
            "{ $or: [ " +
@@ -74,7 +76,8 @@ public interface ProductRepository extends MongoRepository<Product, String> {
            "] } " +
            "] }")
     List<Product> findFilteredProducts(String category, String subcategory, String section, 
-                                     String search, Double minPrice, Double maxPrice, Double minRating);    // Упрощенный метод фильтрации без сложных условий
+                                     String search, Double minPrice, Double maxPrice, Double minRating);
+    */// Упрощенный метод фильтрации без сложных условий
     default List<Product> findFilteredProducts(String category, String subcategory, String section, String search,
                                              Double minPrice, Double maxPrice, List<String> brands, List<String> colors, List<String> sizes,
                                              Boolean inStock, Double minRating, Boolean isNew, Boolean hasDiscount) {
@@ -93,11 +96,10 @@ public interface ProductRepository extends MongoRepository<Product, String> {
             products = findBySectionTypeAndIsActiveTrue(section);
         } else {
             products = findByIsActiveTrue();
-        }
-          // Применяем фильтры
+        }          // Применяем фильтры (используем актуальную цену для фильтрации)
         return products.stream()
-            .filter(product -> minPrice == null || product.getPrice() >= minPrice)
-            .filter(product -> maxPrice == null || product.getPrice() <= maxPrice)
+            .filter(product -> minPrice == null || product.getActualPrice() >= minPrice)
+            .filter(product -> maxPrice == null || product.getActualPrice() <= maxPrice)
             .filter(product -> brands == null || brands.isEmpty() || 
                     (product.getBrand() != null && brands.stream().anyMatch(brand -> 
                         product.getBrand().toLowerCase().contains(brand.toLowerCase()))))
@@ -112,9 +114,8 @@ public interface ProductRepository extends MongoRepository<Product, String> {
             .filter(product -> minRating == null || 
                     (product.getRating() != null && product.getRating() >= minRating))
             .filter(product -> isNew == null || 
-                    (product.getIsNew() != null && product.getIsNew().equals(isNew)))
-            .filter(product -> hasDiscount == null || !hasDiscount ||
-                    (product.getDiscount() != null && product.getDiscount() > 0))
+                    (product.getIsNew() != null && product.getIsNew().equals(isNew)))            .filter(product -> hasDiscount == null || !hasDiscount ||
+                    product.hasDiscount())
             .collect(Collectors.toList());
     }
 }
