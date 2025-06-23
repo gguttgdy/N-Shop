@@ -1,11 +1,19 @@
-/* Auth Page Styles - Simplified */
+/* Auth Page Styles - Full Height Layout */
 .auth-page {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  padding: 0;
+}
+
+.auth-content {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-primary);
   padding: 20px;
+  min-height: calc(100vh - 120px); /* Account for header/footer if present */
 }
 
 .auth-container {

@@ -166,13 +166,13 @@ const Register = ({ language, onNavigate, onLogin }) => {
       setIsLoading(false);
     }, 1500);
   };
-
   return (
     <div className="auth-page">
-      <div className="auth-container">
-        <div className="auth-header">
-          <h1>{t.register}</h1>
-        </div>
+      <div className="auth-content">
+        <div className="auth-container">
+          <div className="auth-header">
+            <h1>{t.register}</h1>
+          </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
@@ -313,8 +313,8 @@ const Register = ({ language, onNavigate, onLogin }) => {
             >
               {t.signIn}
             </button>
-          </div>
-        </form>
+          </div>        </form>
+      </div>
       </div>
     </div>
   );

@@ -140,79 +140,77 @@ const ResetPassword = ({ language = 'en' }) => {
 
     const handleBackToLogin = () => {
         window.location.href = '/';
-    };
-
-    if (validating) {
+    };    if (validating) {
         return (
             <div className="auth-page">
-                <div className="auth-container">
-                    <div className="auth-header">
-                        <h1>{t.title}</h1>
-                    </div>
-                    <div className="auth-form">
-                        <p style={{textAlign: 'center', color: 'var(--text-secondary)'}}>
-                            {t.validatingMessage}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (!tokenValid) {
-        return (
-            <div className="auth-page">
-                <div className="auth-container">
-                    <div className="auth-header">
-                        <h1>{t.invalidLinkTitle}</h1>
-                    </div>
-                    <div className="auth-form">
-                        <div className="error-message">
-                            {error || 'This reset link is invalid or has expired'}
+                <div className="auth-content">
+                    <div className="auth-container">
+                        <div className="auth-header">
+                            <h1>{t.title}</h1>
                         </div>
-                        <button 
-                            type="button" 
-                            className="auth-btn primary"
-                            onClick={handleBackToLogin}
-                        >
-                            {t.backToLogin}
-                        </button>
+                        <div className="auth-form">
+                            <p style={{textAlign: 'center', color: 'var(--text-secondary)'}}>
+                                {t.validatingMessage}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         );
-    }
-
-    if (success) {
+    }    if (!tokenValid) {
         return (
             <div className="auth-page">
-                <div className="auth-container">
-                    <div className="auth-header">
-                        <h1>{t.successTitle}</h1>
+                <div className="auth-content">
+                    <div className="auth-container">
+                        <div className="auth-header">
+                            <h1>{t.invalidLinkTitle}</h1>
+                        </div>
+                        <div className="auth-form">
+                            <div className="error-message">
+                                {error || 'This reset link is invalid or has expired'}
+                            </div>
+                            <button 
+                                type="button" 
+                                className="auth-btn primary"
+                                onClick={handleBackToLogin}
+                            >
+                                {t.backToLogin}
+                            </button>
+                        </div>
                     </div>
-                    <div className="auth-form">
-                        <p style={{color: 'var(--success)', textAlign: 'center', marginBottom: '20px'}}>
-                            {t.successMessage}
-                        </p>
-                        <button 
-                            type="button" 
-                            className="auth-btn primary"
-                            onClick={handleBackToLogin}
-                        >
+                </div>
+            </div>
+        );
+    }    if (success) {
+        return (
+            <div className="auth-page">
+                <div className="auth-content">
+                    <div className="auth-container">
+                        <div className="auth-header">
+                            <h1>{t.successTitle}</h1>
+                        </div>
+                        <div className="auth-form">
+                            <p style={{color: 'var(--success)', textAlign: 'center', marginBottom: '20px'}}>
+                                {t.successMessage}
+                            </p>
+                            <button 
+                                type="button" 
+                                className="auth-btn primary"
+                                onClick={handleBackToLogin}                        >
                             {t.goToLogin}
                         </button>
                     </div>
                 </div>
+                </div>
             </div>
         );
-    }
-
-    return (
+    }    return (
         <div className="auth-page">
-            <div className="auth-container">
-                <div className="auth-header">
-                    <h1>{t.title}</h1>
-                </div>
+            <div className="auth-content">
+                <div className="auth-container">
+                    <div className="auth-header">
+                        <h1>{t.title}</h1>
+                    </div>
                 
                 <form className="auth-form" onSubmit={handleSubmit}>
                     {error && (
@@ -266,8 +264,8 @@ const ResetPassword = ({ language = 'en' }) => {
                         >
                             ← {t.backToLogin}
                         </button>
-                    </div>
-                </form>
+                    </div>                </form>
+            </div>
             </div>
         </div>
     );

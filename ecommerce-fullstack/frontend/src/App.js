@@ -13,6 +13,7 @@ import Register from './components/Register_new';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import UserProfile from './components/UserProfile';
+import UserMyData from './components/UserMyData';
 import UserOrders from './components/UserOrders';
 import UserReceipts from './components/UserReceipts';
 import UserDiscounts from './components/UserDiscounts';
@@ -65,7 +66,7 @@ function App() {
   }, [cartItems]);  const handleNavigation = (pageType, value) => {
     console.log('Navigating to:', pageType, value);
       // Обработка прямых переходов на страницы
-    if (['login', 'register', 'profile', 'home', 'orders', 'receipts', 'discounts', 'reviews', 'complaints', 'returns', 'forgot-password', 'reset-password'].includes(pageType)) {
+    if (['login', 'register', 'profile', 'my-data', 'home', 'orders', 'receipts', 'discounts', 'reviews', 'complaints', 'returns', 'forgot-password', 'reset-password'].includes(pageType)) {
       setCurrentPage(pageType);
       setSelectedCategory(null);
       setSelectedSubcategory(null);
@@ -251,6 +252,12 @@ function App() {
             onLogin={handleRegister}
           />        ) : currentPage === 'profile' ? (
           <UserProfile 
+            language={language}
+            user={user}
+            updateProfile={updateProfile}
+          />
+        ) : currentPage === 'my-data' ? (
+          <UserMyData 
             language={language}
             user={user}
             updateProfile={updateProfile}

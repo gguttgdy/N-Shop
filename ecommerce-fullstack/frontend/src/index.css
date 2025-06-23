@@ -5,17 +5,46 @@
   --bg-tertiary: #e9ecef;
   --text-primary: #1a202c;
   --text-secondary: #4a5568;
-  --text-muted: #718096;
+  --text-muted: #6c757d;
+  --text-muted-hover: #545b62;
   --border-primary: #e2e8f0;
   --border-secondary: #cbd5e0;
   --accent-primary: #3182ce;
   --accent-hover: #2c5282;
   --shadow: rgba(0,0,0,0.1);
   --shadow-hover: rgba(0,0,0,0.15);
+  
+  /* Status colors */
   --success: #38a169;
+  --success-primary: #28a745;
+  --success-hover: #218838;
+  --success-bg: #d4edda;
+  --success-text: #155724;
+  --success-border: #c3e6cb;
+  
   --warning: #d69e2e;
+  --warning-primary: #ffc107;
+  --warning-hover: #e0a800;
+  --warning-bg: #fff3cd;
+  --warning-text: #856404;
+  --warning-border: #ffeaa7;
+  
   --error: #e53e3e;
+  --error-primary: #dc3545;
+  --error-hover: #c82333;
+  --error-bg: #f8d7da;
+  --error-text: #721c24;
+  --error-border: #f5c6cb;
+  
   --info: #3182ce;
+  --info-primary: #17a2b8;
+  --info-hover: #138496;
+  --info-bg: #cce5ff;
+  --info-text: #004085;
+  --info-border: #b8daff;
+  
+  --secondary-primary: #fd7e14;
+  --secondary-hover: #e8650e;
   
   /* Alpha versions for transparency effects */
   --accent-primary-alpha: rgba(49, 130, 206, 0.1);
@@ -32,16 +61,45 @@
     --text-primary: #f7fafc;
     --text-secondary: #e2e8f0;
     --text-muted: #a0aec0;
+    --text-muted-hover: #cbd5e0;
     --border-primary: #4a5568;
     --border-secondary: #718096;
     --accent-primary: #63b3ed;
     --accent-hover: #90cdf4;
     --shadow: rgba(0,0,0,0.4);
     --shadow-hover: rgba(0,0,0,0.6);
+    
+    /* Status colors for dark theme */
     --success: #68d391;
+    --success-primary: #48bb78;
+    --success-hover: #68d391;
+    --success-bg: rgba(72, 187, 120, 0.15);
+    --success-text: #9ae6b4;
+    --success-border: rgba(72, 187, 120, 0.3);
+    
     --warning: #f6e05e;
+    --warning-primary: #ed8936;
+    --warning-hover: #f6ad55;
+    --warning-bg: rgba(237, 137, 54, 0.15);
+    --warning-text: #fbd38d;
+    --warning-border: rgba(237, 137, 54, 0.3);
+    
     --error: #fc8181;
+    --error-primary: #f56565;
+    --error-hover: #fc8181;
+    --error-bg: rgba(245, 101, 101, 0.15);
+    --error-text: #feb2b2;
+    --error-border: rgba(245, 101, 101, 0.3);
+    
     --info: #63b3ed;
+    --info-primary: #4299e1;
+    --info-hover: #63b3ed;
+    --info-bg: rgba(66, 153, 225, 0.15);
+    --info-text: #90cdf4;
+    --info-border: rgba(66, 153, 225, 0.3);
+    
+    --secondary-primary: #ed8936;
+    --secondary-hover: #f6ad55;
     
     /* Alpha versions for dark theme */
     --accent-primary-alpha: rgba(99, 179, 237, 0.15);

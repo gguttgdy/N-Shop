@@ -88,7 +88,7 @@ const ProfileDropdown = ({ user, onLogout, language, onClose, onNavigate }) => {
       }}>
         {t.receipts}
       </button>      <button className="dropdown-item" onClick={() => {
-        onNavigate('profile');
+        onNavigate('my-data');
         onClose();
       }}>
         {t.myData}

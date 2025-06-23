@@ -89,40 +89,39 @@ const ForgotPassword = ({ language = 'en' }) => {
 
     const handleBackToLogin = () => {
         window.location.href = '/';
-    };
-
-    if (sent) {
+    };    if (sent) {
         return (
             <div className="auth-page">
-                <div className="auth-container">
-                    <div className="auth-header">
-                        <h1>{t.checkEmailTitle}</h1>
-                    </div>
-                    <div className="auth-form">
-                        <div className="success-message">
-                            <p style={{color: 'var(--success)', textAlign: 'center', marginBottom: '20px'}}>
-                                {t.checkEmailMessage}
-                            </p>
+                <div className="auth-content">
+                    <div className="auth-container">
+                        <div className="auth-header">
+                            <h1>{t.checkEmailTitle}</h1>
                         </div>
-                        <button 
-                            type="button" 
-                            className="auth-btn primary"
-                            onClick={handleBackToLogin}
-                        >
-                            {t.backToLogin}
-                        </button>
+                        <div className="auth-form">
+                            <div className="success-message">
+                                <p style={{color: 'var(--success)', textAlign: 'center', marginBottom: '20px'}}>
+                                    {t.checkEmailMessage}
+                                </p>
+                            </div>
+                            <button 
+                                type="button" 
+                                className="auth-btn primary"
+                                onClick={handleBackToLogin}
+                            >
+                                {t.backToLogin}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         );
-    }
-
-    return (
+    }    return (
         <div className="auth-page">
-            <div className="auth-container">
-                <div className="auth-header">
-                    <h1>{t.title}</h1>
-                </div>
+            <div className="auth-content">
+                <div className="auth-container">
+                    <div className="auth-header">
+                        <h1>{t.title}</h1>
+                    </div>
                 
                 <form className="auth-form" onSubmit={handleSubmit}>
                     {error && (
@@ -162,8 +161,8 @@ const ForgotPassword = ({ language = 'en' }) => {
                         >
                             ← {t.backToLogin}
                         </button>
-                    </div>
-                </form>
+                    </div>                </form>
+            </div>
             </div>
         </div>
     );
