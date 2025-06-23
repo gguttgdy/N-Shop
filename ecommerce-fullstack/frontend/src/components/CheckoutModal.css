@@ -286,3 +286,209 @@
     flex-direction: column;
   }
 }
+
+/* Адаптивные стили для разных тем */
+/* Стили для светлой темы */
+@media (prefers-color-scheme: light) {
+  .checkout-modal {
+    background: white !important;
+  }
+  
+  .checkout-header {
+    background-color: #f8fafc !important;
+    border-bottom-color: #e2e8f0 !important;
+  }
+  
+  .checkout-header h2 {
+    color: #1a202c !important;
+  }
+  
+  .close-btn {
+    color: #64748b !important;
+  }
+  
+  .close-btn:hover {
+    background-color: #e2e8f0 !important;
+    color: #1a202c !important;
+  }
+  
+  .checkout-steps {
+    background-color: #f8fafc !important;
+    border-bottom-color: #e2e8f0 !important;
+  }
+  
+  .step {
+    color: #64748b !important;
+  }
+  
+  .form-group label {
+    color: #374151 !important;
+    font-weight: 500 !important;
+  }
+  
+  .address-form h3,
+  .payment-form h3,
+  .confirmation h3 {
+    color: #1a202c !important;
+  }
+  
+  .order-summary h4 {
+    color: #1a202c !important;
+  }
+  
+  .form-group input {
+    background: white !important;
+    color: #1a202c !important;
+    border-color: #d1d5db !important;
+  }
+  
+  .card-details,
+  .order-summary {
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+  }
+  
+  .checkout-actions {
+    background-color: #f8fafc !important;
+    border-top-color: #e2e8f0 !important;
+  }
+  
+  /* Дополнительные селекторы для текстовых элементов в светлой теме */
+  .payment-methods label,
+  .order-item,
+  .order-total,
+  .checkout-content {
+    color: #1a202c !important;
+  }
+}
+
+/* Стили для темной темы */
+@media (prefers-color-scheme: dark) {
+  .checkout-modal-overlay {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+  }
+  
+  .checkout-modal {
+    background: #2d3748 !important;
+  }
+  
+  .checkout-header {
+    background-color: #1a202c !important;
+    border-bottom-color: #4a5568 !important;
+  }
+  
+  .checkout-header h2 {
+    color: #ffffff !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3) !important;
+  }
+  
+  .close-btn {
+    color: #e2e8f0 !important;
+  }
+  
+  .close-btn:hover {
+    background-color: #4a5568 !important;
+    color: #ffffff !important;
+  }
+  
+  .checkout-steps {
+    background-color: #1a202c !important;
+    border-bottom-color: #4a5568 !important;
+  }
+  
+  .step {
+    color: #e2e8f0 !important;
+  }
+  
+  .step.active {
+    background-color: #3b82f6 !important;
+    color: white !important;
+  }
+  
+  .checkout-content {
+    background: #2d3748 !important;
+  }
+  
+  .form-group label {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3) !important;
+  }
+  
+  .address-form h3,
+  .payment-form h3,
+  .confirmation h3 {
+    color: #ffffff !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3) !important;
+  }
+  
+  .order-summary h4 {
+    color: #ffffff !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3) !important;
+  }
+  
+  .form-group input {
+    background: #4a5568 !important;
+    color: #ffffff !important;
+    border-color: #718096 !important;
+  }
+  
+  .form-group input::placeholder {
+    color: #a0aec0 !important;
+  }
+  
+  .form-group input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+  }
+  
+  .card-details,
+  .order-summary {
+    background-color: #1a202c !important;
+    border-color: #4a5568 !important;
+  }
+  
+  .payment-methods label {
+    border-color: #4a5568 !important;
+    color: #ffffff !important;
+    background-color: #2d3748 !important;
+  }
+  
+  .payment-methods label:hover {
+    border-color: #3b82f6 !important;
+    background-color: #1a202c !important;
+  }
+  
+  .order-item {
+    border-bottom-color: #4a5568 !important;
+    color: #ffffff !important;
+  }
+  
+  .order-total {
+    border-top-color: #4a5568 !important;
+    color: #ffffff !important;
+  }
+  
+  .checkout-actions {
+    background-color: #1a202c !important;
+    border-top-color: #4a5568 !important;
+  }
+  
+  .error-message {
+    background-color: #742a2a !important;
+    color: #fed7d7 !important;
+    border-color: #fc8181 !important;
+  }
+  
+  /* Дополнительные селекторы для текстовых элементов в темной теме */
+  .payment-methods label,
+  .order-item,
+  .order-total,
+  .checkout-content {
+    color: #ffffff !important;
+  }
+  
+  .payment-methods input[type="radio"] {
+    accent-color: #3b82f6 !important;
+  }
+}

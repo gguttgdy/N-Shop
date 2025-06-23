@@ -135,13 +135,11 @@
 .checkbox-label {
   display: flex !important;
   align-items: flex-start !important;
-  gap: 6px !important;
+  gap: 8px !important;
   cursor: pointer !important;
-  font-size: 12px !important;
-  color: #e2e8f0 !important;
-  line-height: 1.3 !important;
-  font-weight: 300 !important;
-  text-shadow: 0 0 1px rgba(255,255,255,0.3) !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  font-weight: 400 !important;
 }
 
 .checkbox-label input[type="checkbox"] {
@@ -351,124 +349,40 @@
   }
 }
 
-/* Принудительные стили для темной темы */
+/* Адаптивные стили для разных тем */
+/* Стили для светлой темы */
+@media (prefers-color-scheme: light) {
+  .form-group label {
+    color: #2d3748 !important;
+    font-weight: 500 !important;
+  }
+  
+  .checkbox-label {
+    color: #2d3748 !important;
+    font-weight: 400 !important;
+  }
+  
+  .register-form-wrapper h1 {
+    color: #2d3748 !important;
+  }
+}
+
+/* Стили для темной темы */
 @media (prefers-color-scheme: dark) {
   .form-group label {
     color: #ffffff !important;
     font-weight: 600 !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3) !important;
   }
   
   .checkbox-label {
     color: #e2e8f0 !important;
     font-weight: 400 !important;
-  }
-  
-  .register-page {
-    background: #1a202c !important;
-  }
-  
-  .register-container {
-    background: #2d3748 !important;
-    border-color: #4a5568 !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.2) !important;
   }
   
   .register-form-wrapper h1 {
     color: #ffffff !important;
-  }
-}
-
-/* 100% гарантированные стили для темной темы без медиа-запроса */
-body[data-theme="dark"] .form-group label,
-html[data-theme="dark"] .form-group label,
-.dark .form-group label,
-.register-page .form-group label {
-  color: #ffffff !important;
-  font-weight: 600 !important;
-  text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
-}
-
-body[data-theme="dark"] .checkbox-label,
-html[data-theme="dark"] .checkbox-label,
-.dark .checkbox-label,
-.register-page .checkbox-label {
-  color: #e2e8f0 !important;
-  font-weight: 400 !important;
-  text-shadow: none !important;
-}
-
-body[data-theme="dark"] .register-form-wrapper h1,
-html[data-theme="dark"] .register-form-wrapper h1,
-.dark .register-form-wrapper h1,
-.register-page .register-form-wrapper h1 {
-  color: #ffffff !important;
-  text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
-}
-
-/* Дополнительные селекторы для всех возможных случаев */
-.register-container .form-group label {
-  color: #ffffff !important;
-}
-
-.register-form-wrapper .form-group label {
-  color: #ffffff !important;
-}
-
-.register-form .form-group label {
-  color: #ffffff !important;
-}
-
-/* ПРИНУДИТЕЛЬНЫЕ СТИЛИ ДЛЯ ЧЕКБОКСА - 100% ГАРАНТИЯ */
-.checkbox-label,
-.register-page .checkbox-label,
-.register-container .checkbox-label,
-.register-form-wrapper .checkbox-label,
-.register-form .checkbox-label,
-.checkbox-group .checkbox-label,
-div .checkbox-label,
-body .checkbox-label,
-html .checkbox-label {
-  font-size: 13px !important;
-  color: #a0aec0 !important;
-  font-weight: 400 !important;
-  line-height: 1.4 !important;
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: 8px !important;
-  cursor: pointer !important;
-}
-
-.checkmark,
-.register-page .checkmark,
-.register-container .checkmark,
-.register-form-wrapper .checkmark,
-.checkbox-label .checkmark,
-div .checkmark,
-body .checkmark,
-html .checkmark {
-  position: relative !important;
-  height: 16px !important;
-  width: 16px !important;
-  background-color: var(--bg-primary) !important;
-  border: 1px solid var(--border-primary) !important;
-  border-radius: 3px !important;
-  transition: all 0.2s ease !important;
-  flex-shrink: 0 !important;
-  margin-top: 1px !important;
-}
-
-/* Темная тема для чекбокса */
-@media (prefers-color-scheme: dark) {
-  .checkbox-label,
-  .register-page .checkbox-label,
-  .register-container .checkbox-label,
-  .register-form-wrapper .checkbox-label,
-  .register-form .checkbox-label,
-  .checkbox-group .checkbox-label,
-  div .checkbox-label,
-  body .checkbox-label,
-  html .checkbox-label {
-    color: #e2e8f0 !important;
-    font-weight: 400 !important;
-    font-size: 13px !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3) !important;
   }
 }

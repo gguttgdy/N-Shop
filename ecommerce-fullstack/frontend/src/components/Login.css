@@ -45,56 +45,31 @@
   font-size: 14px;
 }
 
-/* Принудительные стили для темной темы */
+/* Адаптивные стили для разных тем */
+/* Стили для светлой темы */
+@media (prefers-color-scheme: light) {
+  .form-group label {
+    color: #2d3748 !important;
+    font-weight: 500 !important;
+  }
+  
+  .login-form-wrapper h1 {
+    color: #2d3748 !important;
+  }
+}
+
+/* Стили для темной темы */
 @media (prefers-color-scheme: dark) {
   .form-group label {
     color: #ffffff !important;
     font-weight: 600 !important;
-  }
-  
-  .login-page {
-    background: #1a202c !important;
-  }
-  
-  .login-container {
-    background: #2d3748 !important;
-    border-color: #4a5568 !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3) !important;
   }
   
   .login-form-wrapper h1 {
     color: #ffffff !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3) !important;
   }
-}
-
-/* 100% гарантированные стили для темной темы без медиа-запроса */
-body[data-theme="dark"] .form-group label,
-html[data-theme="dark"] .form-group label,
-.dark .form-group label,
-.login-page .form-group label {
-  color: #ffffff !important;
-  font-weight: 600 !important;
-  text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
-}
-
-body[data-theme="dark"] .login-form-wrapper h1,
-html[data-theme="dark"] .login-form-wrapper h1,
-.dark .login-form-wrapper h1,
-.login-page .login-form-wrapper h1 {
-  color: #ffffff !important;
-  text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
-}
-
-/* Дополнительные селекторы для всех возможных случаев */
-.login-container .form-group label {
-  color: #ffffff !important;
-}
-
-.login-form-wrapper .form-group label {
-  color: #ffffff !important;
-}
-
-.login-form .form-group label {
-  color: #ffffff !important;
 }
 
 .form-group input {

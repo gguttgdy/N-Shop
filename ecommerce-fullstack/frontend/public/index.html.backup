@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />  <meta name="description" content="N-Shop - best products at affordable prices" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>N-Shop - Online Store</title>  <style>
+    /* 100% ПРИНУДИТЕЛЬНЫЕ СТИЛИ ДЛЯ ВСЕХ ФОРМ */
+    .form-group label,
+    label,
+    .register-form-wrapper label,
+    .login-form-wrapper label,
+    .forgot-password-wrapper label,
+    .reset-password-wrapper label,
+    .form-wrapper label {
+      color: #ffffff !important;
+      font-weight: 500 !important;
+      font-size: 14px !important;
+      text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    
+    .checkbox-label,
+    .register-form .checkbox-label,
+    .login-form .checkbox-label,
+    .forgot-password-form .checkbox-label,
+    .reset-password-form .checkbox-label {
+      color: #e2e8f0 !important;
+      font-weight: 400 !important;
+      font-size: 13px !important;
+      line-height: 1.4 !important;
+      display: flex !important;
+      align-items: flex-start !important;
+      gap: 8px !important;
+      cursor: pointer !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    
+    .login-form-wrapper h1,
+    .register-form-wrapper h1,
+    .forgot-password-wrapper h1,
+    .reset-password-wrapper h1 {
+      color: #ffffff !important;
+      text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
+    }
+    
+    /* ЧЕКБОКС СТИЛИ */
+    .checkmark {
+      position: relative !important;
+      height: 16px !important;
+      width: 16px !important;
+      background-color: #1e293b !important;
+      border: 1px solid #64748b !important;
+      border-radius: 3px !important;
+      transition: all 0.2s ease !important;
+      flex-shrink: 0 !important;
+      margin-top: 1px !important;
+      display: inline-block !important;
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+      position: absolute !important;
+      opacity: 0 !important;
+      cursor: pointer !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    
+    .checkbox-label input[type="checkbox"]:checked + .checkmark,
+    .checkbox-label input[type="checkbox"]:checked ~ .checkmark {
+      background-color: #3b82f6 !important;
+      border-color: #3b82f6 !important;
+    }
+    
+    .checkbox-label:hover .checkmark {
+      border-color: #94a3b8 !important;
+    }
+    
+    .checkmark:after {
+      content: "" !important;
+      position: absolute !important;
+      display: none !important;
+      left: 5px !important;
+      top: 1px !important;
+      width: 4px !important;
+      height: 8px !important;
+      border: solid white !important;
+      border-width: 0 2px 2px 0 !important;
+      transform: rotate(45deg) !important;
+    }
+    
+    .checkbox-label input:checked ~ .checkmark:after {
+      display: block !important;
+    }
+    
+    /* ДОПОЛНИТЕЛЬНЫЕ СЕЛЕКТОРЫ ДЛЯ ВСЕХ ВОЗМОЖНЫХ СЛУЧАЕВ */
+    * .form-group label,
+    * label,
+    body .form-group label,
+    html .form-group label {
+      color: #ffffff !important;
+    }
+    
+    * .checkbox-label,
+    body .checkbox-label,
+    html .checkbox-label {
+      color: #e2e8f0 !important;
+    }
+  </style>
+</head>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+    <script>
+    // МАКСИМАЛЬНО АГРЕССИВНОЕ принудительное применение стилей для лейблов и чекбоксов
+    function ultraForceApplyStyles() {
+      try {
+        // 1. Принудительные стили для всех лейблов в формах
+        const allLabels = document.querySelectorAll('label, .checkbox-label, .form-group label');
+        allLabels.forEach(label => {
+          if (label) {
+            // Базовые стили лейбла
+            label.style.setProperty('color', '#ffffff', 'important');
+            label.style.setProperty('font-weight', '500', 'important');
+            label.style.setProperty('font-size', '14px', 'important');
+            label.style.setProperty('text-shadow', '0 0 1px rgba(255,255,255,0.5)', 'important');
+            label.style.setProperty('opacity', '1', 'important');
+            label.style.setProperty('visibility', 'visible', 'important');
+            
+            // Если это чекбокс лейбл
+            if (label.classList.contains('checkbox-label') || label.querySelector('input[type="checkbox"]')) {
+              label.style.setProperty('display', 'flex', 'important');
+              label.style.setProperty('align-items', 'flex-start', 'important');
+              label.style.setProperty('gap', '8px', 'important');
+              label.style.setProperty('cursor', 'pointer', 'important');
+              label.style.setProperty('font-size', '13px', 'important');
+              label.style.setProperty('color', '#e2e8f0', 'important');
+              label.style.setProperty('font-weight', '400', 'important');
+              label.style.setProperty('line-height', '1.4', 'important');
+            }
+          }
+        });
+        
+        // 2. Принудительные стили для чекбоксов
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+          if (checkbox) {
+            const parentLabel = checkbox.closest('.checkbox-label');
+            if (parentLabel) {
+              // Скрываем оригинальный чекбокс
+              checkbox.style.setProperty('position', 'absolute', 'important');
+              checkbox.style.setProperty('opacity', '0', 'important');
+              checkbox.style.setProperty('cursor', 'pointer', 'important');
+              checkbox.style.setProperty('width', '0', 'important');
+              checkbox.style.setProperty('height', '0', 'important');
+              
+              // Убеждаемся что есть checkmark
+              let checkmark = parentLabel.querySelector('.checkmark');
+              if (!checkmark) {
+                checkmark = document.createElement('span');
+                checkmark.className = 'checkmark';
+                parentLabel.insertBefore(checkmark, parentLabel.firstChild);
+              }
+            }
+          }
+        });
+        
+        // 3. Принудительные стили для checkmark
+        const checkmarks = document.querySelectorAll('.checkmark');
+        checkmarks.forEach(checkmark => {
+          if (checkmark) {
+            checkmark.style.setProperty('position', 'relative', 'important');
+            checkmark.style.setProperty('height', '16px', 'important');
+            checkmark.style.setProperty('width', '16px', 'important');
+            checkmark.style.setProperty('background-color', '#1e293b', 'important');
+            checkmark.style.setProperty('border', '1px solid #64748b', 'important');
+            checkmark.style.setProperty('border-radius', '3px', 'important');
+            checkmark.style.setProperty('transition', 'all 0.2s ease', 'important');
+            checkmark.style.setProperty('flex-shrink', '0', 'important');
+            checkmark.style.setProperty('margin-top', '1px', 'important');
+            checkmark.style.setProperty('display', 'inline-block', 'important');
+            
+            // Проверяем состояние чекбокса
+            const checkbox = checkmark.parentElement?.querySelector('input[type="checkbox"]');
+            if (checkbox && checkbox.checked) {
+              checkmark.style.setProperty('background-color', '#3b82f6', 'important');
+              checkmark.style.setProperty('border-color', '#3b82f6', 'important');
+              
+              // Добавляем галочку
+              if (!checkmark.querySelector('span')) {
+                checkmark.innerHTML = '<span style="position: absolute; top: 1px; left: 3px; color: white; font-size: 12px; font-weight: bold;">✓</span>';
+              }
+            } else {
+              checkmark.innerHTML = '';
+            }
+          }
+        });
+        
+        // 4. Добавляем глобальные CSS правила напрямую
+        let forceStyleTag = document.getElementById('force-styles');
+        if (!forceStyleTag) {
+          forceStyleTag = document.createElement('style');
+          forceStyleTag.id = 'force-styles';
+          document.head.appendChild(forceStyleTag);
+        }
+        
+        forceStyleTag.textContent = `
+          /* МАКСИМАЛЬНО ПРИНУДИТЕЛЬНЫЕ СТИЛИ */
+          .form-group label,
+          label,
+          .register-form-wrapper label,
+          .login-form-wrapper label,
+          .form-wrapper label {
+            color: #ffffff !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+            text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+          }
+          
+          .checkbox-label,
+          .register-form .checkbox-label,
+          .login-form .checkbox-label {
+            color: #e2e8f0 !important;
+            font-size: 13px !important;
+            font-weight: 400 !important;
+            line-height: 1.4 !important;
+            display: flex !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+            cursor: pointer !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+          }
+          
+          .checkmark {
+            position: relative !important;
+            height: 16px !important;
+            width: 16px !important;
+            background-color: #1e293b !important;
+            border: 1px solid #64748b !important;
+            border-radius: 3px !important;
+            transition: all 0.2s ease !important;
+            flex-shrink: 0 !important;
+            margin-top: 1px !important;
+            display: inline-block !important;
+          }
+          
+          .checkbox-label input[type="checkbox"] {
+            position: absolute !important;
+            opacity: 0 !important;
+            cursor: pointer !important;
+            width: 0 !important;
+            height: 0 !important;
+          }
+          
+          .checkbox-label input[type="checkbox"]:checked + .checkmark,
+          .checkbox-label input[type="checkbox"]:checked ~ .checkmark {
+            background-color: #3b82f6 !important;
+            border-color: #3b82f6 !important;
+          }
+          
+          /* Заголовки форм */
+          .register-form-wrapper h1,
+          .login-form-wrapper h1 {
+            color: #ffffff !important;
+            text-shadow: 0 0 1px rgba(255,255,255,0.5) !important;
+          }
+        `;
+        
+      } catch (error) {
+        console.warn('Force styles error:', error);
+      }
+    }
+    
+    // Множественные способы применения стилей
+    document.addEventListener('DOMContentLoaded', ultraForceApplyStyles);
+    window.addEventListener('load', ultraForceApplyStyles);
+    
+    // Применяем стили каждые 50мс (чаще)
+    setInterval(ultraForceApplyStyles, 50);
+    
+    // Применяем стили при изменении DOM
+    if (window.MutationObserver) {
+      const observer = new MutationObserver(() => {
+        setTimeout(ultraForceApplyStyles, 10);
+      });
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+      });
+    }
+    
+    // Применяем стили при изменении темы
+    window.addEventListener('storage', ultraForceApplyStyles);
+    
+    // Применяем стили при фокусе окна
+    window.addEventListener('focus', ultraForceApplyStyles);
+    
+    // Немедленное применение
+    ultraForceApplyStyles();
+  </script>
+</body>
+</html>
