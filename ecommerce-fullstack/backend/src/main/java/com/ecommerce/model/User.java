@@ -43,18 +43,41 @@ public class User {
     // OAuth fields
     private String provider; // google, facebook, local
     private String providerId;
-    
-    // Profile image
+      // Profile image
     private String profileImageUrl;
-      // Billing information
+    
+    // Address information
+    private String address;
+    private String city;
+    private String state;
+    private String country;
+    private String postalCode;
+    private String apartment; // квартира/дом
+    
+    // Billing information (может отличаться от основного адреса)
     private String billingAddress;
     private String billingCity;
+    private String billingState;
     private String billingCountry;
     private String billingPostalCode;
-    // Constructors
+    private String billingApartment;    // Constructors
     public User() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        
+        // Initialize address fields with empty strings so they appear in MongoDB
+        this.address = "";
+        this.city = "";
+        this.state = "";
+        this.country = "";
+        this.postalCode = "";
+        this.apartment = "";
+        this.billingAddress = "";
+        this.billingCity = "";
+        this.billingState = "";
+        this.billingCountry = "";
+        this.billingPostalCode = "";
+        this.billingApartment = "";
     }
     
     public User(String firstName, String lastName, String email, String password) {
@@ -122,9 +145,33 @@ public class User {
     
     public String getBillingCountry() { return billingCountry; }
     public void setBillingCountry(String billingCountry) { this.billingCountry = billingCountry; }
-    
-    public String getBillingPostalCode() { return billingPostalCode; }
+      public String getBillingPostalCode() { return billingPostalCode; }
     public void setBillingPostalCode(String billingPostalCode) { this.billingPostalCode = billingPostalCode; }
+    
+    // Address getters and setters
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+    
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
+    
+    public String getState() { return state; }
+    public void setState(String state) { this.state = state; }
+    
+    public String getCountry() { return country; }
+    public void setCountry(String country) { this.country = country; }
+    
+    public String getPostalCode() { return postalCode; }
+    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
+    
+    public String getApartment() { return apartment; }
+    public void setApartment(String apartment) { this.apartment = apartment; }
+    
+    public String getBillingState() { return billingState; }
+    public void setBillingState(String billingState) { this.billingState = billingState; }
+    
+    public String getBillingApartment() { return billingApartment; }
+    public void setBillingApartment(String billingApartment) { this.billingApartment = billingApartment; }
     
     // Helper method
     public String getFullName() {

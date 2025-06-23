@@ -9,22 +9,31 @@ const UserMyData = ({ language = 'en' }) => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [activeSection, setActiveSection] = useState('personal');
-  const [formData, setFormData] = useState({
+  const [activeSection, setActiveSection] = useState('personal');  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     phoneNumber: '',
     dateOfBirth: '',
+    // Main address fields
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+    postalCode: '',
+    apartment: '',
+    // Billing address fields
     billingAddress: '',
     billingCity: '',
+    billingState: '',
     billingCountry: '',
-    billingPostalCode: ''
+    billingPostalCode: '',
+    billingApartment: ''
   });
 
-  const translations = {
-    ru: {
+  const translations = {    ru: {
       title: 'Мои данные',
       personalInfo: 'Личная информация',
+      addressInfo: 'Адрес доставки',
       billingInfo: 'Платежная информация',
       accountInfo: 'Информация об аккаунте',
       firstName: 'Имя',
@@ -32,10 +41,20 @@ const UserMyData = ({ language = 'en' }) => {
       email: 'Email',
       phoneNumber: 'Телефон',
       dateOfBirth: 'Дата рождения',
-      billingAddress: 'Адрес',
-      billingCity: 'Город',
-      billingCountry: 'Страна',
-      billingPostalCode: 'Почтовый индекс',
+      // Main address fields
+      address: 'Адрес',
+      city: 'Город',
+      state: 'Область/Регион',
+      country: 'Страна',
+      postalCode: 'Почтовый индекс',
+      apartment: 'Квартира/Дом',
+      // Billing address fields
+      billingAddress: 'Платежный адрес',
+      billingCity: 'Город (платежный)',
+      billingState: 'Область/Регион (платежный)',
+      billingCountry: 'Страна (платежная)',
+      billingPostalCode: 'Почтовый индекс (платежный)',
+      billingApartment: 'Квартира/Дом (платежный)',
       memberSince: 'Участник с',
       lastLogin: 'Последний вход',
       accountStatus: 'Статус аккаунта',
@@ -51,12 +70,13 @@ const UserMyData = ({ language = 'en' }) => {
       updateError: 'Ошибка при обновлении профиля',
       loading: 'Загрузка...',
       personalTab: 'Личные данные',
+      addressTab: 'Адрес доставки',
       billingTab: 'Платежные данные',
       accountTab: 'Аккаунт'
-    },
-    en: {
+    },    en: {
       title: 'My Data',
       personalInfo: 'Personal Information',
+      addressInfo: 'Shipping Address',
       billingInfo: 'Billing Information',
       accountInfo: 'Account Information',
       firstName: 'First Name',
@@ -64,10 +84,20 @@ const UserMyData = ({ language = 'en' }) => {
       email: 'Email',
       phoneNumber: 'Phone Number',
       dateOfBirth: 'Date of Birth',
-      billingAddress: 'Address',
-      billingCity: 'City',
-      billingCountry: 'Country',
-      billingPostalCode: 'Postal Code',
+      // Main address fields
+      address: 'Address',
+      city: 'City',
+      state: 'State/Region',
+      country: 'Country',
+      postalCode: 'Postal Code',
+      apartment: 'Apartment/House',
+      // Billing address fields
+      billingAddress: 'Billing Address',
+      billingCity: 'Billing City',
+      billingState: 'Billing State/Region',
+      billingCountry: 'Billing Country',
+      billingPostalCode: 'Billing Postal Code',
+      billingApartment: 'Billing Apartment/House',
       memberSince: 'Member since',
       lastLogin: 'Last login',
       accountStatus: 'Account status',
@@ -83,12 +113,13 @@ const UserMyData = ({ language = 'en' }) => {
       updateError: 'Error updating profile',
       loading: 'Loading...',
       personalTab: 'Personal Data',
+      addressTab: 'Shipping Address',
       billingTab: 'Billing Data',
       accountTab: 'Account'
-    },
-    pl: {
+    },    pl: {
       title: 'Moje dane',
       personalInfo: 'Informacje osobiste',
+      addressInfo: 'Adres dostawy',
       billingInfo: 'Informacje płatnicze',
       accountInfo: 'Informacje o koncie',
       firstName: 'Imię',
@@ -96,10 +127,20 @@ const UserMyData = ({ language = 'en' }) => {
       email: 'Email',
       phoneNumber: 'Numer telefonu',
       dateOfBirth: 'Data urodzenia',
-      billingAddress: 'Adres',
-      billingCity: 'Miasto',
-      billingCountry: 'Kraj',
-      billingPostalCode: 'Kod pocztowy',
+      // Main address fields
+      address: 'Adres',
+      city: 'Miasto',
+      state: 'Województwo/Region',
+      country: 'Kraj',
+      postalCode: 'Kod pocztowy',
+      apartment: 'Mieszkanie/Dom',
+      // Billing address fields
+      billingAddress: 'Adres płatniczy',
+      billingCity: 'Miasto (płatnicze)',
+      billingState: 'Województwo/Region (płatnicze)',
+      billingCountry: 'Kraj (płatniczy)',
+      billingPostalCode: 'Kod pocztowy (płatniczy)',
+      billingApartment: 'Mieszkanie/Dom (płatnicze)',
       memberSince: 'Członek od',
       lastLogin: 'Ostatnie logowanie',
       accountStatus: 'Status konta',
@@ -115,6 +156,7 @@ const UserMyData = ({ language = 'en' }) => {
       updateError: 'Błąd podczas aktualizacji profilu',
       loading: 'Ładowanie...',
       personalTab: 'Dane osobowe',
+      addressTab: 'Adres dostawy',
       billingTab: 'Dane płatnicze',
       accountTab: 'Konto'
     }
@@ -128,16 +170,25 @@ const UserMyData = ({ language = 'en' }) => {
         setError('');
         
         const profile = await authService.getProfile();
-        setUser(profile);
-        setFormData({
+        setUser(profile);        setFormData({
           firstName: profile.firstName || '',
           lastName: profile.lastName || '',
           phoneNumber: profile.phoneNumber || '',
           dateOfBirth: profile.dateOfBirth ? profile.dateOfBirth.split('T')[0] : '',
+          // Main address fields
+          address: profile.address || '',
+          city: profile.city || '',
+          state: profile.state || '',
+          country: profile.country || '',
+          postalCode: profile.postalCode || '',
+          apartment: profile.apartment || '',
+          // Billing address fields
           billingAddress: profile.billingAddress || '',
           billingCity: profile.billingCity || '',
+          billingState: profile.billingState || '',
           billingCountry: profile.billingCountry || '',
-          billingPostalCode: profile.billingPostalCode || ''
+          billingPostalCode: profile.billingPostalCode || '',
+          billingApartment: profile.billingApartment || ''
         });
       } catch (error) {
         console.error('Error loading profile:', error);
@@ -177,17 +228,26 @@ const UserMyData = ({ language = 'en' }) => {
       setSaving(false);
     }
   };
-
   const handleCancel = () => {
     setFormData({
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       phoneNumber: user.phoneNumber || '',
       dateOfBirth: user.dateOfBirth ? user.dateOfBirth.split('T')[0] : '',
+      // Main address fields
+      address: user.address || '',
+      city: user.city || '',
+      state: user.state || '',
+      country: user.country || '',
+      postalCode: user.postalCode || '',
+      apartment: user.apartment || '',
+      // Billing address fields
       billingAddress: user.billingAddress || '',
       billingCity: user.billingCity || '',
+      billingState: user.billingState || '',
       billingCountry: user.billingCountry || '',
-      billingPostalCode: user.billingPostalCode || ''
+      billingPostalCode: user.billingPostalCode || '',
+      billingApartment: user.billingApartment || ''
     });
     setEditing(false);
     setError('');
@@ -270,13 +330,19 @@ const UserMyData = ({ language = 'en' }) => {
 
         {/* Modern Tab Navigation */}
         <div className="modern-tabs">
-          <div className="tabs-container">
-            <button 
+          <div className="tabs-container">            <button 
               className={`modern-tab ${activeSection === 'personal' ? 'active' : ''}`}
               onClick={() => setActiveSection('personal')}
             >
               <span className="tab-icon">👤</span>
               <span className="tab-label">{t.personalTab}</span>
+            </button>
+            <button 
+              className={`modern-tab ${activeSection === 'address' ? 'active' : ''}`}
+              onClick={() => setActiveSection('address')}
+            >
+              <span className="tab-icon">🏠</span>
+              <span className="tab-label">{t.addressTab}</span>
             </button>
             <button 
               className={`modern-tab ${activeSection === 'billing' ? 'active' : ''}`}
@@ -331,21 +397,66 @@ const UserMyData = ({ language = 'en' }) => {
                   </div>
                 </div>
               </div>
-            )}            {/* Billing Information Tab */}
+            )}
+
+            {/* Address Information Tab */}
+            {activeSection === 'address' && (
+              <div className="content-section">
+                <div className="section-header">
+                  <h3>{t.addressInfo}</h3>
+                  <div className="header-icon">🏠</div>
+                </div>
+                <div className="modern-data-grid">
+                  <div className="data-card wide">
+                    <div className="data-label">{t.address}</div>
+                    <div className="data-value">{user.address || t.notSet}</div>
+                  </div>
+                  <div className="data-card">
+                    <div className="data-label">{t.apartment}</div>
+                    <div className="data-value">{user.apartment || t.notSet}</div>
+                  </div>
+                  <div className="data-card">
+                    <div className="data-label">{t.city}</div>
+                    <div className="data-value">{user.city || t.notSet}</div>
+                  </div>
+                  <div className="data-card">
+                    <div className="data-label">{t.state}</div>
+                    <div className="data-value">{user.state || t.notSet}</div>
+                  </div>
+                  <div className="data-card">
+                    <div className="data-label">{t.country}</div>
+                    <div className="data-value">{user.country || t.notSet}</div>
+                  </div>
+                  <div className="data-card">
+                    <div className="data-label">{t.postalCode}</div>
+                    <div className="data-value">{user.postalCode || t.notSet}</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Billing Information Tab */}
             {activeSection === 'billing' && (
               <div className="content-section">
                 <div className="section-header">
                   <h3>{t.billingInfo}</h3>
                   <div className="header-icon">💳</div>
-                </div>
-                <div className="modern-data-grid">
+                </div>                <div className="modern-data-grid">
                   <div className="data-card wide">
                     <div className="data-label">{t.billingAddress}</div>
                     <div className="data-value">{user.billingAddress || t.notSet}</div>
                   </div>
                   <div className="data-card">
+                    <div className="data-label">{t.billingApartment}</div>
+                    <div className="data-value">{user.billingApartment || t.notSet}</div>
+                  </div>
+                  <div className="data-card">
                     <div className="data-label">{t.billingCity}</div>
                     <div className="data-value">{user.billingCity || t.notSet}</div>
+                  </div>
+                  <div className="data-card">
+                    <div className="data-label">{t.billingState}</div>
+                    <div className="data-value">{user.billingState || t.notSet}</div>
                   </div>
                   <div className="data-card">
                     <div className="data-label">{t.billingCountry}</div>
@@ -450,6 +561,95 @@ const UserMyData = ({ language = 'en' }) => {
                       />
                     </div>
                   </div>
+                </div>              )}
+
+              {/* Address Information Form */}
+              {activeSection === 'address' && (
+                <div className="form-section">
+                  <div className="section-header">
+                    <h3>{t.addressInfo}</h3>
+                    <div className="header-icon">🏠</div>
+                  </div>
+                  <div className="modern-form-grid">
+                    <div className="form-group wide">
+                      <label htmlFor="address">{t.address}</label>
+                      <input
+                        type="text"
+                        id="address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        disabled={saving}
+                        className="modern-input"
+                        placeholder={language === 'ru' ? 'Улица, дом' : 
+                                   language === 'pl' ? 'Ulica, numer domu' : 
+                                   'Street, house number'}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="apartment">{t.apartment}</label>
+                      <input
+                        type="text"
+                        id="apartment"
+                        name="apartment"
+                        value={formData.apartment}
+                        onChange={handleInputChange}
+                        disabled={saving}
+                        className="modern-input"
+                        placeholder={language === 'ru' ? 'Кв./Офис' : 
+                                   language === 'pl' ? 'Mieszkanie/Biuro' : 
+                                   'Apt/Office'}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="city">{t.city}</label>
+                      <input
+                        type="text"
+                        id="city"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        disabled={saving}
+                        className="modern-input"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="state">{t.state}</label>
+                      <input
+                        type="text"
+                        id="state"
+                        name="state"
+                        value={formData.state}
+                        onChange={handleInputChange}
+                        disabled={saving}
+                        className="modern-input"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="country">{t.country}</label>
+                      <input
+                        type="text"
+                        id="country"
+                        name="country"
+                        value={formData.country}
+                        onChange={handleInputChange}
+                        disabled={saving}
+                        className="modern-input"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="postalCode">{t.postalCode}</label>
+                      <input
+                        type="text"
+                        id="postalCode"
+                        name="postalCode"
+                        value={formData.postalCode}
+                        onChange={handleInputChange}
+                        disabled={saving}
+                        className="modern-input"
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -459,8 +659,7 @@ const UserMyData = ({ language = 'en' }) => {
                   <div className="section-header">
                     <h3>{t.billingInfo}</h3>
                     <div className="header-icon">💳</div>
-                  </div>
-                  <div className="modern-form-grid">
+                  </div>                  <div className="modern-form-grid">
                     <div className="form-group wide">
                       <label htmlFor="billingAddress">{t.billingAddress}</label>
                       <input
@@ -468,6 +667,21 @@ const UserMyData = ({ language = 'en' }) => {
                         id="billingAddress"
                         name="billingAddress"
                         value={formData.billingAddress}
+                        onChange={handleInputChange}
+                        disabled={saving}
+                        className="modern-input"
+                        placeholder={language === 'ru' ? 'Платежный адрес' : 
+                                   language === 'pl' ? 'Adres płatniczy' : 
+                                   'Billing address'}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="billingApartment">{t.billingApartment}</label>
+                      <input
+                        type="text"
+                        id="billingApartment"
+                        name="billingApartment"
+                        value={formData.billingApartment}
                         onChange={handleInputChange}
                         disabled={saving}
                         className="modern-input"
@@ -480,6 +694,18 @@ const UserMyData = ({ language = 'en' }) => {
                         id="billingCity"
                         name="billingCity"
                         value={formData.billingCity}
+                        onChange={handleInputChange}
+                        disabled={saving}
+                        className="modern-input"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="billingState">{t.billingState}</label>
+                      <input
+                        type="text"
+                        id="billingState"
+                        name="billingState"
+                        value={formData.billingState}
                         onChange={handleInputChange}
                         disabled={saving}
                         className="modern-input"

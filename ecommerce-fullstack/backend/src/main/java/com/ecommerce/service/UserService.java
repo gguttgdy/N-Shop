@@ -39,13 +39,19 @@ public class UserService {
         User user = new User();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhoneNumber(request.getPhoneNumber());
         user.setProvider("local");
         user.setRole(UserRole.CUSTOMER);
         user.setIsActive(true);
         user.setEmailVerified(false);
+          // Set address information if provided, otherwise set empty strings
+        user.setAddress(request.getAddress() != null ? request.getAddress() : "");
+        user.setCity(request.getCity() != null ? request.getCity() : "");
+        user.setState(request.getState() != null ? request.getState() : "");
+        user.setCountry(request.getCountry() != null ? request.getCountry() : "");
+        user.setPostalCode(request.getPostalCode() != null ? request.getPostalCode() : "");
+        user.setApartment(request.getApartment() != null ? request.getApartment() : "");
         
         // Save user
         User savedUser = userRepository.save(user);
@@ -120,21 +126,48 @@ public class UserService {
         }
         if (request.getPhoneNumber() != null) {
             user.setPhoneNumber(request.getPhoneNumber());
-        }
-        if (request.getDateOfBirth() != null) {
+        }        if (request.getDateOfBirth() != null) {
             user.setDateOfBirth(request.getDateOfBirth());
         }
+        
+        // Update address information
+        if (request.getAddress() != null) {
+            user.setAddress(request.getAddress());
+        }
+        if (request.getCity() != null) {
+            user.setCity(request.getCity());
+        }
+        if (request.getState() != null) {
+            user.setState(request.getState());
+        }
+        if (request.getCountry() != null) {
+            user.setCountry(request.getCountry());
+        }
+        if (request.getPostalCode() != null) {
+            user.setPostalCode(request.getPostalCode());
+        }
+        if (request.getApartment() != null) {
+            user.setApartment(request.getApartment());
+        }
+        
+        // Update billing information
         if (request.getBillingAddress() != null) {
             user.setBillingAddress(request.getBillingAddress());
         }
         if (request.getBillingCity() != null) {
             user.setBillingCity(request.getBillingCity());
         }
+        if (request.getBillingState() != null) {
+            user.setBillingState(request.getBillingState());
+        }
         if (request.getBillingCountry() != null) {
             user.setBillingCountry(request.getBillingCountry());
         }
         if (request.getBillingPostalCode() != null) {
             user.setBillingPostalCode(request.getBillingPostalCode());
+        }
+        if (request.getBillingApartment() != null) {
+            user.setBillingApartment(request.getBillingApartment());
         }
         
         user.updateTimestamp();
@@ -153,14 +186,25 @@ public class UserService {
         response.setDateOfBirth(user.getDateOfBirth());
         response.setRole(user.getRole());
         response.setEmailVerified(user.getEmailVerified());
-        response.setCreatedAt(user.getCreatedAt());
-        response.setLastLogin(user.getLastLogin());
+        response.setCreatedAt(user.getCreatedAt());        response.setLastLogin(user.getLastLogin());
         response.setProvider(user.getProvider());
         response.setProfileImageUrl(user.getProfileImageUrl());
+        
+        // Set address information
+        response.setAddress(user.getAddress());
+        response.setCity(user.getCity());
+        response.setState(user.getState());
+        response.setCountry(user.getCountry());
+        response.setPostalCode(user.getPostalCode());
+        response.setApartment(user.getApartment());
+        
+        // Set billing information
         response.setBillingAddress(user.getBillingAddress());
         response.setBillingCity(user.getBillingCity());
+        response.setBillingState(user.getBillingState());
         response.setBillingCountry(user.getBillingCountry());
         response.setBillingPostalCode(user.getBillingPostalCode());
+        response.setBillingApartment(user.getBillingApartment());
         return response;
     }
 }
