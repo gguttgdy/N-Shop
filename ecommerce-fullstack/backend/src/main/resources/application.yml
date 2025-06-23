@@ -6,7 +6,7 @@ spring:
     mongodb:
       uri: mongodb+srv://dwaf:szPt2RsSrsmZdDHl@sklep.7tdeg.mongodb.net/sklep?retryWrites=true&w=majority&appName=ecommerce
       database: sklep
-      auto-index-creation: true
+      auto-index-creation: false
   
   web:
     cors:
@@ -18,6 +18,11 @@ spring:
   security:
     basic:
       enabled: false
+
+app:
+  jwt:
+    secret: mySecretKeyForJWTTokenGenerationAndValidation2024EcommerceApplication
+    expiration: 86400000  # 24 hours in milliseconds
 
 management:
   endpoints:

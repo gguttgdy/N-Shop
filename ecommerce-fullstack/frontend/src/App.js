@@ -8,14 +8,24 @@ import SearchPage from './components/SearchPage';
 import Footer from './components/Footer';
 import InfoPage from './components/InfoPage';
 import HelpCenter from './components/HelpCenter';
-import Login from './components/Login';
-import Register from './components/Register';
+import Login from './components/Login_new';
+import Register from './components/Register_new';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
+import UserProfile from './components/UserProfile';
+import UserOrders from './components/UserOrders';
+import UserReceipts from './components/UserReceipts';
+import UserDiscounts from './components/UserDiscounts';
+import UserReviews from './components/UserReviews';
+import UserComplaints from './components/UserComplaints';
+import UserReturns from './components/UserReturns';
 import { useCurrency } from './hooks/useCurrency';
+import { useAuth } from './hooks/useAuth';
 import './App.css';
 
 function App() {
   const [language, setLanguage] = useState('en');
-  const [user, setUser] = useState(null);
+  const { user, loading, login, register, logout, updateProfile } = useAuth();
   const [cartItems, setCartItems] = useState([]);
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -25,7 +35,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Хук для управления валютой
-  const { currency, currencySymbol, formatPrice, loading: currencyLoading } = useCurrency(language);
+  const { currency, formatPrice } = useCurrency(language);
   // Загружаем корзину из localStorage при загрузке компонента
   useEffect(() => {
     try {
@@ -53,7 +63,18 @@ function App() {
       // При ошибке сохранения просто логируем, но не прерываем работу
     }
   }, [cartItems]);  const handleNavigation = (pageType, value) => {
-    if (pageType === 'category') {
+    console.log('Navigating to:', pageType, value);
+      // Обработка прямых переходов на страницы
+    if (['login', 'register', 'profile', 'home', 'orders', 'receipts', 'discounts', 'reviews', 'complaints', 'returns', 'forgot-password', 'reset-password'].includes(pageType)) {
+      setCurrentPage(pageType);
+      setSelectedCategory(null);
+      setSelectedSubcategory(null);
+      setSelectedSection(null);
+      setSelectedInfoPage(null);
+      if (pageType !== 'search') {
+        setSearchQuery('');
+      }
+    } else if (pageType === 'category') {
       setSelectedCategory(value.categoryId);
       setSelectedSubcategory(value.subcategoryId || null);
       setCurrentPage('category');
@@ -61,7 +82,7 @@ function App() {
       setSelectedSection(value);
       setCurrentPage('section');
     } else if (pageType === 'page') {
-      if (value === 'login' || value === 'register') {
+      if (value === 'login' || value === 'register' || value === 'profile' || value === 'forgot-password' || value === 'reset-password') {
         setCurrentPage(value);
       } else {
         setSelectedInfoPage(value);
@@ -133,9 +154,43 @@ function App() {
       );
     }
   };
-
   const clearCart = () => {
-    setCartItems([]);
+    setCartItems([]);  };
+    const handleLogin = async (credentials) => {
+    try {
+      console.log('App.js handleLogin called with:', credentials);
+      await login(credentials);
+      // После успешного логина переходим на главную
+      setCurrentPage('home');
+      console.log('User logged in successfully, current user:', user);
+    } catch (error) {
+      console.error('Login error in App.js:', error);
+      throw error; // Пробрасываем ошибку для обработки в компоненте
+    }
+  };
+
+  const handleRegister = async (userData) => {
+    try {
+      await register(userData);
+      // После успешной регистрации переходим на главную
+      setCurrentPage('home');
+      console.log('User registered successfully');
+    } catch (error) {
+      console.error('Register error:', error);
+      throw error; // Пробрасываем ошибку для обработки в компоненте
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      localStorage.removeItem('rememberedUser');
+      // После выхода переходим на главную
+      setCurrentPage('home');
+      console.log('User logged out');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
@@ -143,7 +198,8 @@ function App() {
         language={language}
         setLanguage={setLanguage}
         user={user}
-        setUser={setUser}
+        loading={loading}
+        onLogout={handleLogout}
         cartItems={cartItems}
         removeFromCart={removeFromCart}
         updateCartQuantity={updateCartQuantity}
@@ -183,17 +239,49 @@ function App() {
             addToCart={addToCart}
             currency={currency}
             formatPrice={formatPrice}
-          />
-        ) : currentPage === 'login' ? (
+          />        ) : currentPage === 'login' ? (
           <Login 
             language={language}
             onNavigate={handleNavigation}
-          />
-        ) : currentPage === 'register' ? (
+            onLogin={handleLogin}
+          />        ) : currentPage === 'register' ? (
           <Register 
             language={language}
             onNavigate={handleNavigation}
+            onLogin={handleRegister}
+          />        ) : currentPage === 'profile' ? (
+          <UserProfile 
+            language={language}
+            user={user}
+            updateProfile={updateProfile}
           />
+        ) : currentPage === 'orders' ? (
+          <UserOrders 
+            language={language}
+          />
+        ) : currentPage === 'receipts' ? (
+          <UserReceipts 
+            language={language}
+          />
+        ) : currentPage === 'discounts' ? (
+          <UserDiscounts 
+            language={language}
+          />
+        ) : currentPage === 'reviews' ? (
+          <UserReviews 
+            language={language}
+          />
+        ) : currentPage === 'complaints' ? (
+          <UserComplaints 
+            language={language}
+          />        ) : currentPage === 'returns' ? (
+          <UserReturns 
+            language={language}
+          />
+        ) : currentPage === 'forgot-password' ? (
+          <ForgotPassword />
+        ) : currentPage === 'reset-password' ? (
+          <ResetPassword />
         ) : currentPage === 'info' ? (
           selectedInfoPage === 'help-center' ? (
             <HelpCenter language={language} />

@@ -6,6 +6,7 @@
   top: 0;
   z-index: 100;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .header-container {
@@ -16,6 +17,8 @@
   justify-content: space-between;
   padding: 15px 20px;
   gap: 20px;
+  height: 70px;
+  box-sizing: border-box;
 }
 
 .logo {
@@ -39,19 +42,25 @@
   flex: 1;
   max-width: 600px;
   margin: 0 20px;
+  height: 40px;
+  align-items: center;
 }
 
 .search-input {
   flex: 1;
-  padding: 10px 15px;
+  padding: 0 15px;
   border: 2px solid var(--border-primary);
   border-radius: 8px 0 0 8px;
   outline: none;
   font-size: 14px;
+  line-height: 1;
   min-width: 0;
   background: var(--bg-primary);
   color: var(--text-primary);
   transition: all 0.3s ease;
+  height: 40px;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .search-input::placeholder {
@@ -63,15 +72,22 @@
 }
 
 .search-button {
-  padding: 10px 15px;
+  padding: 0 15px;
   background: var(--accent-primary);
   color: white;
   border: none;
   border-radius: 0 8px 8px 0;
   font-size: 16px;
+  line-height: 1;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.3s ease;
+  height: 40px;
+  box-sizing: border-box;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-button:hover {
@@ -81,32 +97,177 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   flex-shrink: 0;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+/* Принудительное выравнивание всех элементов в header-actions */
+.header .header-container .header-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 12px !important;
+  height: 40px !important;
+}
+
+.header .header-container .header-actions .profile-section,
+.header .header-container .header-actions .help-center-button,
+.header .header-container .header-actions .cart-section,
+.header .header-container .header-actions .language-select {
+  position: relative !important;
+  top: 0 !important;
+  bottom: auto !important;
+  vertical-align: middle !important;
+  align-self: center !important;
+  flex-shrink: 0 !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Сброс всех возможных смещений */
+.header .header-container .header-actions button,
+.header .header-container .header-actions select {
+  transform: none !important;
+  position: relative !important;
+  top: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.header-actions > * {
+  vertical-align: middle;
+  align-self: center;
 }
 
 .profile-section {
   position: relative;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  box-sizing: border-box;
 }
 
 .profile-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 15px;
-  border-radius: 8px;
-  background: var(--bg-secondary);
-  font-size: 14px;
-  transition: background 0.2s;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  color: var(--text-primary);
-  height: 40px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  padding: 0 12px !important;
+  border-radius: 8px !important;
+  background: var(--bg-secondary) !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  transition: background 0.2s !important;
+  border: none !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  color: var(--text-primary) !important;
+  height: 40px !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  max-width: 180px !important;
+  margin: 0 !important;
+  position: relative !important;
+  top: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  vertical-align: baseline !important;
+  align-self: center !important;
+}
+
+/* АБСОЛЮТНОЕ ПРИНУДИТЕЛЬНОЕ ВЫРАВНИВАНИЕ КНОПКИ ПРОФИЛЯ */
+.header .header-container .header-actions .profile-section .profile-button,
+.profile-button,
+button.profile-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  line-height: 40px !important;
+  vertical-align: top !important;
+  position: relative !important;
+  top: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 12px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  transform: none !important;
+  translate: none !important;
+  align-self: center !important;
+  font-size: 14px !important;
+  box-sizing: border-box !important;
+  border: none !important;
+  background: var(--bg-secondary) !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+  max-width: 180px !important;
+  transition: background 0.2s !important;
+}
+
+/* Принудительное выравнивание содержимого кнопки профиля */
+.header .header-container .header-actions .profile-section .profile-button .profile-icon,
+.header .header-container .header-actions .profile-section .profile-button span,
+.header .header-container .header-actions .profile-section .profile-button .dropdown-arrow {
+  line-height: 1 !important;
+  vertical-align: middle !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-self: center !important;
 }
 
 .profile-button:hover {
   background: var(--bg-tertiary);
+}
+
+.profile-button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.profile-icon {
+  flex-shrink: 0 !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+.dropdown-arrow {
+  flex-shrink: 0 !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
 }
 
 .help-center-button,
@@ -118,12 +279,19 @@
   height: 40px;
   border-radius: 8px;
   background: var(--bg-secondary);
-  font-size: 20px;
+  font-size: 18px;
+  line-height: 1;
   transition: background 0.2s;
   border: none;
   cursor: pointer;
   flex-shrink: 0;
   position: relative;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  transform: none;
+  vertical-align: baseline;
 }
 
 .help-center-button:hover,
@@ -134,6 +302,10 @@
 .cart-section {
   position: relative;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  box-sizing: border-box;
 }
 
 .cart-count {
@@ -172,69 +344,111 @@
   background: var(--accent-hover);
 }
 
-@media (max-width: 768px) {
-  .header-container {
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-  
-  .search-form {
-    order: 3;
-    width: 100%;
-    margin: 0;
-    max-width: none;
-  }
-  
-  .header-actions {
-    gap: 10px;
-  }
-  
-  .profile-button span:not(.profile-icon):not(.dropdown-arrow) {
-    display: none;
-  }
-  
-  .help-center-button,
-  .cart-button {
-    width: 35px !important;
-    height: 35px !important;
-    font-size: 18px !important;
-  }
+.language-select {
+  padding: 0 12px;
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  height: 40px;
+  min-width: 60px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+  top: 0;
+  transform: none;
+  vertical-align: baseline;
 }
 
-@media (max-width: 640px) {
-  .header-container {
-    padding: 12px 15px;
-  }
-  
-  .logo h1 {
-    font-size: 20px;
-  }
-  
-  .language-select {
-    padding: 6px 8px;
-    font-size: 12px;
+.language-select:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-primary);
+}
+
+.language-select:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* ФИНАЛЬНОЕ АБСОЛЮТНОЕ ИСПРАВЛЕНИЕ ВЫРАВНИВАНИЯ - ПЕРЕКРЫВАЕТ ВСЁ */
+.header * .profile-button,
+.header .profile-button,
+.profile-button,
+[class*="profile-button"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  vertical-align: baseline !important;
+  position: relative !important;
+  top: 0px !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  margin: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  transform: translate(0px, 0px) !important;
+  translate: 0px 0px !important;
+  align-self: center !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+}
+
+/* Принудительная одинаковая высота для всех элементов header-actions */
+.header-actions > *,
+.header-actions .profile-section,
+.header-actions .cart-section,
+.header-actions .help-center-button,
+.header-actions .language-select,
+.header-actions .profile-button {
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  align-self: center !important;
+  vertical-align: baseline !important;
+  position: relative !important;
+  top: 0px !important;
+  bottom: auto !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  transform: none !important;
+  translate: none !important;
+}
+
+/* Медиа-запросы - сохраняем выравнивание */
+@media (max-width: 768px) {
+  .header-actions > *,
+  .header-actions .profile-section,
+  .header-actions .cart-section,
+  .header-actions .help-center-button,
+  .header-actions .language-select,
+  .header-actions .profile-button {
+    height: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .header-container {
-    padding: 10px 15px;
-  }
-  
-  .logo h1 {
-    font-size: 18px;
-  }
-  
-  .help-center-button,
-  .cart-button {
-    width: 32px !important;
+  .header-actions > *,
+  .header-actions .profile-section,
+  .header-actions .cart-section,
+  .header-actions .help-center-button,
+  .header-actions .language-select,
+  .header-actions .profile-button {
     height: 32px !important;
-    font-size: 16px !important;
-  }
-  
-  .profile-button {
-    padding: 6px 10px;
-    font-size: 12px;
+    min-height: 32px !important;
+    max-height: 32px !important;
   }
 }
 

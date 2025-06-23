@@ -1,8 +1,10 @@
 package com.ecommerce.service;
 
-import com.ecommerce.model.Product;
+import com.ecommerce.model.*;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -122,5 +124,121 @@ public class MockDataService {
         }
         
         return product;
+    }    // Mock data methods for user profile - DISABLED due to compilation errors
+    // Use UserProfileMockService instead
+    /*
+    public List<Order> getMockUserOrders(String userId) {
+        return Arrays.asList(
+            createMockOrder("ORD-2024-001", userId, OrderStatus.DELIVERED, new BigDecimal("299.99"), LocalDateTime.now().minusDays(15)),
+            createMockOrder("ORD-2024-002", userId, OrderStatus.SHIPPED, new BigDecimal("149.50"), LocalDateTime.now().minusDays(3)),
+            createMockOrder("ORD-2024-003", userId, OrderStatus.PENDING, new BigDecimal("89.99"), LocalDateTime.now().minusHours(6))
+        );
     }
+
+    public List<Receipt> getMockUserReceipts(String userId) {
+        return Arrays.asList(
+            createMockReceipt("RCP-2024-001", userId, new BigDecimal("299.99"), LocalDateTime.now().minusDays(15)),
+            createMockReceipt("RCP-2024-002", userId, new BigDecimal("149.50"), LocalDateTime.now().minusDays(3))
+        );
+    }
+
+    public List<Review> getMockUserReviews(String userId) {
+        return Arrays.asList(
+            createMockReview("REV-001", userId, "1", "Wireless Headphones", 5, "Excellent sound quality!", LocalDateTime.now().minusDays(10)),
+            createMockReview("REV-002", userId, "2", "Bluetooth Speaker", 4, "Good speaker but battery could be better", LocalDateTime.now().minusDays(5)),
+            createMockReview("REV-003", userId, "3", "Smart Watch", 3, "Average smartwatch", LocalDateTime.now().minusDays(2))
+        );
+    }
+
+    public List<Complaint> getMockUserComplaints(String userId) {
+        return Arrays.asList(
+            createMockComplaint("CMP-001", userId, "Defective product", "Headphones have crackling sound", ComplaintStatus.IN_PROGRESS, LocalDateTime.now().minusDays(5)),
+            createMockComplaint("CMP-002", userId, "Late delivery", "Order arrived 5 days late", ComplaintStatus.RESOLVED, LocalDateTime.now().minusDays(12)),
+            createMockComplaint("CMP-003", userId, "Wrong item", "Received red shirt instead of blue", ComplaintStatus.CLOSED, LocalDateTime.now().minusDays(20))
+        );
+    }    public List<UserDiscount> getMockUserDiscounts(String userId) {
+        return Arrays.asList(
+            createMockDiscount("DSC-001", userId, "SAVE20", "20% off on electronics", DiscountType.PERCENTAGE, new BigDecimal("20"), LocalDateTime.now().plusDays(30)),
+            createMockDiscount("DSC-002", userId, "FREESHIP", "Free shipping", DiscountType.FIXED_AMOUNT, new BigDecimal("0"), LocalDateTime.now().plusDays(15)),
+            createMockDiscount("DSC-003", userId, "WELCOME10", "Welcome discount", DiscountType.PERCENTAGE, new BigDecimal("10"), LocalDateTime.now().minusDays(5))
+        );
+    }
+
+    public List<Return> getMockUserReturns(String userId) {
+        return Arrays.asList(
+            createMockReturn("RET-001", userId, "ORD-2024-100", "Defective", ReturnStatus.IN_TRANSIT, new BigDecimal("99.99"), LocalDateTime.now().minusDays(3)),
+            createMockReturn("RET-002", userId, "ORD-2024-095", "Not as described", ReturnStatus.COMPLETED, new BigDecimal("79.99"), LocalDateTime.now().minusDays(10)),
+            createMockReturn("RET-003", userId, "ORD-2024-090", "Changed mind", ReturnStatus.REQUESTED, new BigDecimal("199.99"), LocalDateTime.now().minusDays(1))
+        );
+    }
+
+    // Helper methods for creating mock objects
+    private Order createMockOrder(String orderNumber, String userId, OrderStatus status, BigDecimal amount, LocalDateTime orderDate) {
+        Order order = new Order();
+        order.setId(orderNumber);
+        order.setUserId(userId);
+        order.setOrderNumber(orderNumber);
+        order.setStatus(status);
+        order.setTotalAmount(amount);
+        order.setOrderDate(orderDate);
+        return order;
+    }
+
+    private Receipt createMockReceipt(String receiptNumber, String userId, BigDecimal amount, LocalDateTime date) {
+        Receipt receipt = new Receipt();
+        receipt.setId(receiptNumber);
+        receipt.setUserId(userId);
+        receipt.setReceiptNumber(receiptNumber);
+        receipt.setTotalAmount(amount);
+        receipt.setCreatedAt(date);
+        return receipt;
+    }
+
+    private Review createMockReview(String id, String userId, String productId, String productName, Integer rating, String comment, LocalDateTime createdAt) {
+        Review review = new Review();
+        review.setId(id);
+        review.setUserId(userId);
+        review.setProductId(productId);
+        review.setProductName(productName);
+        review.setRating(rating);
+        review.setComment(comment);
+        review.setCreatedAt(createdAt);
+        return review;
+    }
+
+    private Complaint createMockComplaint(String id, String userId, String subject, String description, ComplaintStatus status, LocalDateTime createdAt) {
+        Complaint complaint = new Complaint();
+        complaint.setId(id);
+        complaint.setUserId(userId);
+        complaint.setSubject(subject);
+        complaint.setDescription(description);
+        complaint.setStatus(status);
+        complaint.setCreatedAt(createdAt);
+        return complaint;
+    }
+
+    private UserDiscount createMockDiscount(String id, String userId, String code, String description, DiscountType type, BigDecimal value, LocalDateTime validUntil) {
+        UserDiscount discount = new UserDiscount();
+        discount.setId(id);
+        discount.setUserId(userId);
+        discount.setCode(code);
+        discount.setDescription(description);
+        discount.setDiscountType(type);
+        discount.setValue(value);
+        discount.setValidUntil(validUntil);
+        discount.setIsActive(validUntil.isAfter(LocalDateTime.now()));
+        return discount;
+    }
+
+    private Return createMockReturn(String id, String userId, String orderNumber, String reason, ReturnStatus status, BigDecimal amount, LocalDateTime createdAt) {
+        Return returnItem = new Return();
+        returnItem.setId(id);
+        returnItem.setUserId(userId);
+        returnItem.setOrderId(orderNumber);
+        returnItem.setReason(ReturnReason.valueOf(reason.toUpperCase().replace(" ", "_")));
+        returnItem.setStatus(status);
+        returnItem.setReturnAmount(amount);        returnItem.setCreatedAt(createdAt);
+        return returnItem;
+    }
+    */
 }

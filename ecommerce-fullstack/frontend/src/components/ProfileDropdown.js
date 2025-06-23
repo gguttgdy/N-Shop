@@ -1,7 +1,7 @@
 import React from 'react';
 import './ProfileDropdown.css';
 
-const ProfileDropdown = ({ user, setUser, language, onClose, onNavigate }) => {
+const ProfileDropdown = ({ user, onLogout, language, onClose, onNavigate }) => {
   const translations = {
     ru: {
       login: 'Войти',
@@ -41,19 +41,17 @@ const ProfileDropdown = ({ user, setUser, language, onClose, onNavigate }) => {
     }
   };
 
-  const t = translations[language];
-  const handleLogin = () => {
-    onNavigate('page', 'login');
+  const t = translations[language];  const handleLogin = () => {
+    onNavigate('login');
     onClose();
   };
 
   const handleRegister = () => {
-    onNavigate('page', 'register');
+    onNavigate('register');
     onClose();
   };
-
   const handleLogout = () => {
-    setUser(null);
+    onLogout();
     onClose();
   };
   if (!user) {
@@ -70,30 +68,53 @@ const ProfileDropdown = ({ user, setUser, language, onClose, onNavigate }) => {
   }
 
   return (
-    <div className="profile-dropdown">
-      <div className="dropdown-header">
-        <strong>{user.name}</strong>
+    <div className="profile-dropdown">      <div className="dropdown-header">
+        <strong>
+          {user.firstName && user.lastName 
+            ? `${user.firstName} ${user.lastName}`
+            : user.email
+          }
+        </strong>
       </div>
-      <hr />
-      <button className="dropdown-item" onClick={onClose}>
+      <hr />      <button className="dropdown-item" onClick={() => {
+        onNavigate('orders');
+        onClose();
+      }}>
         {t.orders}
       </button>
-      <button className="dropdown-item" onClick={onClose}>
+      <button className="dropdown-item" onClick={() => {
+        onNavigate('receipts');
+        onClose();
+      }}>
         {t.receipts}
-      </button>
-      <button className="dropdown-item" onClick={onClose}>
+      </button>      <button className="dropdown-item" onClick={() => {
+        onNavigate('profile');
+        onClose();
+      }}>
         {t.myData}
       </button>
-      <button className="dropdown-item" onClick={onClose}>
+      <button className="dropdown-item" onClick={() => {
+        onNavigate('discounts');
+        onClose();
+      }}>
         {t.discounts}
       </button>
-      <button className="dropdown-item" onClick={onClose}>
+      <button className="dropdown-item" onClick={() => {
+        onNavigate('reviews');
+        onClose();
+      }}>
         {t.reviews}
       </button>
-      <button className="dropdown-item" onClick={onClose}>
+      <button className="dropdown-item" onClick={() => {
+        onNavigate('complaints');
+        onClose();
+      }}>
         {t.complaints}
       </button>
-      <button className="dropdown-item" onClick={onClose}>
+      <button className="dropdown-item" onClick={() => {
+        onNavigate('returns');
+        onClose();
+      }}>
         {t.returns}
       </button>
       <hr />

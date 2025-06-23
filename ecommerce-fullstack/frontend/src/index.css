@@ -16,6 +16,11 @@
   --warning: #d69e2e;
   --error: #e53e3e;
   --info: #3182ce;
+  
+  /* Alpha versions for transparency effects */
+  --accent-primary-alpha: rgba(49, 130, 206, 0.1);
+  --accent-hover-alpha: rgba(44, 82, 130, 0.1);
+  --info-alpha: rgba(49, 130, 206, 0.08);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,6 +42,11 @@
     --warning: #f6e05e;
     --error: #fc8181;
     --info: #63b3ed;
+    
+    /* Alpha versions for dark theme */
+    --accent-primary-alpha: rgba(99, 179, 237, 0.15);
+    --accent-hover-alpha: rgba(144, 205, 244, 0.15);
+    --info-alpha: rgba(99, 179, 237, 0.1);
   }
 }
 

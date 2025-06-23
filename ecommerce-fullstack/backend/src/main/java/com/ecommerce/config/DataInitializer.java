@@ -1,19 +1,45 @@
 package com.ecommerce.config;
 
-import com.ecommerce.model.Product;
-import com.ecommerce.repository.ProductRepository;
+import com.ecommerce.model.*;
+import com.ecommerce.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
-    private ProductRepository productRepository;    @Override
+    private ProductRepository productRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private OrderRepository orderRepository;
+    
+    @Autowired
+    private ReceiptRepository receiptRepository;
+    
+    @Autowired
+    private ReviewRepository reviewRepository;
+    
+    @Autowired
+    private ComplaintRepository complaintRepository;
+    
+    @Autowired
+    private UserDiscountRepository userDiscountRepository;
+    
+    @Autowired
+    private ReturnRepository returnRepository;
+
+    @Override
     public void run(String... args) throws Exception {
         try {
             // Добавляем задержку для стабилизации соединения с MongoDB
@@ -38,15 +64,17 @@ public class DataInitializer implements CommandLineRunner {
                     }
                 }
             }
-            
-            // Если подключение успешно, инициализируем продукты
+              // Если подключение успешно, инициализируем данные
             if (count == 0) {
                 System.out.println("Initializing products in MongoDB sklep database...");
                 initializeAllProducts();
                 System.out.println("Successfully initialized products in MongoDB!");
             } else {
-                System.out.println("Database already contains " + count + " products. Skipping initialization.");
+                System.out.println("Database already contains " + count + " products. Skipping product initialization.");
             }
+            
+            // Инициализируем пользователей и данные профиля
+            initializeUserProfileData();
             
         } catch (Exception e) {
             System.err.println("Failed to initialize database: " + e.getMessage());
@@ -394,5 +422,226 @@ private void initializeAllProducts() {
         throw e;
     }
 }
+
+private void initializeUserProfileData() {
+        try {
+            System.out.println("Initializing user profile data...");
+            
+            // Создаем тестового пользователя
+            User testUser = createTestUser();
+            
+            // Инициализируем данные профиля для тестового пользователя
+            initializeOrdersForUser(testUser);
+            initializeReceiptsForUser(testUser);
+            initializeReviewsForUser(testUser);
+            initializeComplaintsForUser(testUser);
+            initializeDiscountsForUser(testUser);
+            initializeReturnsForUser(testUser);
+            
+            System.out.println("Successfully initialized user profile data!");
+            
+        } catch (Exception e) {
+            System.err.println("Error initializing user profile data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+      private User createTestUser() {
+        // Проверяем, есть ли уже тестовый пользователь
+        Optional<User> existingUser = userRepository.findByEmail("test@example.com");
+        if (existingUser.isPresent()) {
+            System.out.println("Test user already exists, using existing user");
+            return existingUser.get();
+        }
+        
+        User testUser = new User();
+        testUser.setFirstName("John");
+        testUser.setLastName("Doe");
+        testUser.setEmail("test@example.com");
+        testUser.setPassword("$2a$10$N.zmdrJ.oOJQQFPTx4B1Oe"); // password: "password"
+        testUser.setPhoneNumber("+1234567890");
+        testUser.setRole(UserRole.CUSTOMER);
+        testUser.setIsActive(true);
+        testUser.setEmailVerified(true);
+        testUser.setCreatedAt(LocalDateTime.now());
+        testUser.setProvider("local");
+        
+        testUser = userRepository.save(testUser);
+        System.out.println("Created test user with ID: " + testUser.getId());
+        return testUser;
+    }
+      private void initializeOrdersForUser(User user) {
+        List<Order> existingOrders = orderRepository.findByUserIdOrderByOrderDateDesc(user.getId());
+        if (existingOrders.isEmpty()) {
+            List<Order> orders = Arrays.asList(
+                createOrder(user, "ORD-2024-001", OrderStatus.DELIVERED, new BigDecimal("299.99"), LocalDateTime.now().minusDays(15)),
+                createOrder(user, "ORD-2024-002", OrderStatus.SHIPPED, new BigDecimal("149.50"), LocalDateTime.now().minusDays(3)),
+                createOrder(user, "ORD-2024-003", OrderStatus.PENDING, new BigDecimal("89.99"), LocalDateTime.now().minusHours(6))
+            );
+            orderRepository.saveAll(orders);
+            System.out.println("Initialized " + orders.size() + " orders for user");
+        }
+    }
+      private void initializeReceiptsForUser(User user) {
+        List<Order> userOrders = orderRepository.findByUserIdOrderByOrderDateDesc(user.getId());
+        // Для простоты проверим по количеству - если есть заказы но нет чеков, создадим чеки
+        if (!userOrders.isEmpty()) {
+            // Попробуем найти чеки - если нет, создадим
+            try {
+                // Создаем чеки только для первых двух заказов
+                List<Receipt> receipts = Arrays.asList(
+                    createReceipt(user, userOrders.get(0), "RCP-2024-001", new BigDecimal("299.99"), LocalDateTime.now().minusDays(15)),
+                    createReceipt(user, userOrders.size() > 1 ? userOrders.get(1) : userOrders.get(0), "RCP-2024-002", new BigDecimal("149.50"), LocalDateTime.now().minusDays(3))
+                );
+                receiptRepository.saveAll(receipts);
+                System.out.println("Initialized " + receipts.size() + " receipts for user");
+            } catch (Exception e) {
+                System.out.println("Receipts may already exist or error occurred: " + e.getMessage());
+            }
+        }
+    }
+      private void initializeReviewsForUser(User user) {
+        try {
+            List<Review> reviews = Arrays.asList(
+                createReview(user, "1", "Wireless Headphones", 5, "Excellent sound quality!", LocalDateTime.now().minusDays(10)),
+                createReview(user, "2", "Bluetooth Speaker", 4, "Good battery life", LocalDateTime.now().minusDays(5))
+            );
+            reviewRepository.saveAll(reviews);
+            System.out.println("Initialized " + reviews.size() + " reviews for user");
+        } catch (Exception e) {
+            System.out.println("Reviews may already exist or error occurred: " + e.getMessage());
+        }
+    }
+    
+    private void initializeComplaintsForUser(User user) {
+        try {
+            List<Complaint> complaints = Arrays.asList(
+                createComplaint(user, "Defective product", "Product arrived damaged", ComplaintStatus.OPEN, LocalDateTime.now().minusDays(2)),
+                createComplaint(user, "Late delivery", "Package arrived 3 days late", ComplaintStatus.RESOLVED, LocalDateTime.now().minusDays(7))
+            );
+            complaintRepository.saveAll(complaints);
+            System.out.println("Initialized " + complaints.size() + " complaints for user");
+        } catch (Exception e) {
+            System.out.println("Complaints may already exist or error occurred: " + e.getMessage());
+        }
+    }
+    
+    private void initializeDiscountsForUser(User user) {
+        try {
+            List<UserDiscount> discounts = Arrays.asList(
+                createDiscount(user, "SAVE20", "20% off on electronics", DiscountType.PERCENTAGE, new BigDecimal("20"), LocalDateTime.now().plusDays(30)),
+                createDiscount(user, "FREESHIP", "Free shipping", DiscountType.FIXED_AMOUNT, new BigDecimal("0"), LocalDateTime.now().plusDays(15)),
+                createDiscount(user, "WELCOME10", "Welcome discount", DiscountType.PERCENTAGE, new BigDecimal("10"), LocalDateTime.now().minusDays(5))
+            );
+            userDiscountRepository.saveAll(discounts);
+            System.out.println("Initialized " + discounts.size() + " discounts for user");
+        } catch (Exception e) {
+            System.out.println("Discounts may already exist or error occurred: " + e.getMessage());
+        }
+    }
+    
+    private void initializeReturnsForUser(User user) {
+        List<Order> userOrders = orderRepository.findByUserIdOrderByOrderDateDesc(user.getId());
+        if (!userOrders.isEmpty()) {
+            try {
+                List<Return> returns = Arrays.asList(
+                    createReturn(user, userOrders.get(0), "DEFECTIVE", ReturnStatus.IN_TRANSIT, new BigDecimal("99.99"), LocalDateTime.now().minusDays(3)),
+                    createReturn(user, userOrders.size() > 1 ? userOrders.get(1) : userOrders.get(0), "NOT_AS_DESCRIBED", ReturnStatus.COMPLETED, new BigDecimal("79.99"), LocalDateTime.now().minusDays(10))
+                );
+                returnRepository.saveAll(returns);
+                System.out.println("Initialized " + returns.size() + " returns for user");
+            } catch (Exception e) {
+                System.out.println("Returns may already exist or error occurred: " + e.getMessage());
+            }
+        }
+    }
+    
+    // Helper methods for creating profile entities
+    private Order createOrder(User user, String orderNumber, OrderStatus status, BigDecimal amount, LocalDateTime orderDate) {
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderNumber(orderNumber);
+        order.setStatus(status);
+        order.setTotalAmount(amount);
+        order.setCurrency("USD");
+        order.setOrderDate(orderDate);
+        order.setShippingAddress("123 Test Street, Test City, TC 12345");
+        order.setBillingAddress("123 Test Street, Test City, TC 12345");
+        order.setPaymentMethod("Credit Card");
+        order.setPaymentStatus("Paid");
+        return order;
+    }
+    
+    private Receipt createReceipt(User user, Order order, String receiptNumber, BigDecimal amount, LocalDateTime issuedAt) {
+        Receipt receipt = new Receipt();
+        receipt.setUser(user);
+        receipt.setOrder(order);
+        receipt.setReceiptNumber(receiptNumber);
+        receipt.setTotalAmount(amount);
+        receipt.setTaxAmount(amount.multiply(new BigDecimal("0.08"))); // 8% tax
+        receipt.setDiscountAmount(BigDecimal.ZERO);
+        receipt.setShippingAmount(new BigDecimal("9.99"));
+        receipt.setCurrency("USD");
+        receipt.setPaymentMethod("Credit Card");
+        receipt.setPaymentTransactionId("TXN-" + receiptNumber);
+        receipt.setIssuedAt(issuedAt);
+        receipt.setEmailSent(true);
+        receipt.setEmailSentAt(issuedAt.plusMinutes(5));
+        return receipt;
+    }
+      private Review createReview(User user, String productId, String productName, Integer rating, String comment, LocalDateTime createdAt) {
+        Review review = new Review();
+        review.setUser(user);
+        review.setProductId(productId);
+        review.setProductName(productName);
+        review.setRating(rating);
+        review.setComment(comment);
+        review.setCreatedAt(createdAt);
+        review.setVerified(true);
+        return review;
+    }
+    
+    private Complaint createComplaint(User user, String subject, String description, ComplaintStatus status, LocalDateTime createdAt) {
+        Complaint complaint = new Complaint();
+        complaint.setUser(user);
+        complaint.setSubject(subject);
+        complaint.setDescription(description);
+        complaint.setStatus(status);
+        complaint.setCreatedAt(createdAt);
+        return complaint;
+    }
+      private UserDiscount createDiscount(User user, String code, String description, DiscountType type, BigDecimal value, LocalDateTime validUntil) {
+        UserDiscount discount = new UserDiscount();
+        discount.setUser(user);
+        discount.setDiscountCode(code);
+        discount.setDiscountName(description);
+        discount.setType(type);
+        discount.setValue(value);
+        discount.setValidFrom(LocalDateTime.now().minusDays(1));
+        discount.setValidUntil(validUntil);
+        discount.setUsed(code.equals("WELCOME10")); // WELCOME10 is already used
+        if (discount.isUsed()) {
+            discount.setUsedAt(LocalDateTime.now().minusDays(2));
+        }
+        return discount;
+    }
+    
+    private Return createReturn(User user, Order order, String reasonString, ReturnStatus status, BigDecimal amount, LocalDateTime createdAt) {
+        Return returnItem = new Return();
+        returnItem.setUser(user);
+        returnItem.setOrder(order);
+        returnItem.setReturnNumber("RET-" + System.currentTimeMillis());
+        // Convert string to ReturnReason enum
+        try {
+            ReturnReason reason = ReturnReason.valueOf(reasonString);
+            returnItem.setReason(reason);
+        } catch (IllegalArgumentException e) {
+            returnItem.setReason(ReturnReason.OTHER);
+        }
+        returnItem.setStatus(status);
+        returnItem.setRefundAmount(amount);
+        returnItem.setRequestedAt(createdAt);
+        returnItem.setDescription("Return request for " + reasonString.toLowerCase().replace("_", " "));
+        return returnItem;
+    }
 }
 

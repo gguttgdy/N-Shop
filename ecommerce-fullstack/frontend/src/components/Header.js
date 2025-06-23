@@ -3,7 +3,7 @@ import ProfileDropdown from './ProfileDropdown';
 import CartDropdown from './CartDropdown';
 import './Header.css';
 
-const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCart, updateCartQuantity, clearCart, onHomeClick, onNavigate, onSearch, searchQuery, setSearchQuery }) => {
+const Header = ({ language, setLanguage, user, loading, cartItems, removeFromCart, updateCartQuantity, clearCart, onHomeClick, onNavigate, onSearch, searchQuery, setSearchQuery, onLogout }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   
@@ -103,18 +103,24 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
           </button>
         </form>
 
-        <div className="header-actions">          <div className="profile-section" ref={profileRef}>
-            <button 
+        <div className="header-actions">          <div className="profile-section" ref={profileRef}>            <button 
               className="profile-button"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
             >
               <span className="profile-icon">👤</span>
-              <span>{user ? user.name : t.login}</span>
+              <span>
+                {loading 
+                  ? 'Loading...'
+                  : user 
+                    ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email
+                    : t.login
+                }
+              </span>
               <span className="dropdown-arrow">▼</span>
-            </button>            {isProfileOpen && (
+            </button>{isProfileOpen && (
               <ProfileDropdown 
                 user={user}
-                setUser={setUser}
+                onLogout={onLogout}
                 language={language}
                 onClose={() => setIsProfileOpen(false)}
                 onNavigate={onNavigate}
