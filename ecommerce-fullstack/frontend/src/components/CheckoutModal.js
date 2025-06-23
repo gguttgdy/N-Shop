@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CheckoutModal.css';
 
 const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, formatPrice, onOrderSuccess }) => {
@@ -6,7 +6,9 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
   const [orderData, setOrderData] = useState({
     address: {
       street: '',
+      apartment: '',
       city: '',
+      state: '',
       postalCode: '',
       country: ''
     },
@@ -16,21 +18,41 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
       expiryDate: '',
       cvv: '',
       nameOnCard: ''
-    }
+    },
+    saveAddress: false // checkbox to save address to user profile
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Auto-fill address from user profile when modal opens
+  useEffect(() => {
+    if (isOpen && user) {
+      setOrderData(prev => ({
+        ...prev,
+        address: {
+          street: user.address || '',
+          apartment: user.apartment || '',
+          city: user.city || '',
+          state: user.state || '',
+          postalCode: user.postalCode || '',
+          country: user.country || ''
+        }
+      }));
+    }
+  }, [isOpen, user]);
+
   const translations = {
     ru: {
-      checkout: 'Оформление заказа',
-      address: 'Адрес доставки',
+      checkout: 'Оформление заказа',      address: 'Адрес доставки',
       payment: 'Способ оплаты',
       confirmation: 'Подтверждение',
       street: 'Улица и дом',
+      apartment: 'Квартира/Офис',
       city: 'Город',
+      state: 'Область/Регион',
       postalCode: 'Почтовый индекс',
       country: 'Страна',
+      saveAddress: 'Сохранить адрес в профиле',
       next: 'Далее',
       back: 'Назад',
       placeOrder: 'Оформить заказ',
@@ -51,14 +73,16 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
       required: 'Обязательное поле'
     },
     en: {
-      checkout: 'Checkout',
-      address: 'Delivery Address',
+      checkout: 'Checkout',      address: 'Delivery Address',
       payment: 'Payment Method',
       confirmation: 'Confirmation',
       street: 'Street Address',
+      apartment: 'Apartment/Suite',
       city: 'City',
+      state: 'State/Region',
       postalCode: 'Postal Code',
       country: 'Country',
+      saveAddress: 'Save address to profile',
       next: 'Next',
       back: 'Back',
       placeOrder: 'Place Order',
@@ -82,11 +106,13 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
       checkout: 'Składanie zamówienia',
       address: 'Adres dostawy',
       payment: 'Metoda płatności',
-      confirmation: 'Potwierdzenie',
-      street: 'Ulica i numer',
+      confirmation: 'Potwierdzenie',      street: 'Ulica i numer',
+      apartment: 'Mieszkanie/Biuro',
       city: 'Miasto',
+      state: 'Województwo/Region',
       postalCode: 'Kod pocztowy',
       country: 'Kraj',
+      saveAddress: 'Zapisz adres w profilu',
       next: 'Dalej',
       back: 'Wstecz',
       placeOrder: 'Złóż zamówienie',
@@ -113,7 +139,6 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
-
   const validateStep = () => {
     setError('');
     
@@ -142,46 +167,60 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
   const handleBack = () => {
     setError('');
     setStep(step - 1);
-  };
-
-  const handleSubmit = async () => {
+  };  const handleSubmit = async () => {
     if (!validateStep()) return;
 
-    setLoading(true);
-    setError('');
+    // Check if user is authenticated
+    const token = localStorage.getItem('authToken');
+    if (!token || !user) {
+      setError('Please log in to place an order');
+      return;
+    }
 
-    try {
-      const order = {
+    setLoading(true);
+    setError('');try {      const order = {
         items: cartItems.map(item => ({
-          productId: item.id,
+          productId: String(item.id),
+          productName: item.name || item.title,
           quantity: item.quantity,
-          price: item.price
+          price: Number(item.price),
+          productImage: item.image
         })),
-        address: orderData.address,
+        street: orderData.address.street,
+        apartment: orderData.address.apartment,
+        city: orderData.address.city,
+        state: orderData.address.state,
+        postalCode: orderData.address.postalCode,
+        country: orderData.address.country,
         paymentMethod: orderData.payment.method,
-        totalAmount: getTotalPrice()
-      };
+        currency: currency || 'USD',
+        totalAmount: Number(getTotalPrice()),
+        saveDeliveryAddress: orderData.saveAddress
+      };      console.log('Sending order data:', JSON.stringify(order, null, 2));
+      console.log('Token:', localStorage.getItem('authToken'));
 
       const response = await fetch('http://localhost:8080/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify(order)
-      });      if (response.ok) {
+      });if (response.ok) {
         const result = await response.json();
         // Show success message with order number
-        alert(`${t.orderSuccess} ${t.orderNumber}: ${result.id}`);
+        alert(`${t.orderSuccess} ${t.orderNumber}: ${result.orderNumber}`);
         
         // Call the success callback to clear cart and close modal
         if (onOrderSuccess) {
           onOrderSuccess();
         } else {
           onClose();
-        }
-      } else {
+        }      } else {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
         const errorData = await response.json();
+        console.log('Error response:', errorData);
         setError(errorData.message || 'Error placing order');
       }
     } catch (error) {
@@ -223,8 +262,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
 
           {step === 1 && (
             <div className="address-form">
-              <h3>{t.address}</h3>
-              <div className="form-group">
+              <h3>{t.address}</h3>              <div className="form-group">
                 <label>{t.street}</label>
                 <input
                   type="text"
@@ -235,12 +273,30 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
               </div>
               <div className="form-row">
                 <div className="form-group">
+                  <label>{t.apartment}</label>
+                  <input
+                    type="text"
+                    value={orderData.address.apartment}
+                    onChange={(e) => handleInputChange('address', 'apartment', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
                   <label>{t.city}</label>
                   <input
                     type="text"
                     value={orderData.address.city}
                     onChange={(e) => handleInputChange('address', 'city', e.target.value)}
                     required
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>{t.state}</label>
+                  <input
+                    type="text"
+                    value={orderData.address.state}
+                    onChange={(e) => handleInputChange('address', 'state', e.target.value)}
                   />
                 </div>
                 <div className="form-group">
@@ -261,6 +317,16 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
                   onChange={(e) => handleInputChange('address', 'country', e.target.value)}
                   required
                 />
+              </div>
+              <div className="form-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={orderData.saveAddress}
+                    onChange={(e) => setOrderData(prev => ({ ...prev, saveAddress: e.target.checked }))}
+                  />
+                  {t.saveAddress}
+                </label>
               </div>
             </div>
           )}

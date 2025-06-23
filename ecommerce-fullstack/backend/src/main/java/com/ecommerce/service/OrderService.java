@@ -1,7 +1,13 @@
 package com.ecommerce.service;
 
+import com.ecommerce.dto.CreateOrderRequest;
+import com.ecommerce.dto.OrderItemRequest;
+import com.ecommerce.dto.UserUpdateRequest;
 import com.ecommerce.model.Order;
+import com.ecommerce.model.OrderItem;
 import com.ecommerce.model.OrderStatus;
+import com.ecommerce.model.User;
+import com.ecommerce.repository.UserRepository;
 import com.ecommerce.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,13 +19,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OrderService {
-
-    @Autowired
-    private OrderRepository orderRepository;
+public class OrderService {    @Autowired
+    private OrderRepository orderRepository;    @Autowired
+    private UserRepository userRepository;
     
     @Autowired
-    private UserProfileMockService mockService;    public List<Order> getUserOrders(String userId) {
+    private UserService userService;
+    
+    @Autowired
+    private UserProfileMockService mockService;
+    
+    public List<Order> getUserOrders(String userId) {
         try {
             List<Order> orders = orderRepository.findByUserIdOrderByOrderDateDesc(userId);
             if (orders.isEmpty()) {
@@ -78,5 +88,75 @@ public class OrderService {
 
     public long countUserOrders(String userId) {
         return orderRepository.countByUserId(userId);
+    }    public Order createOrderFromRequest(CreateOrderRequest request, String userId) {
+        // Get user
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        User user = userOpt.get();
+        
+        // Create order
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderNumber(generateOrderNumber());
+        order.setTotalAmount(request.getTotalAmount());
+        order.setCurrency(request.getCurrency());
+        
+        // Set delivery address
+        String deliveryAddress = String.format("%s, %s, %s %s, %s", 
+            request.getStreet() + (request.getApartment() != null ? ", " + request.getApartment() : ""),
+            request.getCity(),
+            request.getState() != null ? request.getState() + "," : "",
+            request.getPostalCode(),
+            request.getCountry());
+        order.setShippingAddress(deliveryAddress);
+        
+        // Set payment information
+        order.setPaymentMethod(request.getPaymentMethod());
+        order.setPaymentStatus("PENDING");
+        order.setNotes(request.getNotes());
+        
+        // Convert and add order items
+        for (OrderItemRequest itemRequest : request.getItems()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProductId(itemRequest.getProductId());
+            orderItem.setProductName(itemRequest.getProductName());
+            orderItem.setQuantity(itemRequest.getQuantity());
+            orderItem.setPrice(itemRequest.getPrice());
+            orderItem.setProductImage(itemRequest.getProductImage());
+            order.getItems().add(orderItem);
+        }
+        
+        // Save order
+        Order savedOrder = orderRepository.save(order);
+        
+        // Update user address if requested
+        if (request.isSaveDeliveryAddress()) {
+            updateUserDeliveryAddress(user, request);
+        }
+        
+        return savedOrder;
+    }
+    
+    private void updateUserDeliveryAddress(User user, CreateOrderRequest request) {
+        try {
+            UserUpdateRequest updateRequest = new UserUpdateRequest();
+            updateRequest.setAddress(request.getStreet());
+            updateRequest.setCity(request.getCity());
+            updateRequest.setState(request.getState());
+            updateRequest.setCountry(request.getCountry());
+            updateRequest.setPostalCode(request.getPostalCode());
+            updateRequest.setApartment(request.getApartment());
+            
+            userService.updateUser(user.getId(), updateRequest);
+        } catch (Exception e) {
+            // Log error but don't fail the order creation
+            System.err.println("Failed to update user address: " + e.getMessage());
+        }
+    }
+    
+    private String generateOrderNumber() {
+        return "ORD-" + System.currentTimeMillis();
     }
 }

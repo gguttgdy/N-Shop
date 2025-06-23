@@ -32,15 +32,22 @@ public class JwtUtil {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-    
-    public String getUserIdFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        
-        return claims.getSubject();
+      public String getUserIdFromToken(String token) {
+        try {
+            System.out.println("Extracting user ID from token");
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            
+            String userId = claims.getSubject();
+            System.out.println("Extracted user ID: " + userId);
+            return userId;
+        } catch (Exception e) {
+            System.out.println("Error extracting user ID from token: " + e.getMessage());
+            throw e;
+        }
     }
     
     public String getEmailFromToken(String token) {
@@ -52,15 +59,17 @@ public class JwtUtil {
         
         return claims.get("email", String.class);
     }
-    
-    public boolean validateToken(String token) {
+      public boolean validateToken(String token) {
         try {
+            System.out.println("Validating token: " + token.substring(0, Math.min(20, token.length())) + "...");
             Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token);
+            System.out.println("Token validation successful");
             return true;
         } catch (JwtException | IllegalArgumentException e) {
+            System.out.println("Token validation failed: " + e.getMessage());
             return false;
         }
     }
