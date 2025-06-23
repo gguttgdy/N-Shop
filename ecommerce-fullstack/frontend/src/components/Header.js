@@ -3,7 +3,7 @@ import ProfileDropdown from './ProfileDropdown';
 import CartDropdown from './CartDropdown';
 import './Header.css';
 
-const Header = ({ language, setLanguage, user, loading, cartItems, removeFromCart, updateCartQuantity, clearCart, onHomeClick, onNavigate, onSearch, searchQuery, setSearchQuery, onLogout }) => {
+const Header = ({ language, setLanguage, user, loading, cartItems, removeFromCart, updateCartQuantity, clearCart, onHomeClick, onNavigate, onSearch, searchQuery, setSearchQuery, onLogout, currency, formatPrice }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   
@@ -144,7 +144,7 @@ const Header = ({ language, setLanguage, user, loading, cartItems, removeFromCar
               {getTotalItems() > 0 && (
                 <span className="cart-count">{getTotalItems()}</span>
               )}
-            </button>{isCartOpen && (
+            </button>            {isCartOpen && (
               <CartDropdown 
                 cartItems={cartItems}
                 removeFromCart={removeFromCart}
@@ -152,6 +152,9 @@ const Header = ({ language, setLanguage, user, loading, cartItems, removeFromCar
                 clearCart={clearCart}
                 language={language}
                 onClose={() => setIsCartOpen(false)}
+                onNavigate={onNavigate}
+                currency={currency}
+                formatPrice={formatPrice}
               />
             )}
           </div>          <select 

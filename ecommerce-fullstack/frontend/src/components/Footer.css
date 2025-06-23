@@ -1,9 +1,9 @@
 .footer {
   background: var(--bg-primary);
   color: var(--text-secondary);
-  margin-top: 60px;
   border-top: 1px solid var(--border-primary);
   transition: all 0.3s ease;
+  margin-top: auto;
 }
 
 .footer-container {

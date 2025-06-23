@@ -1,15 +1,15 @@
 import React from 'react';
 import './CartDropdown.css';
 
-const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, clearCart, language, onClose }) => {
-  const translations = {    ru: {
+const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, clearCart, language, onClose, onNavigate, currency, formatPrice }) => {
+  const translations = {
+    ru: {
       cart: 'Корзина',
       empty: 'Корзина пуста',
       total: 'Итого',
       checkout: 'Оформить заказ',
       clearCart: 'Очистить корзину',
       confirmClear: 'Вы уверены, что хотите очистить корзину?',
-      currency: 'руб.',
       remove: 'Удалить'
     },
     en: {
@@ -19,7 +19,6 @@ const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, clearCart
       checkout: 'Checkout',
       clearCart: 'Clear Cart',
       confirmClear: 'Are you sure you want to clear the cart?',
-      currency: 'USD',
       remove: 'Remove'
     },
     pl: {
@@ -29,14 +28,23 @@ const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, clearCart
       checkout: 'Do kasy',
       clearCart: 'Wyczyść koszyk',
       confirmClear: 'Czy na pewno chcesz wyczyścić koszyk?',
-      currency: 'zł',
       remove: 'Usuń'
     }
   };
 
   const t = translations[language];
+
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  const handleCheckout = () => {
+    // Закрываем корзину
+    onClose();
+    // Переходим к оформлению заказа
+    if (onNavigate) {
+      onNavigate('checkout');
+    }
   };
 
   const handleClearCart = () => {
@@ -71,7 +79,7 @@ const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, clearCart
             <div className="cart-item-details">
               <h4 className="cart-item-name">{item.name}</h4>
               <div className="cart-item-price">
-                {item.price.toLocaleString()} {t.currency}
+                {formatPrice ? formatPrice(item.price) : `${item.price} ${currency}`}
               </div>
               <div className="cart-item-controls">
                 <button 
@@ -99,14 +107,18 @@ const CartDropdown = ({ cartItems, removeFromCart, updateCartQuantity, clearCart
           </div>
         ))}
       </div>
-        <div className="cart-footer">
+      
+      <div className="cart-footer">
         <div className="cart-total">
-          <strong>{t.total}: {getTotalPrice().toLocaleString()} {t.currency}</strong>
-        </div>        <div className="cart-actions">
+          <strong>
+            {t.total}: {formatPrice ? formatPrice(getTotalPrice()) : `${getTotalPrice()} ${currency}`}
+          </strong>
+        </div>
+        <div className="cart-actions">
           <button className="clear-cart-btn" onClick={handleClearCart}>
             {t.clearCart}
           </button>
-          <button className="checkout-btn" onClick={onClose}>
+          <button className="checkout-btn" onClick={handleCheckout}>
             {t.checkout}
           </button>
         </div>

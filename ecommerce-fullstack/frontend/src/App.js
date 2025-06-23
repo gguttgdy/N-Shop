@@ -20,6 +20,7 @@ import UserDiscounts from './components/UserDiscounts';
 import UserReviews from './components/UserReviews';
 import UserComplaints from './components/UserComplaints';
 import UserReturns from './components/UserReturns';
+import CheckoutModal from './components/CheckoutModal';
 import { useCurrency } from './hooks/useCurrency';
 import { useAuth } from './hooks/useAuth';
 import './App.css';
@@ -34,9 +35,9 @@ function App() {
   const [selectedSection, setSelectedSection] = useState(null);
   const [selectedInfoPage, setSelectedInfoPage] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   // Хук для управления валютой
-  const { currency, formatPrice } = useCurrency(language);
+  const { currency, formatPrice, convertAndFormatPrice } = useCurrency(language);
   // Загружаем корзину из localStorage при загрузке компонента
   useEffect(() => {
     try {
@@ -65,7 +66,25 @@ function App() {
     }
   }, [cartItems]);  const handleNavigation = (pageType, value) => {
     console.log('Navigating to:', pageType, value);
-      // Обработка прямых переходов на страницы
+    
+    // Специальная обработка для checkout
+    if (pageType === 'checkout') {
+      if (!user) {
+        // Если пользователь не залогинен, перенаправляем на логин
+        setCurrentPage('login');
+        setSelectedCategory(null);
+        setSelectedSubcategory(null);
+        setSelectedSection(null);
+        setSelectedInfoPage(null);
+        setSearchQuery('');
+      } else {
+        // Если пользователь залогинен, открываем модальное окно
+        setIsCheckoutOpen(true);
+      }
+      return;
+    }
+    
+    // Обработка прямых переходов на страницы
     if (['login', 'register', 'profile', 'my-data', 'home', 'orders', 'receipts', 'discounts', 'reviews', 'complaints', 'returns', 'forgot-password', 'reset-password'].includes(pageType)) {
       setCurrentPage(pageType);
       setSelectedCategory(null);
@@ -154,9 +173,17 @@ function App() {
         )
       );
     }
-  };
-  const clearCart = () => {
+  };  const clearCart = () => {
     setCartItems([]);  };
+  const handleCheckoutClose = () => {
+    setIsCheckoutOpen(false);
+  };
+
+  const handleOrderSuccess = () => {
+    // Закрываем модальное окно и очищаем корзину после успешного заказа
+    setIsCheckoutOpen(false);
+    clearCart();
+  };
     const handleLogin = async (credentials) => {
     try {
       console.log('App.js handleLogin called with:', credentials);
@@ -192,10 +219,9 @@ function App() {
     } catch (error) {
       console.error('Logout error:', error);
     }
-  };
-
-  return (
-    <div className="App">      <Header 
+  };  return (
+    <div className="App">
+      <Header 
         language={language}
         setLanguage={setLanguage}
         user={user}
@@ -210,12 +236,16 @@ function App() {
         onSearch={handleSearch}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        currency={currency}
+        formatPrice={convertAndFormatPrice}
       />
-        <Catalog 
+      
+      <Catalog 
         language={language} 
         onCategorySelect={handleCategorySelect}
       />
-        <main className="main-content">
+        
+      <main className="main-content">
         {currentPage === 'home' ? (
           <HomePage 
             language={language} 
@@ -306,12 +336,22 @@ function App() {
             currency={currency}
             formatPriceWithCurrency={formatPrice}
             onHomeClick={handleHomeClick}
-          />
-        ) : null}
+          />        ) : null}
       </main>
+      
       <Footer 
         language={language} 
         onNavigate={handleNavigation}
+      />
+        <CheckoutModal 
+        isOpen={isCheckoutOpen}
+        onClose={handleCheckoutClose}
+        cartItems={cartItems}
+        user={user}
+        language={language}
+        currency={currency}
+        formatPrice={formatPrice}
+        onOrderSuccess={handleOrderSuccess}
       />
     </div>
   );
