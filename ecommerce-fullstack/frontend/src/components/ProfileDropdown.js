@@ -1,7 +1,7 @@
 import React from 'react';
 import './ProfileDropdown.css';
 
-const ProfileDropdown = ({ user, setUser, language, onClose }) => {
+const ProfileDropdown = ({ user, setUser, language, onClose, onNavigate }) => {
   const translations = {
     ru: {
       login: 'Войти',
@@ -42,10 +42,13 @@ const ProfileDropdown = ({ user, setUser, language, onClose }) => {
   };
 
   const t = translations[language];
-
   const handleLogin = () => {
-    // Временная имитация входа
-    setUser({ name: 'Иван Иванов', email: 'ivan@example.com' });
+    onNavigate('page', 'login');
+    onClose();
+  };
+
+  const handleRegister = () => {
+    onNavigate('page', 'register');
     onClose();
   };
 
@@ -53,14 +56,13 @@ const ProfileDropdown = ({ user, setUser, language, onClose }) => {
     setUser(null);
     onClose();
   };
-
   if (!user) {
     return (
       <div className="profile-dropdown">
         <button className="dropdown-item" onClick={handleLogin}>
           {t.login}
         </button>
-        <button className="dropdown-item" onClick={onClose}>
+        <button className="dropdown-item" onClick={handleRegister}>
           {t.register}
         </button>
       </div>

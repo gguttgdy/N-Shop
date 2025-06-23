@@ -222,9 +222,8 @@ const Footer = ({ language, onNavigate }) => {
 
         {/* Footer Bottom */}
         <div className="footer-bottom">
-          <div className="footer-bottom-content">
-            <div className="copyright">
-              <p>&copy; {currentYear} ShopLogo. {t.rights}</p>
+          <div className="footer-bottom-content">            <div className="copyright">
+              <p>&copy; {currentYear} N-Shop. {t.rights}</p>
             </div>
             <div className="footer-links">
               <a href="#" onClick={() => handleLinkClick('page', 'privacy')}>{t.privacy}</a>

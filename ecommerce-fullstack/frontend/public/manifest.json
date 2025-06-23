@@ -1,6 +1,5 @@
-{
-  "short_name": "Shop App",
-  "name": "Интернет Магазин",
+{  "short_name": "N-Shop",
+  "name": "N-Shop - Online Store",
   "icons": [
     {
       "src": "favicon.ico",

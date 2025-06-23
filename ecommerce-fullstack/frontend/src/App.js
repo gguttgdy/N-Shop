@@ -8,6 +8,8 @@ import SearchPage from './components/SearchPage';
 import Footer from './components/Footer';
 import InfoPage from './components/InfoPage';
 import HelpCenter from './components/HelpCenter';
+import Login from './components/Login';
+import Register from './components/Register';
 import { useCurrency } from './hooks/useCurrency';
 import './App.css';
 
@@ -50,7 +52,7 @@ function App() {
       console.error('Error saving cart to localStorage:', error);
       // При ошибке сохранения просто логируем, но не прерываем работу
     }
-  }, [cartItems]);const handleNavigation = (pageType, value) => {
+  }, [cartItems]);  const handleNavigation = (pageType, value) => {
     if (pageType === 'category') {
       setSelectedCategory(value.categoryId);
       setSelectedSubcategory(value.subcategoryId || null);
@@ -59,10 +61,14 @@ function App() {
       setSelectedSection(value);
       setCurrentPage('section');
     } else if (pageType === 'page') {
-      setSelectedInfoPage(value);
-      setCurrentPage('info');
+      if (value === 'login' || value === 'register') {
+        setCurrentPage(value);
+      } else {
+        setSelectedInfoPage(value);
+        setCurrentPage('info');
+      }
     }
-  };  const handleCategorySelect = (categoryId, subcategoryId = null) => {
+  };const handleCategorySelect = (categoryId, subcategoryId = null) => {
     console.log('Category selected:', categoryId, 'Subcategory:', subcategoryId);    setSelectedCategory(categoryId);
     setSelectedSubcategory(subcategoryId);
     setCurrentPage('category');
@@ -152,8 +158,8 @@ function App() {
         language={language} 
         onCategorySelect={handleCategorySelect}
       />
-      
-      <main className="main-content">{currentPage === 'home' ? (
+        <main className="main-content">
+        {currentPage === 'home' ? (
           <HomePage 
             language={language} 
             onNavigate={handleNavigation}
@@ -178,6 +184,16 @@ function App() {
             currency={currency}
             formatPrice={formatPrice}
           />
+        ) : currentPage === 'login' ? (
+          <Login 
+            language={language}
+            onNavigate={handleNavigation}
+          />
+        ) : currentPage === 'register' ? (
+          <Register 
+            language={language}
+            onNavigate={handleNavigation}
+          />
         ) : currentPage === 'info' ? (
           selectedInfoPage === 'help-center' ? (
             <HelpCenter language={language} />
@@ -186,7 +202,8 @@ function App() {
               language={language}
               pageType={selectedInfoPage}
             />
-          )        ) : currentPage === 'search' ? (
+          )
+        ) : currentPage === 'search' ? (
           <SearchPage 
             language={language}
             searchQuery={searchQuery}

@@ -84,7 +84,7 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
   return (
     <header className="header">
       <div className="header-container">        <div className="logo" onClick={() => { setSearchQuery(''); onHomeClick(); }}>
-          <h1>ShopLogo</h1>
+          <h1>N-Shop</h1>
         </div>
         
         <form className="search-form" onSubmit={handleSearch}>
@@ -111,13 +111,13 @@ const Header = ({ language, setLanguage, user, setUser, cartItems, removeFromCar
               <span className="profile-icon">👤</span>
               <span>{user ? user.name : t.login}</span>
               <span className="dropdown-arrow">▼</span>
-            </button>
-            {isProfileOpen && (
+            </button>            {isProfileOpen && (
               <ProfileDropdown 
                 user={user}
                 setUser={setUser}
                 language={language}
                 onClose={() => setIsProfileOpen(false)}
+                onNavigate={onNavigate}
               />
             )}
           </div>
