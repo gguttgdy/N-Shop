@@ -24,8 +24,9 @@ public class RegisterRequest {
     
     @NotBlank(message = "Password confirmation is required")
     private String confirmPassword;
+      private String phoneNumber;
     
-    private String phoneNumber;
+    private String dateOfBirth; // Date in format YYYY-MM-DD
     
     // Address information (optional during registration)
     private String address;
@@ -60,9 +61,11 @@ public class RegisterRequest {
     public void setPassword(String password) { this.password = password; }
     
     public String getConfirmPassword() { return confirmPassword; }
-    public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
-      public String getPhoneNumber() { return phoneNumber; }
+    public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }    public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    
+    public String getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(String dateOfBirth) { this.dateOfBirth = dateOfBirth; }
     
     // Address getters and setters
     public String getAddress() { return address; }

@@ -174,7 +174,7 @@ const UserMyData = ({ language = 'en' }) => {
           firstName: profile.firstName || '',
           lastName: profile.lastName || '',
           phoneNumber: profile.phoneNumber || '',
-          dateOfBirth: profile.dateOfBirth ? profile.dateOfBirth.split('T')[0] : '',
+          dateOfBirth: profile.dateOfBirth && profile.dateOfBirth !== "1970-01-01T00:00:00" ? profile.dateOfBirth.split('T')[0] : '',
           // Main address fields
           address: profile.address || '',
           city: profile.city || '',
@@ -233,7 +233,7 @@ const UserMyData = ({ language = 'en' }) => {
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       phoneNumber: user.phoneNumber || '',
-      dateOfBirth: user.dateOfBirth ? user.dateOfBirth.split('T')[0] : '',
+      dateOfBirth: user.dateOfBirth && user.dateOfBirth !== "1970-01-01T00:00:00" ? user.dateOfBirth.split('T')[0] : '',
       // Main address fields
       address: user.address || '',
       city: user.city || '',

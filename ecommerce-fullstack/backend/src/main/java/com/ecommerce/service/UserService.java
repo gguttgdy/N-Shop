@@ -38,14 +38,16 @@ public class UserService {
         // Create new user
         User user = new User();
         user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setPhoneNumber(request.getPhoneNumber());
+        user.setLastName(request.getLastName());        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        
         user.setProvider("local");
         user.setRole(UserRole.CUSTOMER);
         user.setIsActive(true);
         user.setEmailVerified(false);
-          // Set address information if provided, otherwise set empty strings
+        // Don't set lastLogin during registration - leave it null
+        
+        // Set address information if provided, otherwise set empty strings
         user.setAddress(request.getAddress() != null ? request.getAddress() : "");
         user.setCity(request.getCity() != null ? request.getCity() : "");
         user.setState(request.getState() != null ? request.getState() : "");
@@ -127,7 +129,18 @@ public class UserService {
         if (request.getPhoneNumber() != null) {
             user.setPhoneNumber(request.getPhoneNumber());
         }        if (request.getDateOfBirth() != null) {
-            user.setDateOfBirth(request.getDateOfBirth());
+            if (request.getDateOfBirth().trim().isEmpty()) {
+                // If empty string, set to null
+                user.setDateOfBirth(null);
+            } else {
+                try {
+                    // Parse date string (YYYY-MM-DD) to LocalDateTime
+                    user.setDateOfBirth(LocalDateTime.parse(request.getDateOfBirth() + "T00:00:00"));
+                } catch (Exception e) {
+                    // If parsing fails, leave dateOfBirth unchanged
+                    throw new RuntimeException("Invalid date format. Please use YYYY-MM-DD format.");
+                }
+            }
         }
         
         // Update address information

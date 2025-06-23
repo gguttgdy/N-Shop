@@ -2,6 +2,7 @@ package com.ecommerce.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.index.Indexed;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -30,14 +31,15 @@ public class User {
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
-    
-    private String phoneNumber;
+      private String phoneNumber;
+    @Field
     private LocalDateTime dateOfBirth;
     private UserRole role = UserRole.CUSTOMER;
     private Boolean isActive = true;
     private Boolean emailVerified = false;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @Field
     private LocalDateTime lastLogin;
     
     // OAuth fields
@@ -61,11 +63,11 @@ public class User {
     private String billingCountry;
     private String billingPostalCode;
     private String billingApartment;    // Constructors
-    public User() {
-        this.createdAt = LocalDateTime.now();
+    public User() {        this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         
-        // Initialize address fields with empty strings so they appear in MongoDB
+        // Initialize optional fields as empty strings so they appear in MongoDB
+        this.phoneNumber = "";
         this.address = "";
         this.city = "";
         this.state = "";
@@ -76,8 +78,10 @@ public class User {
         this.billingCity = "";
         this.billingState = "";
         this.billingCountry = "";
-        this.billingPostalCode = "";
-        this.billingApartment = "";
+        this.billingPostalCode = "";        this.billingApartment = "";
+          // Initialize date fields as null but with @Field annotation to ensure they appear in MongoDB
+        this.dateOfBirth = null;
+        this.lastLogin = null;
     }
     
     public User(String firstName, String lastName, String email, String password) {

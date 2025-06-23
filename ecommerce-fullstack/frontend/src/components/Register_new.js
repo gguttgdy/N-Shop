@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import './Auth.css';
 
-const Register = ({ language, onNavigate, onLogin }) => {
-  const [formData, setFormData] = useState({
+const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -17,8 +16,7 @@ const Register = ({ language, onNavigate, onLogin }) => {
     ru: {
       register: 'Регистрация',
       firstName: 'Имя',
-      lastName: 'Фамилия',
-      email: 'Email',
+      lastName: 'Фамилия',      email: 'Email',
       password: 'Пароль',
       confirmPassword: 'Подтвердите пароль',
       signUp: 'Зарегистрироваться',
@@ -39,8 +37,7 @@ const Register = ({ language, onNavigate, onLogin }) => {
     en: {
       register: 'Sign Up',
       firstName: 'First Name',
-      lastName: 'Last Name',
-      email: 'Email',
+      lastName: 'Last Name',      email: 'Email',
       password: 'Password',
       confirmPassword: 'Confirm Password',
       signUp: 'Sign Up',
@@ -61,8 +58,7 @@ const Register = ({ language, onNavigate, onLogin }) => {
     pl: {
       register: 'Zarejestruj się',
       firstName: 'Imię',
-      lastName: 'Nazwisko',
-      email: 'Email',
+      lastName: 'Nazwisko',      email: 'Email',
       password: 'Hasło',
       confirmPassword: 'Potwierdź hasło',
       signUp: 'Zarejestruj się',
@@ -129,8 +125,7 @@ const Register = ({ language, onNavigate, onLogin }) => {
 
     try {
       // Передаем userData в App.js для обработки через useAuth
-      const userData = {
-        firstName: formData.firstName,
+      const userData = {        firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
@@ -245,8 +240,7 @@ const Register = ({ language, onNavigate, onLogin }) => {
               onChange={handleInputChange}
               required
               autoComplete="new-password"
-              disabled={isLoading}
-            />
+              disabled={isLoading}            />
           </div>
 
           <div className="form-group">

@@ -1,7 +1,6 @@
 package com.ecommerce.dto;
 
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 public class UserUpdateRequest {
     
@@ -9,9 +8,8 @@ public class UserUpdateRequest {
     private String firstName;
     
     @Size(max = 50)
-    private String lastName;
-      private String phoneNumber;
-    private LocalDateTime dateOfBirth;
+    private String lastName;    private String phoneNumber;
+    private String dateOfBirth; // Date in format YYYY-MM-DD
     private String profileImageUrl;
     
     // Address information
@@ -42,9 +40,8 @@ public class UserUpdateRequest {
     
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-    
-    public LocalDateTime getDateOfBirth() { return dateOfBirth; }
-    public void setDateOfBirth(LocalDateTime dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+      public String getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(String dateOfBirth) { this.dateOfBirth = dateOfBirth; }
     
     public String getProfileImageUrl() { return profileImageUrl; }
     public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
