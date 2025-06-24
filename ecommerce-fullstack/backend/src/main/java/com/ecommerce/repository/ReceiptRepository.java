@@ -14,24 +14,17 @@ import java.util.Optional;
 @Repository
 public interface ReceiptRepository extends MongoRepository<Receipt, String> {
     
-    @Query("{'user.$id': ?0}")
+    // Use direct userId field for better performance and reliability
     List<Receipt> findByUserIdOrderByIssuedAtDesc(String userId);
     
-    @Query("{'user.$id': ?0}")
-    List<Receipt> findByUserIdOrderByCreatedAtDesc(String userId);
+    Page<Receipt> findByUserIdOrderByIssuedAtDesc(String userId, Pageable pageable);
     
-    @Query("{'user.$id': ?0}")
-    Page<Receipt> findByUserIdOrderByCreatedAtDesc(String userId, Pageable pageable);
-    
-    @Query("{'$and': [{'id': ?0}, {'user.$id': ?1}]}")
     Optional<Receipt> findByIdAndUserId(String receiptId, String userId);
     
-    @Query("{'$and': [{'order.$id': ?0}, {'user.$id': ?1}]}")
+    @Query("{'$and': [{'order.$id': ?0}, {'userId': ?1}]}")
     Optional<Receipt> findByOrderIdAndUserId(String orderId, String userId);
     
-    @Query("{'user.$id': ?0, 'issuedAt': {'$gte': ?1, '$lte': ?2}}")
-    List<Receipt> findByUserIdAndCreatedAtBetweenOrderByCreatedAtDesc(String userId, LocalDateTime startDate, LocalDateTime endDate);
-    
+    List<Receipt> findByUserIdAndIssuedAtBetweenOrderByIssuedAtDesc(String userId, LocalDateTime startDate, LocalDateTime endDate);    
     Optional<Receipt> findByReceiptNumber(String receiptNumber);
     
     Optional<Receipt> findByOrderId(String orderId);
@@ -40,6 +33,5 @@ public interface ReceiptRepository extends MongoRepository<Receipt, String> {
     
     List<Receipt> findAllByOrderByIssuedAtDesc();
     
-    @Query("{'user.$id': ?0}")
     long countByUserId(String userId);
 }

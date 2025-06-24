@@ -87,6 +87,26 @@ public class UserController {
         }
     }
     
+    @GetMapping("/receipts/{receiptId}/download")
+    public ResponseEntity<?> downloadReceiptPdf(@PathVariable String receiptId, HttpServletRequest request) {
+        try {
+            String userId = getUserIdFromToken(request);
+            return receiptService.generateReceiptPdf(receiptId, userId);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/receipts/{receiptId}/view")
+    public ResponseEntity<?> viewReceiptPdf(@PathVariable String receiptId, HttpServletRequest request) {
+        try {
+            String userId = getUserIdFromToken(request);
+            return receiptService.viewReceiptPdf(receiptId, userId);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
+    
     @GetMapping("/reviews")
     public ResponseEntity<?> getUserReviews(HttpServletRequest request) {
         try {

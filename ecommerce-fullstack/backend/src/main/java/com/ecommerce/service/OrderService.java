@@ -7,13 +7,17 @@ import com.ecommerce.model.Order;
 import com.ecommerce.model.OrderItem;
 import com.ecommerce.model.OrderStatus;
 import com.ecommerce.model.User;
+import com.ecommerce.model.Receipt;
 import com.ecommerce.repository.UserRepository;
 import com.ecommerce.repository.OrderRepository;
+import com.ecommerce.repository.ReceiptRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +25,16 @@ import java.util.Optional;
 
 @Service
 public class OrderService {    @Autowired
-    private OrderRepository orderRepository;    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
     private UserRepository userRepository;
-      @Autowired
+    
+    @Autowired
     private UserService userService;
+    
+    @Autowired
+    private ReceiptRepository receiptRepository;
       public List<Order> getUserOrders(String userId) {
         try {
             System.out.println("Fetching orders for user: " + userId);
@@ -123,9 +133,11 @@ public class OrderService {    @Autowired
             orderItem.setProductImage(itemRequest.getProductImage());
             order.getItems().add(orderItem);
         }
-        
-        // Save order
+          // Save order
         Order savedOrder = orderRepository.save(order);
+        
+        // Create receipt for the order
+        createReceiptForOrder(savedOrder);
         
         // Update user address if requested
         if (request.isSaveDeliveryAddress()) {
@@ -133,6 +145,47 @@ public class OrderService {    @Autowired
         }
         
         return savedOrder;
+    }
+    
+      private void createReceiptForOrder(Order order) {
+        try {
+            Receipt receipt = new Receipt();
+            receipt.setUserId(order.getUser().getId()); // Set direct userId field
+            receipt.setUser(order.getUser());
+            receipt.setOrder(order);
+            receipt.setReceiptNumber(generateReceiptNumber());
+            receipt.setTotalAmount(order.getTotalAmount());
+            receipt.setCurrency(order.getCurrency());
+            receipt.setPaymentMethod(order.getPaymentMethod());
+              // Calculate tax and shipping (for now, use simple calculation)
+            BigDecimal totalAmount = order.getTotalAmount();
+            BigDecimal shippingAmount = new BigDecimal("9.99"); // Fixed shipping
+            BigDecimal taxRate = new BigDecimal("0.08"); // 8% tax
+            
+            // Calculate tax from subtotal (total - shipping)
+            BigDecimal subtotal = totalAmount.subtract(shippingAmount);
+            BigDecimal taxAmount = subtotal.multiply(taxRate).setScale(2, RoundingMode.HALF_UP);
+            
+            receipt.setTaxAmount(taxAmount);
+            receipt.setShippingAmount(shippingAmount);
+            receipt.setDiscountAmount(BigDecimal.ZERO);
+            
+            // Set payment transaction ID (for now, generate a dummy one)
+            receipt.setPaymentTransactionId("TXN-" + System.currentTimeMillis());
+            
+            receipt.setIssuedAt(LocalDateTime.now());
+            receipt.setEmailSent(false);
+            
+            receiptRepository.save(receipt);
+            System.out.println("Receipt created for order: " + order.getOrderNumber());
+        } catch (Exception e) {
+            System.err.println("Failed to create receipt for order " + order.getOrderNumber() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    private String generateReceiptNumber() {
+        return "RCP-" + System.currentTimeMillis();
     }
     
     private void updateUserDeliveryAddress(User user, CreateOrderRequest request) {

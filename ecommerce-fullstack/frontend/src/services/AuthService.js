@@ -111,12 +111,58 @@ export const authService = {
   getOrders: async () => {
     const response = await api.get('/users/orders');
     return response.data;
-  },
-
-  // Получение квитанций
+  },  // Получение квитанций
   getReceipts: async () => {
     const response = await api.get('/users/receipts');
     return response.data;
+  },
+  // Скачивание PDF чека
+  downloadReceiptPdf: async (receiptId) => {
+    try {
+      const response = await api.get(`/users/receipts/${receiptId}/download`, {
+        responseType: 'blob'
+      });
+      
+      // Create blob URL and trigger download
+      const blob = new Blob([response.data], { type: 'text/html' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `receipt-${receiptId}.html`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Error downloading receipt:', error);
+      throw error;
+    }
+  },
+
+  // Просмотр PDF чека
+  viewReceiptPdf: async (receiptId) => {
+    try {
+      const response = await api.get(`/users/receipts/${receiptId}/view`, {
+        responseType: 'blob'
+      });
+      
+      // Create blob URL and open in new tab
+      const blob = new Blob([response.data], { type: 'text/html' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      
+      // Clean up the URL after a delay to allow the tab to load
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 1000);
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Error viewing receipt PDF:', error);
+      throw error;
+    }
   },
 
   // Получение отзывов

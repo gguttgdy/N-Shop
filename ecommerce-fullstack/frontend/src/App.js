@@ -299,10 +299,14 @@ function App() {
             currency={currency}
             formatPrice={formatPrice}
             convertAndFormatPrice={convertAndFormatPrice}
-          />
-        ) : currentPage === 'receipts' ? (
+          />        ) : currentPage === 'receipts' ? (
           <UserReceipts 
             language={language}
+            user={user}
+            loading={loading}
+            currency={currency}
+            formatPrice={formatPrice}
+            convertAndFormatPrice={convertAndFormatPrice}
           />
         ) : currentPage === 'discounts' ? (
           <UserDiscounts 
