@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,26 +23,21 @@ import java.util.Optional;
 public class OrderService {    @Autowired
     private OrderRepository orderRepository;    @Autowired
     private UserRepository userRepository;
-    
-    @Autowired
+      @Autowired
     private UserService userService;
-    
-    @Autowired
-    private UserProfileMockService mockService;
-    
-    public List<Order> getUserOrders(String userId) {
+      public List<Order> getUserOrders(String userId) {
         try {
+            System.out.println("Fetching orders for user: " + userId);
             List<Order> orders = orderRepository.findByUserIdOrderByOrderDateDesc(userId);
-            if (orders.isEmpty()) {
-                // If no orders found in database, return mock data for demo
-                System.out.println("No orders found in database for user: " + userId + ", returning mock data");
-                return mockService.getMockUserOrders(userId);
-            }
+            System.out.println("Found " + orders.size() + " orders in database");
+            
+            // Return real orders from database, don't mix with mock data
             return orders;
         } catch (Exception e) {
             System.err.println("Error fetching orders from database: " + e.getMessage());
-            // Fallback to mock data if database error occurs
-            return mockService.getMockUserOrders(userId);
+            e.printStackTrace();
+            // Return empty list on error instead of mock data
+            return new ArrayList<>();
         }
     }
 

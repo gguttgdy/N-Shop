@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -60,13 +61,18 @@ public class UserController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
-    }
-      @GetMapping("/orders")
+    }      @GetMapping("/orders")
     public ResponseEntity<?> getUserOrders(HttpServletRequest request) {
         try {
+            System.out.println("GET /api/users/orders - Getting user orders");
             String userId = getUserIdFromToken(request);
-            return ResponseEntity.ok(orderService.getUserOrders(userId));
+            System.out.println("User ID: " + userId);
+            List<?> orders = orderService.getUserOrders(userId);
+            System.out.println("Returning " + orders.size() + " orders");
+            return ResponseEntity.ok(orders);
         } catch (RuntimeException e) {
+            System.err.println("Error in getUserOrders: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
@@ -120,18 +126,23 @@ public class UserController {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
-    
-    private String getUserIdFromToken(HttpServletRequest request) {
+      private String getUserIdFromToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
+        System.out.println("Authorization header: " + authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.err.println("Authorization header is missing or invalid");
             throw new RuntimeException("Authorization header is missing or invalid");
         }
         
         String token = authHeader.substring(7);
+        System.out.println("Token: " + token.substring(0, Math.min(token.length(), 20)) + "...");
         if (!jwtUtil.validateToken(token)) {
+            System.err.println("Token validation failed");
             throw new RuntimeException("Invalid or expired token");
         }
         
-        return jwtUtil.getUserIdFromToken(token);
+        String userId = jwtUtil.getUserIdFromToken(token);
+        System.out.println("Extracted user ID: " + userId);
+        return userId;
     }
 }

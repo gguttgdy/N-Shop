@@ -291,10 +291,14 @@ function App() {
             language={language}
             user={user}
             updateProfile={updateProfile}
-          />
-        ) : currentPage === 'orders' ? (
+          />        ) : currentPage === 'orders' ? (
           <UserOrders 
             language={language}
+            user={user}
+            loading={loading}
+            currency={currency}
+            formatPrice={formatPrice}
+            convertAndFormatPrice={convertAndFormatPrice}
           />
         ) : currentPage === 'receipts' ? (
           <UserReceipts 

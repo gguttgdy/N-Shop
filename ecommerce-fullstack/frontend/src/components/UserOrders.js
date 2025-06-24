@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { authService } from '../services/AuthService';
 import './UserProfile.css';
 
-const UserOrders = ({ language, user }) => {
+const UserOrders = ({ language, user, loading: userLoading, currency, formatPrice, convertAndFormatPrice }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  const translations = {
+  const [error, setError] = useState('');  const translations = {
     ru: {
       title: 'Мои заказы',
       noOrders: 'У вас пока нет заказов',
@@ -17,7 +15,13 @@ const UserOrders = ({ language, user }) => {
       date: 'Дата',
       status: 'Статус',
       total: 'Сумма',
-      items: 'Товары'
+      items: 'Товары',
+      deliveryAddress: 'Адрес доставки',
+      statusPending: 'В обработке',
+      statusProcessing: 'Обрабатывается',
+      statusShipped: 'Отправлен',
+      statusDelivered: 'Доставлен',
+      statusCancelled: 'Отменен'
     },
     en: {
       title: 'My Orders',
@@ -28,7 +32,13 @@ const UserOrders = ({ language, user }) => {
       date: 'Date',
       status: 'Status',
       total: 'Total',
-      items: 'Items'
+      items: 'Items',
+      deliveryAddress: 'Delivery Address',
+      statusPending: 'Pending',
+      statusProcessing: 'Processing',
+      statusShipped: 'Shipped',
+      statusDelivered: 'Delivered',
+      statusCancelled: 'Cancelled'
     },
     pl: {
       title: 'Moje zamówienia',
@@ -39,32 +49,55 @@ const UserOrders = ({ language, user }) => {
       date: 'Data',
       status: 'Status',
       total: 'Suma',
-      items: 'Produkty'
+      items: 'Produkty',
+      deliveryAddress: 'Adres dostawy',
+      statusPending: 'Oczekuje',
+      statusProcessing: 'Przetwarzane',
+      statusShipped: 'Wysłane',
+      statusDelivered: 'Dostarczone',
+      statusCancelled: 'Anulowane'
     }
   };
 
   const t = translations[language];
 
-  useEffect(() => {
+  // Function to get translated status
+  const getStatusText = (status) => {
+    const statusLower = (status || 'PENDING').toLowerCase();
+    switch (statusLower) {
+      case 'pending': return t.statusPending;
+      case 'processing': return t.statusProcessing;
+      case 'shipped': return t.statusShipped;
+      case 'delivered': return t.statusDelivered;
+      case 'cancelled': return t.statusCancelled;
+      default: return t.statusPending;
+    }
+  };  useEffect(() => {
     const fetchOrders = async () => {
       try {
+        console.log('Fetching orders for user:', user);
         setLoading(true);
         const ordersData = await authService.getOrders();
+        console.log('Orders received:', ordersData);
         setOrders(ordersData);
       } catch (err) {
         console.error('Error fetching orders:', err);
+        console.error('Error details:', err.response?.data);
         setError(t.error);
       } finally {
         setLoading(false);
       }
     };
 
-    if (user) {
+    // Wait for user to load before trying to fetch orders
+    if (!userLoading && user) {
       fetchOrders();
+    } else if (!userLoading && !user) {
+      console.log('No user found after loading, skipping orders fetch');
+      setLoading(false);
     }
-  }, [user, t.error]);
-
-  if (loading) {
+  }, [user, userLoading, t.error]);
+  if (loading || userLoading) {
     return (
       <div className="profile-page">
         <div className="profile-container">
@@ -97,29 +130,30 @@ const UserOrders = ({ language, user }) => {
           </div>
         ) : (
           <div className="orders-list">
-            {orders.map((order) => (
-              <div key={order.id} className="order-card">
-                <div className="order-header">
+            {orders.map((order) => (              <div key={order.id} className="order-card">                <div className="order-header">
                   <h3>{t.orderId}{order.orderNumber}</h3>
-                  <span className={`status ${order.status.toLowerCase()}`}>
-                    {order.status}
+                  <span className={`status ${order.status?.toLowerCase() || 'pending'}`}>
+                    {getStatusText(order.status)}
                   </span>
                 </div>
-                <div className="order-details">
-                  <div className="order-info">
-                    <p><strong>{t.date}:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>
-                    <p><strong>{t.total}:</strong> ${order.totalAmount}</p>
+                <div className="order-details">                  <div className="order-info">
+                    <p><strong>{t.date}:</strong> {new Date(order.orderDate || order.createdAt).toLocaleDateString()}</p>
+                    <p><strong>{t.total}:</strong> {convertAndFormatPrice ? convertAndFormatPrice(order.totalAmount) : `${order.currency || '$'}${order.totalAmount}`}</p>
                     <p><strong>{t.items}:</strong> {order.items?.length || 0}</p>
-                  </div>
-                  {order.items && order.items.length > 0 && (
+                  </div>{order.items && order.items.length > 0 && (
                     <div className="order-items">
-                      {order.items.map((item, index) => (
+                      <h4>{t.items} ({order.items.length})</h4>                      {order.items.map((item, index) => (
                         <div key={index} className="order-item">
-                          <span>{item.productName}</span>
-                          <span>x{item.quantity}</span>
-                          <span>${item.price}</span>
+                          <span className="item-image">{item.productImage || '📦'}</span>
+                          <span className="item-name">{item.productName}</span>
+                          <span className="item-quantity">x{item.quantity}</span>
+                          <span className="item-price">{convertAndFormatPrice ? convertAndFormatPrice(item.price) : `${order.currency || '$'}${item.price}`}</span>
                         </div>
                       ))}
+                    </div>
+                  )}                  {order.shippingAddress && (
+                    <div className="order-shipping">
+                      <p><strong>{t.deliveryAddress}:</strong> {order.shippingAddress}</p>
                     </div>
                   )}
                 </div>
