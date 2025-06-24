@@ -50,6 +50,14 @@
   --accent-primary-alpha: rgba(49, 130, 206, 0.1);
   --accent-hover-alpha: rgba(44, 82, 130, 0.1);
   --info-alpha: rgba(49, 130, 206, 0.08);
+  
+  /* Additional variables for components */
+  --card-background: var(--bg-primary);
+  --background-secondary: var(--bg-secondary);
+  --border-light: var(--border-secondary);
+  --border-radius: 8px;
+  --shadow-card: 0 2px 8px var(--shadow);
+  --input-background: var(--bg-primary);
 }
 
 @media (prefers-color-scheme: dark) {
