@@ -1,33 +1,47 @@
 package com.ecommerce.util;
 
+import com.ecommerce.config.AppProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
     
-    @Value("${app.jwt.secret:mySecretKey}")
-    private String jwtSecret;
+    private final AppProperties appProperties;
     
-    @Value("${app.jwt.expiration:86400000}") // 24 hours in milliseconds
-    private long jwtExpiration;
+    @Autowired
+    public JwtUtil(AppProperties appProperties) {
+        this.appProperties = appProperties;
+    }
     
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        try {
+            // Hash the secret to ensure it's always the right length for HMAC-SHA256
+            MessageDigest sha = MessageDigest.getInstance("SHA-256");
+            byte[] keyBytes = sha.digest(appProperties.getJwt().getSecret().getBytes(StandardCharsets.UTF_8));
+            return Keys.hmacShaKeyFor(keyBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error creating JWT signing key", e);
+        }
     }
     
     public String generateToken(String userId, String email) {
-        Date expiryDate = new Date(System.currentTimeMillis() + jwtExpiration);
+        long currentTime = System.currentTimeMillis();
+        Date expiryDate = new Date(currentTime + appProperties.getJwt().getExpiration());
         
         return Jwts.builder()
                 .setSubject(userId)
                 .claim("email", email)
-                .setIssuedAt(new Date())
+                .claim("iat", currentTime / 1000) // Issued at time in seconds
+                .setIssuedAt(new Date(currentTime))
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();

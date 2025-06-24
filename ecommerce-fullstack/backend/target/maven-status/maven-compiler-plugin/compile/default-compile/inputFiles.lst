@@ -7,14 +7,17 @@ C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\jav
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\repository\UserDiscountRepository.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\EmailService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\model\ReturnReason.java
+C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\security\RateLimitService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\dto\RegisterRequest.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\dto\CreateOrderRequest.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\repository\DiscountRepository.java
+C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\security\RateLimitFilter.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\repository\ProductRepository.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\model\OrderItem.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\model\Complaint.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\ReturnService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\repository\ReviewRepository.java
+C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\config\AppProperties.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\dto\UserDiscountResponse.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\model\Discount.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\UserProfileMockService.java
@@ -27,6 +30,7 @@ C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\jav
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\OrderService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\ReceiptService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\repository\OrderRepository.java
+C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\dto\UpdateReviewRequest.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\model\AddressType.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\model\PasswordResetToken.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\model\UserRole.java
@@ -41,8 +45,10 @@ C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\jav
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\PasswordResetService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\controller\CurrencyController.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\model\ComplaintType.java
+C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\dto\ProductForReview.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\controller\ReviewController.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\controller\TestController.java
+C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\config\DotenvConfig.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\UserService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\repository\AddressRepository.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\repository\ComplaintRepository.java
@@ -62,6 +68,7 @@ C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\jav
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\ProductService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\dto\ReviewableProductResponse.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\dto\ReviewResponse.java
+C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\security\DataSanitizer.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\util\JwtUtil.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\MockDataService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\dto\CreateReviewRequest.java

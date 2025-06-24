@@ -4,6 +4,7 @@ import com.ecommerce.dto.*;
 import com.ecommerce.model.User;
 import com.ecommerce.model.UserRole;
 import com.ecommerce.repository.UserRepository;
+import com.ecommerce.security.DataSanitizer;
 import com.ecommerce.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +25,13 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
     
+    @Autowired
+    private DataSanitizer dataSanitizer;
+    
     public AuthResponse registerUser(RegisterRequest request) {
+        // Sanitize and validate input data
+        validateAndSanitizeRegisterRequest(request);
+        
         // Check if user already exists
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("User with email " + request.getEmail() + " already exists");
@@ -37,9 +44,14 @@ public class UserService {
         
         // Create new user
         User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());        user.setEmail(request.getEmail());
+        user.setFirstName(dataSanitizer.sanitizeText(request.getFirstName()));
+        user.setLastName(dataSanitizer.sanitizeText(request.getLastName()));
+        user.setEmail(request.getEmail().toLowerCase().trim());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        
+        if (request.getPhoneNumber() != null) {
+            user.setPhoneNumber(dataSanitizer.sanitizeText(request.getPhoneNumber()));
+        }
         
         user.setProvider("local");
         user.setRole(UserRole.CUSTOMER);
@@ -65,8 +77,10 @@ public class UserService {
         UserResponse userResponse = convertToUserResponse(savedUser);
         return new AuthResponse(token, userResponse);
     }
-    
-    public AuthResponse loginUser(LoginRequest request) {
+      public AuthResponse loginUser(LoginRequest request) {
+        // Sanitize and validate input data
+        validateAndSanitizeLoginRequest(request);
+        
         // Find user by email
         Optional<User> userOptional = userRepository.findByEmailAndIsActiveTrue(request.getEmail());
         if (userOptional.isEmpty()) {
@@ -219,5 +233,42 @@ public class UserService {
         response.setBillingPostalCode(user.getBillingPostalCode());
         response.setBillingApartment(user.getBillingApartment());
         return response;
+    }
+
+    private void validateAndSanitizeRegisterRequest(RegisterRequest request) {
+        // Sanitize and trim strings
+        request.setFirstName(dataSanitizer.sanitizeText(request.getFirstName()).trim());
+        request.setLastName(dataSanitizer.sanitizeText(request.getLastName()).trim());
+        request.setEmail(request.getEmail().toLowerCase().trim());
+        request.setPassword(request.getPassword().trim());
+        request.setConfirmPassword(request.getConfirmPassword().trim());
+        
+        if (request.getPhoneNumber() != null) {
+            request.setPhoneNumber(dataSanitizer.sanitizeText(request.getPhoneNumber()).trim());
+        }
+        
+        // Sanitize address fields
+        request.setAddress(request.getAddress() != null ? dataSanitizer.sanitizeText(request.getAddress()).trim() : null);
+        request.setCity(request.getCity() != null ? dataSanitizer.sanitizeText(request.getCity()).trim() : null);
+        request.setState(request.getState() != null ? dataSanitizer.sanitizeText(request.getState()).trim() : null);
+        request.setCountry(request.getCountry() != null ? dataSanitizer.sanitizeText(request.getCountry()).trim() : null);
+        request.setPostalCode(request.getPostalCode() != null ? dataSanitizer.sanitizeText(request.getPostalCode()).trim() : null);
+        request.setApartment(request.getApartment() != null ? dataSanitizer.sanitizeText(request.getApartment()).trim() : null);
+        
+        // Additional validations can be added here
+    }
+    
+    private void validateAndSanitizeLoginRequest(LoginRequest request) {
+        // Sanitize and trim input
+        request.setEmail(request.getEmail().toLowerCase().trim());
+        request.setPassword(request.getPassword().trim());
+        
+        // Validate email format
+        if (!dataSanitizer.isValidEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+        
+        // Sanitize email for potential XSS
+        request.setEmail(dataSanitizer.sanitizeForXSS(request.getEmail()));
     }
 }

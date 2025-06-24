@@ -11,11 +11,8 @@ com\ecommerce\repository\ReviewRepository.class
 com\ecommerce\model\OrderItem.class
 com\ecommerce\dto\UserUpdateRequest.class
 com\ecommerce\model\Review.class
-com\ecommerce\controller\AuthController.class
-com\ecommerce\EcommerceApplication.class
 com\ecommerce\config\SecurityConfig.class
 com\ecommerce\model\UserRole.class
-com\ecommerce\util\JwtUtil.class
 com\ecommerce\dto\LoginRequest.class
 com\ecommerce\repository\ReceiptRepository.class
 com\ecommerce\repository\ComplaintRepository.class
@@ -35,15 +32,12 @@ com\ecommerce\model\PasswordResetToken.class
 com\ecommerce\model\ComplaintType.class
 com\ecommerce\service\UserProfileMockService.class
 com\ecommerce\model\Product.class
-com\ecommerce\service\UserService.class
 com\ecommerce\repository\AddressRepository.class
 com\ecommerce\service\EmailService.class
 com\ecommerce\model\OrderStatus.class
 com\ecommerce\model\UserDiscount.class
 com\ecommerce\model\ReturnReason.class
 com\ecommerce\config\CorsConfig.class
-com\ecommerce\service\OrderService.class
-com\ecommerce\controller\UserController.class
 com\ecommerce\service\ReviewService.class
 com\ecommerce\repository\OrderRepository.class
 com\ecommerce\repository\PasswordResetTokenRepository.class
