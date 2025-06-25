@@ -269,12 +269,11 @@ const UserOrders = ({ language, user, loading: userLoading, currency, formatPric
     <div className="profile-page">
       <div className="profile-container">
         <h2>{t.title}</h2>
-        
-        {orders.length === 0 ? (
+          {orders.length === 0 ? (
           <div className="no-data-message">
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📦</div>
+            <div className="no-data-icon">📦</div>
             <p>{t.noOrders}</p>
-            <p style={{ fontSize: '0.9rem', color: '#6c757d', marginTop: '0.5rem' }}>
+            <p className="no-data-subtitle">
               {language === 'ru' ? 'Заказы появятся здесь после оформления покупок' : 
                language === 'en' ? 'Orders will appear here after making purchases' :
                'Zamówienia pojawią się tutaj po dokonaniu zakupów'}

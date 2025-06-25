@@ -35,9 +35,8 @@ function App() {
   const [selectedSection, setSelectedSection] = useState(null);
   const [selectedInfoPage, setSelectedInfoPage] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  // Хук для управления валютой
-  const { currency, formatPrice, convertAndFormatPrice } = useCurrency(language);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);  // Хук для управления валютой
+  const { currency, currencySymbol, formatPrice, convertAndFormatPrice } = useCurrency(language);
   // Загружаем корзину из localStorage при загрузке компонента
   useEffect(() => {
     try {
@@ -350,15 +349,15 @@ function App() {
       <Footer 
         language={language} 
         onNavigate={handleNavigation}
-      />
-        <CheckoutModal 
+      />        <CheckoutModal 
         isOpen={isCheckoutOpen}
         onClose={handleCheckoutClose}
         cartItems={cartItems}
         user={user}
         language={language}
         currency={currency}
-        formatPrice={formatPrice}
+        currencySymbol={currencySymbol}
+        formatPrice={convertAndFormatPrice}
         onOrderSuccess={handleOrderSuccess}
       />
     </div>

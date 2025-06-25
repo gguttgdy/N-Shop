@@ -26,7 +26,7 @@ spring:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:mySecretKeyForJWTTokenGenerationAndValidation2024EcommerceApplication}
+    secret: ${JWT_SECRET}  # ОБЯЗАТЕЛЬНО: устанавливается через .env файл
     expiration: ${JWT_EXPIRATION:86400000}  # 24 hours in milliseconds
   
   security:

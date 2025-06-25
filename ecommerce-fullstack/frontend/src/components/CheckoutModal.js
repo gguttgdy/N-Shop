@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './CheckoutModal.css';
 
-const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, formatPrice, onOrderSuccess }) => {
+const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, formatPrice, currencySymbol, onOrderSuccess }) => {
   const [step, setStep] = useState(1); // 1: address, 2: payment, 3: confirmation
   const [orderData, setOrderData] = useState({
     address: {
@@ -23,21 +23,26 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  // Auto-fill address from user profile when modal opens
+  // Auto-fill address from user profile when modal opens and reset to step 1
   useEffect(() => {
-    if (isOpen && user) {
-      setOrderData(prev => ({
-        ...prev,
-        address: {
-          street: user.address || '',
-          apartment: user.apartment || '',
-          city: user.city || '',
-          state: user.state || '',
-          postalCode: user.postalCode || '',
-          country: user.country || ''
-        }
-      }));
+    if (isOpen) {
+      // Всегда сбрасываем на первый шаг при открытии
+      setStep(1);
+      setError('');
+      
+      if (user) {
+        setOrderData(prev => ({
+          ...prev,
+          address: {
+            street: user.address || '',
+            apartment: user.apartment || '',
+            city: user.city || '',
+            state: user.state || '',
+            postalCode: user.postalCode || '',
+            country: user.country || ''
+          }
+        }));
+      }
     }
   }, [isOpen, user]);
 
@@ -64,13 +69,18 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
       cardNumber: 'Номер карты',
       expiryDate: 'Срок действия',
       cvv: 'CVV',
-      nameOnCard: 'Имя на карте',
-      orderSummary: 'Сводка заказа',
+      nameOnCard: 'Имя на карте',      orderSummary: 'Сводка заказа',
       total: 'Итого',
       processing: 'Обработка...',
       orderSuccess: 'Заказ успешно оформлен!',
       orderNumber: 'Номер заказа',
-      required: 'Обязательное поле'
+      required: 'Обязательное поле',
+      shippingAddress: 'Адрес доставки',
+      quantity: 'Количество',
+      each: 'шт.',
+      subtotal: 'Промежуточный итог',
+      shipping: 'Доставка',
+      free: 'Бесплатно'
     },
     en: {
       checkout: 'Checkout',      address: 'Delivery Address',
@@ -94,13 +104,18 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
       cardNumber: 'Card Number',
       expiryDate: 'Expiry Date',
       cvv: 'CVV',
-      nameOnCard: 'Name on Card',
-      orderSummary: 'Order Summary',
+      nameOnCard: 'Name on Card',      orderSummary: 'Order Summary',
       total: 'Total',
       processing: 'Processing...',
       orderSuccess: 'Order placed successfully!',
       orderNumber: 'Order Number',
-      required: 'Required field'
+      required: 'Required field',
+      shippingAddress: 'Shipping Address',
+      quantity: 'Quantity',
+      each: 'each',
+      subtotal: 'Subtotal',
+      shipping: 'Shipping',
+      free: 'Free'
     },
     pl: {
       checkout: 'Składanie zamówienia',
@@ -124,13 +139,18 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
       cardNumber: 'Numer karty',
       expiryDate: 'Data ważności',
       cvv: 'CVV',
-      nameOnCard: 'Imię na karcie',
-      orderSummary: 'Podsumowanie zamówienia',
+      nameOnCard: 'Imię na karcie',      orderSummary: 'Podsumowanie zamówienia',
       total: 'Razem',
       processing: 'Przetwarzanie...',
       orderSuccess: 'Zamówienie złożone pomyślnie!',
       orderNumber: 'Numer zamówienia',
-      required: 'Pole wymagane'
+      required: 'Pole wymagane',
+      shippingAddress: 'Adres dostawy',
+      quantity: 'Ilość',
+      each: 'szt.',
+      subtotal: 'Suma częściowa',
+      shipping: 'Dostawa',
+      free: 'Za darmo'
     }
   };
 
@@ -182,21 +202,21 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
         items: cartItems.map(item => ({
           productId: String(item.id),
           productName: item.name || item.title,
-          quantity: item.quantity,
-          price: Number(item.price),
+          quantity: parseInt(item.quantity),
+          price: parseFloat(item.price).toFixed(2),
           productImage: item.image
         })),
-        street: orderData.address.street,
-        apartment: orderData.address.apartment,
-        city: orderData.address.city,
-        state: orderData.address.state,
-        postalCode: orderData.address.postalCode,
-        country: orderData.address.country,
+        street: orderData.address.street.trim(),
+        apartment: orderData.address.apartment ? orderData.address.apartment.trim() : null,
+        city: orderData.address.city.trim(),
+        state: orderData.address.state ? orderData.address.state.trim() : null,
+        postalCode: orderData.address.postalCode.trim(),
+        country: orderData.address.country.trim(),
         paymentMethod: orderData.payment.method,
         currency: currency || 'USD',
-        totalAmount: Number(getTotalPrice()),
-        saveDeliveryAddress: orderData.saveAddress
-      };      console.log('Sending order data:', JSON.stringify(order, null, 2));
+        totalAmount: parseFloat(getTotalPrice()).toFixed(2),
+        saveDeliveryAddress: orderData.saveAddress || false
+      };console.log('Sending order data:', JSON.stringify(order, null, 2));
       console.log('Token:', localStorage.getItem('authToken'));
 
       const response = await fetch('http://localhost:8080/api/orders', {
@@ -413,25 +433,91 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, user, language, currency, f
                 </div>
               )}
             </div>
-          )}
-
-          {step === 3 && (
+          )}          {step === 3 && (
             <div className="confirmation">
-              <h3>{t.confirmation}</h3>
-              <div className="order-summary">
-                <h4>{t.orderSummary}</h4>
-                <div className="order-items">
-                  {cartItems.map(item => (
-                    <div key={item.id} className="order-item">
-                      <span>{item.name} x{item.quantity}</span>
-                      <span>{formatPrice ? formatPrice(item.price * item.quantity) : `${item.price * item.quantity} ${currency}`}</span>
+              <h3 className="confirmation-title">{t.confirmation}</h3>
+              
+              <div className="confirmation-sections">
+                {/* Shipping Address Section */}
+                <div className="confirmation-section">
+                  <h4 className="section-title">{t.shippingAddress}</h4>
+                  <div className="address-display">
+                    <div className="address-line">{orderData.address.street}</div>
+                    {orderData.address.apartment && (
+                      <div className="address-line">{orderData.address.apartment}</div>
+                    )}
+                    <div className="address-line">
+                      {orderData.address.city}, {orderData.address.state} {orderData.address.postalCode}
                     </div>
-                  ))}
+                    <div className="address-line">{orderData.address.country}</div>
+                  </div>
                 </div>
-                <div className="order-total">
-                  <strong>
-                    {t.total}: {formatPrice ? formatPrice(getTotalPrice()) : `${getTotalPrice()} ${currency}`}
-                  </strong>
+
+                {/* Payment Method Section */}
+                <div className="confirmation-section">
+                  <h4 className="section-title">{t.paymentMethod}</h4>
+                  <div className="payment-display">
+                    <div className="payment-method">
+                      {orderData.payment.method === 'card' && '💳 ' + t.creditCard}
+                      {orderData.payment.method === 'paypal' && '🅿️ PayPal'}
+                      {orderData.payment.method === 'apple_pay' && '🍎 Apple Pay'}
+                    </div>
+                    {orderData.payment.method === 'card' && orderData.payment.cardNumber && (
+                      <div className="card-info">
+                        **** **** **** {orderData.payment.cardNumber.slice(-4)}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Order Summary Section */}
+                <div className="confirmation-section order-summary-section">
+                  <h4 className="section-title">{t.orderSummary}</h4>
+                  <div className="confirmation-order-items">                    {cartItems.map(item => (
+                      <div key={item.id} className="confirmation-order-item">
+                        <div className="confirmation-item-image">
+                          {item.image ? (
+                            // Проверяем, является ли image URL или emoji
+                            item.image.startsWith('http') || item.image.startsWith('/') ? (
+                              <img src={item.image} alt={item.name} />
+                            ) : (
+                              <div className="confirmation-item-emoji">{item.image}</div>
+                            )
+                          ) : (
+                            <div className="confirmation-item-placeholder">📦</div>
+                          )}
+                        </div>
+                        <div className="confirmation-item-details">
+                          <div className="confirmation-item-name">{item.name}</div>
+                          <div className="confirmation-item-meta">
+                            <div className="confirmation-item-quantity">
+                              {t.quantity}: {item.quantity}
+                            </div>                            <div className="confirmation-item-unit-price">
+                              {formatPrice ? formatPrice(item.price) : `${currencySymbol}${item.price}`} {t.each || 'each'}
+                            </div>
+                          </div>
+                        </div>                        <div className="confirmation-item-total">
+                          {formatPrice ? formatPrice(item.price * item.quantity) : `${currencySymbol}${(item.price * item.quantity).toFixed(2)}`}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="confirmation-order-total">
+                    <div className="total-breakdown">                      <div className="total-line">
+                        <span>{t.subtotal}:</span>
+                        <span>{formatPrice ? formatPrice(getTotalPrice()) : `${currencySymbol}${getTotalPrice().toFixed(2)}`}</span>
+                      </div>
+                      <div className="total-line">
+                        <span>{t.shipping}:</span>
+                        <span>{t.free}</span>
+                      </div>
+                      <div className="total-line total-final">
+                        <span>{t.total}:</span>
+                        <span>{formatPrice ? formatPrice(getTotalPrice()) : `${getTotalPrice()} ${currency}`}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
