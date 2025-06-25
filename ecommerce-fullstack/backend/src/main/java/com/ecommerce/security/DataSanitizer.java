@@ -50,13 +50,11 @@ public class DataSanitizer {
             return null;
         }
         
-        // Check for SQL injection patterns
-        if (SQL_INJECTION_PATTERN.matcher(input).find()) {
-            throw new IllegalArgumentException("Potentially malicious input detected");
-        }
+        // Remove potential SQL injection patterns
+        String sanitized = SQL_INJECTION_PATTERN.matcher(input).replaceAll("");
         
         // Escape single quotes for SQL
-        return input.replace("'", "''").trim();
+        return sanitized.replace("'", "''").trim();
     }
     
     /**

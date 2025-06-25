@@ -1,0 +1,32 @@
+spring:
+  data:
+    mongodb:
+      auto-index-creation: false
+  mongodb:
+    embedded:
+      version: 4.4.18
+  
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+logging:
+  level:
+    com.ecommerce: DEBUG
+    org.springframework.data.mongodb: DEBUG
+    
+jwt:
+  secret: test-secret-key-for-testing-purposes-only
+  expiration: 86400000
+
+app:
+  security:
+    jwt:
+      secret: test-secret-key-for-testing-purposes-only
+  cors:
+    allowed-origins: http://localhost:3000
+  
+# Disable rate limiting for tests
+rate-limit:
+  enabled: false

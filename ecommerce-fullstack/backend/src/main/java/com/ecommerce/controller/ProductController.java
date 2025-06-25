@@ -3,19 +3,31 @@ package com.ecommerce.controller;
 import com.ecommerce.model.Product;
 import com.ecommerce.service.ProductService;
 import com.ecommerce.service.CurrencyService;
+import com.ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
+import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name = "Products", description = "Product management and catalog operations")
 public class ProductController {
 
     @Autowired
@@ -23,13 +35,21 @@ public class ProductController {
     
     @Autowired
     private CurrencyService currencyService;
+    
+    @Autowired
+    private ProductRepository productRepository;
 
+    @Operation(summary = "Get products", description = "Retrieve products with optional filtering by category, subcategory, section, or search term")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Products retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = Product.class)))
+    })
     @GetMapping
     public ResponseEntity<List<Product>> getProducts(
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String subcategory,
-            @RequestParam(required = false) String section,
-            @RequestParam(required = false) String search) {
+            @Parameter(description = "Filter by category") @RequestParam(required = false) String category,
+            @Parameter(description = "Filter by subcategory") @RequestParam(required = false) String subcategory,
+            @Parameter(description = "Filter by section") @RequestParam(required = false) String section,
+            @Parameter(description = "Search term") @RequestParam(required = false) String search) {
         
         List<Product> products = productService.getProducts(category, subcategory, section, search);
         return ResponseEntity.ok(products);
@@ -137,11 +157,22 @@ public class ProductController {
             @RequestBody Map<String, Object> request,
             @RequestParam(required = false, defaultValue = "USD") String currency) {
         
+        System.out.println("Convert prices request: " + request);
+        System.out.println("Currency: " + currency);
+        
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> products = (List<Map<String, Object>>) request.get("products");
         
+        System.out.println("Products received: " + (products != null ? products.size() : "null"));
+        
         if (products == null || products.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            System.out.println("No products found in request, returning empty result");
+            String currencySymbol = currencyService.getCurrencySymbol(currency);
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", new ArrayList<>());
+            response.put("currency", currency);
+            response.put("currencySymbol", currencySymbol);
+            return ResponseEntity.ok(response);
         }
           String currencySymbol = currencyService.getCurrencySymbol(currency);
         
@@ -260,8 +291,14 @@ public class ProductController {
         return ResponseEntity.ok(filterData);
     }
 
+    @Operation(summary = "Get product by ID", description = "Retrieve a specific product by its ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Product found",
+                    content = @Content(schema = @Schema(implementation = Product.class))),
+        @ApiResponse(responseCode = "404", description = "Product not found")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id) {
+    public ResponseEntity<Product> getProductById(@Parameter(description = "Product ID") @PathVariable String id) {
         Product product = productService.getProductById(id);
         if (product != null) {
             return ResponseEntity.ok(product);
@@ -303,9 +340,61 @@ public class ProductController {
                      .append("\n");
             }
             
+            // Проверим также поиск по "fashion"
+            List<Product> fashionProducts = productService.getProducts("fashion", null, null, null);
+            debug.append("\nFashion products found: ").append(fashionProducts.size()).append("\n");
+            
             return ResponseEntity.ok(debug.toString());
         } catch (Exception e) {
             return ResponseEntity.ok("Error: " + e.getMessage());
         }
+    }
+    
+    @PostMapping("/reinitialize")
+    public ResponseEntity<String> reinitializeProducts() {
+        try {
+            // Очищаем все продукты
+            productRepository.deleteAll();
+            
+            // Добавляем новые продукты с категорией fashion
+            List<Product> fashionProducts = Arrays.asList(
+                createFashionProduct("Men's Winter Jacket", "fashion", "men", 159.99, "🧥"),
+                createFashionProduct("Women's Dress", "fashion", "women", 89.99, "👗"),
+                createFashionProduct("Men's Jeans", "fashion", "men", 79.99, "👖"),
+                createFashionProduct("Women's Boots", "fashion", "women", 129.99, "👢"),
+                createFashionProduct("Men's T-Shirt", "fashion", "men", 29.99, "👕"),
+                createFashionProduct("Women's Jacket", "fashion", "women", 149.99, "🧥")
+            );
+            
+            productRepository.saveAll(fashionProducts);
+            
+            return ResponseEntity.ok("Products reinitialized successfully. Added " + fashionProducts.size() + " fashion products.");
+        } catch (Exception e) {
+            return ResponseEntity.ok("Error reinitializing products: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping("/clear-all")
+    public ResponseEntity<String> clearAllProducts() {
+        try {
+            productRepository.deleteAll();
+            return ResponseEntity.ok("All products cleared successfully. Restart the application to reinitialize with full product data.");
+        } catch (Exception e) {
+            return ResponseEntity.ok("Error clearing products: " + e.getMessage());
+        }
+    }
+    
+    private Product createFashionProduct(String name, String categoryId, String subcategoryId, Double price, String image) {
+        Product product = new Product();
+        product.setName(name);
+        product.setPrice(price);
+        product.setImage(image);
+        product.setCategoryId(categoryId);
+        product.setSubcategoryId(subcategoryId);
+        product.setStock(50);
+        product.setIsActive(true);
+        product.setIsNew(false);
+        product.setRating(4.2);
+        return product;
     }
 }

@@ -65,8 +65,8 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
+    @Bean("legacyPasswordEncoder")
+    public PasswordEncoder legacyPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }    @Bean
     public CorsConfigurationSource corsConfigurationSource() {

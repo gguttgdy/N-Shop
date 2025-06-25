@@ -8,6 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+@Tag(name = "Authentication", description = "User authentication and registration endpoints")
 public class AuthController {
     
     @Autowired
@@ -38,6 +47,12 @@ public class AuthController {
         ));
     }
     
+    @Operation(summary = "Register a new user", description = "Creates a new user account with the provided details")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Registration successful", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest request) {
         try {
@@ -62,6 +77,12 @@ public class AuthController {
         }
     }
     
+    @Operation(summary = "Login user", description = "Authenticates the user and returns a JWT token")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Login successful", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid email or password", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest request) {
         try {
@@ -72,6 +93,11 @@ public class AuthController {
         }
     }
     
+    @Operation(summary = "Logout user", description = "Logs out the user by invalidating the JWT token")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Logout successful", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PostMapping("/logout")
     public ResponseEntity<?> logoutUser() {
         // For JWT, logout is handled on the client side by removing the token

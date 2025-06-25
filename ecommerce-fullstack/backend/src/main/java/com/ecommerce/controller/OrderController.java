@@ -10,19 +10,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/orders")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+@Tag(name = "Orders", description = "Order management and processing operations")
+@SecurityRequirement(name = "bearerAuth")
 public class OrderController {
     
     @Autowired
     private OrderService orderService;
     
     @Autowired
-    private JwtUtil jwtUtil;    @PostMapping
+    private JwtUtil jwtUtil;    @Operation(summary = "Create new order", description = "Create a new order for the authenticated user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Order created successfully",
+                    content = @Content(schema = @Schema(implementation = OrderCreatedResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid order data or creation failed",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @PostMapping
     public ResponseEntity<?> createOrder(@Valid @RequestBody CreateOrderRequest request, 
                                         HttpServletRequest httpRequest) {
         try {

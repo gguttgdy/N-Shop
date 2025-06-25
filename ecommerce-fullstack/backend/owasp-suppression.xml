@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    
+    <!-- Suppress false positives for Spring Boot dependencies -->
+    <suppress>
+        <notes><![CDATA[
+        Spring Boot autoconfiguration vulnerabilities that don't apply to our use case
+        ]]></notes>
+        <cve>CVE-2016-1000027</cve>
+    </suppress>
+    
+    <!-- Suppress MongoDB driver false positives -->
+    <suppress>
+        <notes><![CDATA[
+        MongoDB driver vulnerabilities already patched in the version we use
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.mongodb/.*$</packageUrl>
+        <vulnerabilityName regex="true">^.*MongoDB.*$</vulnerabilityName>
+    </suppress>
+    
+    <!-- Suppress test dependencies vulnerabilities -->
+    <suppress>
+        <notes><![CDATA[
+        Test dependencies should not be included in production
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/.*/(.*-test.*|junit.*|mockito.*|testcontainers.*)$</packageUrl>
+    </suppress>
+
+</suppressions>

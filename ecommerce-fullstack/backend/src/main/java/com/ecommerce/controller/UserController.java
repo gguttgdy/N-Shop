@@ -7,6 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -14,6 +23,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+@Tag(name = "Users", description = "User profile and account management operations")
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
     
     @Autowired
@@ -40,6 +51,13 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
     
+    @Operation(summary = "Get user profile", description = "Retrieve the current user's profile information")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Profile retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = UserResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid request or user not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping("/profile")
     public ResponseEntity<?> getUserProfile(HttpServletRequest request) {
         try {

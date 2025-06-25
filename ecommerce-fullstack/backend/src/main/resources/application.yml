@@ -30,9 +30,14 @@ app:
     expiration: ${JWT_EXPIRATION:86400000}  # 24 hours in milliseconds
   
   security:
+    jwt:
+      secret: ${JWT_SECRET}  # Дублируем для SecurityConfigEnhanced
     rate-limit:
       requests: ${RATE_LIMIT_REQUESTS:100}
       window: ${RATE_LIMIT_WINDOW:3600000}  # 1 hour in milliseconds
+  
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000,http://localhost:3001,http://localhost:5173}
   
   upload:
     directory: ${UPLOAD_DIRECTORY:uploads/}

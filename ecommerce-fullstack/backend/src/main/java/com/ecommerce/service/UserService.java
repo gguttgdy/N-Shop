@@ -4,7 +4,7 @@ import com.ecommerce.dto.*;
 import com.ecommerce.model.User;
 import com.ecommerce.model.UserRole;
 import com.ecommerce.repository.UserRepository;
-import com.ecommerce.security.DataSanitizer;
+import com.ecommerce.security.InputValidator;
 import com.ecommerce.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +26,7 @@ public class UserService {
     private JwtUtil jwtUtil;
     
     @Autowired
-    private DataSanitizer dataSanitizer;
+    private InputValidator inputValidator;
     
     public AuthResponse registerUser(RegisterRequest request) {
         // Sanitize and validate input data
@@ -44,13 +44,13 @@ public class UserService {
         
         // Create new user
         User user = new User();
-        user.setFirstName(dataSanitizer.sanitizeText(request.getFirstName()));
-        user.setLastName(dataSanitizer.sanitizeText(request.getLastName()));
+        user.setFirstName(inputValidator.sanitizeInput(request.getFirstName()));
+        user.setLastName(inputValidator.sanitizeInput(request.getLastName()));
         user.setEmail(request.getEmail().toLowerCase().trim());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         
         if (request.getPhoneNumber() != null) {
-            user.setPhoneNumber(dataSanitizer.sanitizeText(request.getPhoneNumber()));
+            user.setPhoneNumber(inputValidator.sanitizeInput(request.getPhoneNumber()));
         }
         
         user.setProvider("local");
@@ -236,26 +236,32 @@ public class UserService {
     }
 
     private void validateAndSanitizeRegisterRequest(RegisterRequest request) {
+        // Use InputValidator for validation and sanitization
+        inputValidator.validateUserInput(
+            request.getFirstName(), 
+            request.getLastName(), 
+            request.getEmail(), 
+            request.getPassword()
+        );
+        
         // Sanitize and trim strings
-        request.setFirstName(dataSanitizer.sanitizeText(request.getFirstName()).trim());
-        request.setLastName(dataSanitizer.sanitizeText(request.getLastName()).trim());
+        request.setFirstName(inputValidator.sanitizeInput(request.getFirstName()).trim());
+        request.setLastName(inputValidator.sanitizeInput(request.getLastName()).trim());
         request.setEmail(request.getEmail().toLowerCase().trim());
         request.setPassword(request.getPassword().trim());
         request.setConfirmPassword(request.getConfirmPassword().trim());
         
         if (request.getPhoneNumber() != null) {
-            request.setPhoneNumber(dataSanitizer.sanitizeText(request.getPhoneNumber()).trim());
+            request.setPhoneNumber(inputValidator.sanitizeInput(request.getPhoneNumber()).trim());
         }
         
         // Sanitize address fields
-        request.setAddress(request.getAddress() != null ? dataSanitizer.sanitizeText(request.getAddress()).trim() : null);
-        request.setCity(request.getCity() != null ? dataSanitizer.sanitizeText(request.getCity()).trim() : null);
-        request.setState(request.getState() != null ? dataSanitizer.sanitizeText(request.getState()).trim() : null);
-        request.setCountry(request.getCountry() != null ? dataSanitizer.sanitizeText(request.getCountry()).trim() : null);
-        request.setPostalCode(request.getPostalCode() != null ? dataSanitizer.sanitizeText(request.getPostalCode()).trim() : null);
-        request.setApartment(request.getApartment() != null ? dataSanitizer.sanitizeText(request.getApartment()).trim() : null);
-        
-        // Additional validations can be added here
+        request.setAddress(request.getAddress() != null ? inputValidator.sanitizeInput(request.getAddress()).trim() : null);
+        request.setCity(request.getCity() != null ? inputValidator.sanitizeInput(request.getCity()).trim() : null);
+        request.setState(request.getState() != null ? inputValidator.sanitizeInput(request.getState()).trim() : null);
+        request.setCountry(request.getCountry() != null ? inputValidator.sanitizeInput(request.getCountry()).trim() : null);
+        request.setPostalCode(request.getPostalCode() != null ? inputValidator.sanitizeInput(request.getPostalCode()).trim() : null);
+        request.setApartment(request.getApartment() != null ? inputValidator.sanitizeInput(request.getApartment()).trim() : null);
     }
     
     private void validateAndSanitizeLoginRequest(LoginRequest request) {
@@ -264,11 +270,11 @@ public class UserService {
         request.setPassword(request.getPassword().trim());
         
         // Validate email format
-        if (!dataSanitizer.isValidEmail(request.getEmail())) {
+        if (!inputValidator.isValidEmail(request.getEmail())) {
             throw new IllegalArgumentException("Invalid email format");
         }
         
         // Sanitize email for potential XSS
-        request.setEmail(dataSanitizer.sanitizeForXSS(request.getEmail()));
+        request.setEmail(inputValidator.sanitizeInput(request.getEmail()));
     }
 }

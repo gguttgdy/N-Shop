@@ -47,10 +47,31 @@ build/Release/
 # Optional REPL history
 .node_repl_history
 
-# SSL certificates
+# SSL certificates and secrets
 *.pem
 *.crt
 *.key
+*.p12
+*.pfx
+jwt-secret.txt
+
+# Security reports
+dependency-check-report.html
+trivy-results.sarif
+*.sarif
+
+# Spring Boot secrets
+application-secret.yml
+application-production.yml
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# JaCoCo coverage
+jacoco.xml
+target/site/jacoco/
 
 # Backup files
 *.backup
