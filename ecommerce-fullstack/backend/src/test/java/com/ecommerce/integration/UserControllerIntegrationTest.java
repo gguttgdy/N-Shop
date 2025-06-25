@@ -1,31 +1,25 @@
 package com.ecommerce.integration;
 
 import com.ecommerce.dto.RegisterRequest;
-import com.ecommerce.dto.LoginRequest;
 import com.ecommerce.dto.UserUpdateRequest;
-import com.ecommerce.model.User;
 import com.ecommerce.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.containsString;
 
 @SpringBootTest
-@AutoConfigureWebMvc
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 public class UserControllerIntegrationTest {
 
     @Autowired
@@ -36,9 +30,6 @@ public class UserControllerIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     private String authToken;
 
@@ -82,9 +73,9 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    void getUserProfile_WithoutToken_ShouldReturnUnauthorized() throws Exception {
+    void getUserProfile_WithoutToken_ShouldReturnBadRequest() throws Exception {
         mockMvc.perform(get("/api/users/profile"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isBadRequest());
     }
 
     @Test

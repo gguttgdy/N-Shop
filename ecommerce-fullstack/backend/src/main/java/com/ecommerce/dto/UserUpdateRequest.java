@@ -1,12 +1,15 @@
 package com.ecommerce.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class UserUpdateRequest {
     
+    @NotBlank(message = "First name cannot be blank")
     @Size(max = 50)
     private String firstName;
     
+    @NotBlank(message = "Last name cannot be blank")
     @Size(max = 50)
     private String lastName;    private String phoneNumber;
     private String dateOfBirth; // Date in format YYYY-MM-DD

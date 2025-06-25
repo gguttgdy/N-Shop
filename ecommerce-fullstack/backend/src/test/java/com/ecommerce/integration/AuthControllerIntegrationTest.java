@@ -50,8 +50,8 @@ class AuthControllerIntegrationTest {
         registerRequest.setFirstName("John");
         registerRequest.setLastName("Doe");
         registerRequest.setEmail("test@example.com");
-        registerRequest.setPassword("password123");
-        registerRequest.setConfirmPassword("password123");
+        registerRequest.setPassword("Password123!");
+        registerRequest.setConfirmPassword("Password123!");
 
         // When & Then
         mockMvc.perform(post("/api/auth/register")
@@ -74,8 +74,8 @@ class AuthControllerIntegrationTest {
         firstRequest.setFirstName("John");
         firstRequest.setLastName("Doe");
         firstRequest.setEmail("test@example.com");
-        firstRequest.setPassword("password123");
-        firstRequest.setConfirmPassword("password123");
+        firstRequest.setPassword("Password123!");
+        firstRequest.setConfirmPassword("Password123!");
 
         mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -87,8 +87,8 @@ class AuthControllerIntegrationTest {
         duplicateRequest.setFirstName("Jane");
         duplicateRequest.setLastName("Smith");
         duplicateRequest.setEmail("test@example.com");
-        duplicateRequest.setPassword("password456");
-        duplicateRequest.setConfirmPassword("password456");
+        duplicateRequest.setPassword("Password456!");
+        duplicateRequest.setConfirmPassword("Password456!");
 
         // Then
         mockMvc.perform(post("/api/auth/register")
@@ -104,8 +104,8 @@ class AuthControllerIntegrationTest {
         registerRequest.setFirstName("John");
         registerRequest.setLastName("Doe");
         registerRequest.setEmail("test@example.com");
-        registerRequest.setPassword("password123");
-        registerRequest.setConfirmPassword("password456"); // Different password
+        registerRequest.setPassword("Password123!");
+        registerRequest.setConfirmPassword("Password456!"); // Different password
 
         // When & Then
         mockMvc.perform(post("/api/auth/register")
@@ -124,8 +124,8 @@ class AuthControllerIntegrationTest {
         registerRequest.setFirstName("John");
         registerRequest.setLastName("Doe");
         registerRequest.setEmail("test@example.com");
-        registerRequest.setPassword("password123");
-        registerRequest.setConfirmPassword("password123");
+        registerRequest.setPassword("Password123!");
+        registerRequest.setConfirmPassword("Password123!");
 
         mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +134,7 @@ class AuthControllerIntegrationTest {
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("test@example.com");
-        loginRequest.setPassword("password123");
+        loginRequest.setPassword("Password123!");
 
         // When & Then
         mockMvc.perform(post("/api/auth/login")
@@ -166,8 +166,8 @@ class AuthControllerIntegrationTest {
         registerRequest.setFirstName("John");
         registerRequest.setLastName("Doe");
         registerRequest.setEmail("test@example.com");
-        registerRequest.setPassword("password123");
-        registerRequest.setConfirmPassword("password123");
+        registerRequest.setPassword("Password123!");
+        registerRequest.setConfirmPassword("Password123!");
 
         mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -176,7 +176,7 @@ class AuthControllerIntegrationTest {
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("test@example.com");
-        loginRequest.setPassword("wrongpassword");
+        loginRequest.setPassword("WrongPassword123!");
 
         // When & Then
         mockMvc.perform(post("/api/auth/login")
@@ -192,8 +192,8 @@ class AuthControllerIntegrationTest {
         registerRequest.setFirstName("John");
         registerRequest.setLastName("Doe");
         registerRequest.setEmail("integration@example.com");
-        registerRequest.setPassword("password123");
-        registerRequest.setConfirmPassword("password123");
+        registerRequest.setPassword("Password123!");
+        registerRequest.setConfirmPassword("Password123!");
 
         // Step 1: Register
         String registerResponse = mockMvc.perform(post("/api/auth/register")
@@ -210,7 +210,7 @@ class AuthControllerIntegrationTest {
         // Step 2: Login with same credentials
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("integration@example.com");
-        loginRequest.setPassword("password123");
+        loginRequest.setPassword("Password123!");
 
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
