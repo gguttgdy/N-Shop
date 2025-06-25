@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -86,24 +87,25 @@ public class SecurityConfigEnhanced {
             // Request Authorization
             .authorizeHttpRequests(authz -> authz
                 // Public endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/products/**").permitAll()
-                .requestMatchers("/api/test/**").permitAll()
-                .requestMatchers("/api/currency/**").permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/products/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/test/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/currency/**")).permitAll()
                 
                 // Swagger endpoints (только в dev режиме)
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
                 
                 // Health check endpoints
-                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/actuator/health")).permitAll()
                 
                 // Admin endpoints - требуют роль ADMIN
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers(new AntPathRequestMatcher("/api/admin/**")).hasRole("ADMIN")
                 
                 // User endpoints - требуют аутентификации
-                .requestMatchers("/api/users/**").authenticated()
-                .requestMatchers("/api/orders/**").authenticated()
-                .requestMatchers("/api/reviews/**").authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/api/users/**")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/api/orders/**")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/api/reviews/**")).authenticated()
                 
                 // Все остальные запросы требуют аутентификации
                 .anyRequest().authenticated()
