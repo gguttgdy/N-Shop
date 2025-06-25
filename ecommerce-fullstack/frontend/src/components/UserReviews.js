@@ -130,9 +130,9 @@ const UserReviews = ({ language }) => {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'published': return '✅';
+      case 'published': return 'Published';
       case 'pending': return '⏳';
-      case 'rejected': return '❌';
+      case 'rejected': return 'Rejected';
       default: return '📝';
     }
   };
@@ -203,7 +203,7 @@ const UserReviews = ({ language }) => {
                     </p>
                     <p><strong>📅 {t.date}:</strong> <span>{formatDate(review.createdAt)}</span></p>
                     {review.verified && (
-                      <p><strong>✅ {t.verified}</strong></p>
+                      <p><strong>Verified</strong></p>
                     )}
                     {review.helpfulVotes > 0 && (
                       <p><strong>👍 {t.helpful}:</strong> <span>{review.helpfulVotes}</span></p>

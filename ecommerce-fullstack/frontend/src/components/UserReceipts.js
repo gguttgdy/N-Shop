@@ -184,7 +184,7 @@ const UserReceipts = ({ language, user, loading: userLoading, currency, formatPr
                     </div>
                   </div>                  <div className="receipt-meta">
                     <p><strong>🔗 {t.transactionId}:</strong> {receipt.paymentTransactionId}</p>
-                    <p><strong>📧 {t.emailSent}:</strong> {receipt.emailSent ? '✅ ' + t.yes : '❌ ' + t.no}</p>
+                    <p><strong>Email Sent:</strong> {receipt.emailSent ? t.yes : t.no}</p>
                   </div>
                 </div>
               </div>

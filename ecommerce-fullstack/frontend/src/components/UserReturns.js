@@ -187,10 +187,10 @@ const UserReturns = ({ language }) => {
   const getStatusIcon = (status) => {
     switch (status?.toLowerCase()) {
       case 'pending': return '⏳';
-      case 'approved': return '✅';
+      case 'approved': return 'Approved';
       case 'processing': return '🔄';
       case 'completed': return '✔️';
-      case 'rejected': return '❌';
+      case 'rejected': return 'Rejected';
       case 'cancelled': return '🚫';
       case 'requested': return '📋';
       case 'intransit': case 'in_transit': return '🚚';

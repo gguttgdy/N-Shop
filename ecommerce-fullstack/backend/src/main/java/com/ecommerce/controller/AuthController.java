@@ -62,15 +62,15 @@ public class AuthController {
             System.out.println("📝 Password length: " + (request.getPassword() != null ? request.getPassword().length() : "null"));
             
             AuthResponse response = userService.registerUser(request);
-            System.out.println("✅ Registration successful for: " + request.getEmail());
+            System.out.println("Registration successful for: " + request.getEmail());
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            System.err.println("❌ Registration failed: " + e.getMessage());
+            System.err.println("Registration failed: " + e.getMessage());
             e.printStackTrace();
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return ResponseEntity.badRequest().body(errorResponse);
         } catch (Exception e) {
-            System.err.println("❌ Unexpected error during registration: " + e.getMessage());
+            System.err.println("Unexpected error during registration: " + e.getMessage());
             e.printStackTrace();
             ErrorResponse errorResponse = new ErrorResponse("Internal server error");
             return ResponseEntity.status(500).body(errorResponse);

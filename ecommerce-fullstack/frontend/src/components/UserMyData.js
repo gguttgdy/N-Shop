@@ -323,7 +323,7 @@ const UserMyData = ({ language = 'en' }) => {
         
         {success && (
           <div className="enhanced-alert alert-success">
-            <span className="alert-icon">✅</span>
+            <span className="alert-icon">✓</span>
             <span className="alert-text">{success}</span>
           </div>
         )}
@@ -750,7 +750,7 @@ const UserMyData = ({ language = 'en' }) => {
                   onClick={handleCancel}
                   disabled={saving}
                 >
-                  <span className="btn-icon">❌</span>
+                  <span className="btn-icon">×</span>
                   <span className="btn-text">{t.cancel}</span>
                 </button>
               </div>

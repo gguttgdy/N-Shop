@@ -146,7 +146,7 @@ const UserComplaints = ({ language }) => {
     switch (status?.toLowerCase()) {
       case 'open': return '🔓';
       case 'inprogress': case 'in_progress': return '⚙️';
-      case 'resolved': return '✅';
+      case 'resolved': return 'Resolved';
       case 'closed': return '🔒';
       default: return '📋';
     }

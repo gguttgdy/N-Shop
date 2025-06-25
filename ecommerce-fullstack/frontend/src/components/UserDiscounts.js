@@ -169,7 +169,7 @@ const UserDiscounts = ({ language }) => {
                 <div className="discount-header">
                   <h3>🎫 {t.code}: {discount.discountCode}</h3>
                   <span className={`status-badge status-${getDiscountStatus(discount)}`}>
-                    {getDiscountStatus(discount) === 'active' && '✅ ' + t.active}
+                    {getDiscountStatus(discount) === 'active' && t.active}
                     {getDiscountStatus(discount) === 'used' && '✓ ' + t.used}
                     {getDiscountStatus(discount) === 'expired' && '⏰ ' + t.expired}
                   </span>

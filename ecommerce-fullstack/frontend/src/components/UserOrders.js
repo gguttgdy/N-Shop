@@ -84,8 +84,8 @@ const UserOrders = ({ language, user, loading: userLoading, currency, formatPric
       case 'pending': return '⏳';
       case 'processing': return '⚙️';
       case 'shipped': return '🚚';
-      case 'delivered': return '✅';
-      case 'cancelled': return '❌';
+      case 'delivered': return 'Delivered';
+      case 'cancelled': return 'Cancelled';
       default: return '⏳';
     }
   };
