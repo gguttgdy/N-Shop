@@ -28,11 +28,14 @@ const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setF
       firstNameRequired: 'Имя обязательно',
       lastNameRequired: 'Фамилия обязательна',
       emailRequired: 'Email обязателен',
-      passwordRequired: 'Пароль обязателен',
-      passwordsNotMatch: 'Пароли не совпадают',
+      passwordRequired: 'Пароль обязателен',      passwordsNotMatch: 'Пароли не совпадают',
       agreeToTerms: 'Я согласен с условиями использования и политикой конфиденциальности',
-      mustAgreeToTerms: 'Необходимо согласиться с условиями',
-      accountCreated: 'Аккаунт успешно создан!'
+      mustAgreeToTerms: 'Необходимо согласиться с условиями',      accountCreated: 'Аккаунт успешно создан!',
+      passwordRequirements: 'Пароль должен содержать: строчную букву, заглавную букву, цифру и спецсимвол (@$!%*?&)',
+      passwordTooShort: 'Пароль должен содержать минимум 8 символов',
+      passwordInvalid: 'Пароль должен содержать: строчную букву, заглавную букву, цифру и спецсимвол (@$!%*?&)',
+      registrationError: 'Ошибка при создании аккаунта. Попробуйте снова.',
+      userExists: 'Пользователь с таким email уже существует'
     },
     en: {
       register: 'Sign Up',
@@ -49,11 +52,14 @@ const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setF
       firstNameRequired: 'First name is required',
       lastNameRequired: 'Last name is required',
       emailRequired: 'Email is required',
-      passwordRequired: 'Password is required',
-      passwordsNotMatch: 'Passwords do not match',
+      passwordRequired: 'Password is required',      passwordsNotMatch: 'Passwords do not match',
       agreeToTerms: 'I agree to the Terms of Service and Privacy Policy',
-      mustAgreeToTerms: 'You must agree to the terms',
-      accountCreated: 'Account created successfully!'
+      mustAgreeToTerms: 'You must agree to the terms',      accountCreated: 'Account created successfully!',
+      passwordRequirements: 'Password must contain: lowercase letter, uppercase letter, digit and special character (@$!%*?&)',
+      passwordTooShort: 'Password must contain at least 8 characters',
+      passwordInvalid: 'Password must contain: lowercase letter, uppercase letter, digit and special character (@$!%*?&)',
+      registrationError: 'Error creating account. Please try again.',
+      userExists: 'User with this email already exists'
     },
     pl: {
       register: 'Zarejestruj się',
@@ -70,11 +76,14 @@ const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setF
       firstNameRequired: 'Imię jest wymagane',
       lastNameRequired: 'Nazwisko jest wymagane',
       emailRequired: 'Email jest wymagany',
-      passwordRequired: 'Hasło jest wymagane',
-      passwordsNotMatch: 'Hasła nie pasują do siebie',
+      passwordRequired: 'Hasło jest wymagane',      passwordsNotMatch: 'Hasła nie pasują do siebie',
       agreeToTerms: 'Zgadzam się z Regulaminem i Polityką Prywatności',
-      mustAgreeToTerms: 'Musisz zaakceptować warunki',
-      accountCreated: 'Konto zostało pomyślnie utworzone!'
+      mustAgreeToTerms: 'Musisz zaakceptować warunki',      accountCreated: 'Konto zostało pomyślnie utworzone!',
+      passwordRequirements: 'Hasło musi zawierać: małą literę, wielką literę, cyfrę i znak specjalny (@$!%*?&)',
+      passwordTooShort: 'Hasło musi zawierać co najmniej 8 znaków',
+      passwordInvalid: 'Hasło musi zawierać: małą literę, wielką literę, cyfrę i znak specjalny (@$!%*?&)',
+      registrationError: 'Błąd podczas tworzenia konta. Spróbuj ponownie.',
+      userExists: 'Użytkownik z tym emailem już istnieje'
     }
   };
 
@@ -88,7 +97,6 @@ const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setF
     }));
     if (error) setError('');
   };
-
   const validateForm = () => {
     if (!formData.firstName.trim()) {
       setError(t.firstNameRequired);
@@ -106,6 +114,17 @@ const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setF
       setError(t.passwordRequired);
       return false;
     }
+      // Проверка требований к паролю
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+    if (formData.password.length < 8) {
+      setError(t.passwordTooShort);
+      return false;
+    }
+    if (!passwordRegex.test(formData.password)) {
+      setError(t.passwordInvalid);
+      return false;
+    }
+    
     if (formData.password !== formData.confirmPassword) {
       setError(t.passwordsNotMatch);
       return false;
@@ -115,7 +134,7 @@ const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setF
       return false;
     }
     return true;
-  };  const handleSubmit = async (e) => {
+  };const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) return;
@@ -134,10 +153,38 @@ const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setF
       
       await onLogin(userData);
       onNavigate('home');
+        } catch (err) {
+      console.error('Registration error:', err);      // Улучшенная обработка ошибок
+      let errorMessage = t.registrationError;
       
-    } catch (err) {
-      console.error('Registration error:', err);
-      setError(err.response?.data?.message || err.message || 'Ошибка при создании аккаунта. Попробуйте снова.');
+      if (err.response?.data?.errors) {
+        // Ошибки валидации
+        const errors = err.response.data.errors;
+        const errorKeys = Object.keys(errors);
+        if (errorKeys.length > 0) {
+          const backendError = errors[errorKeys[0]];
+          // Попытка перевести ошибки с backend
+          if (backendError.includes('Password must contain')) {
+            errorMessage = t.passwordInvalid;
+          } else if (backendError.includes('Password must be between')) {
+            errorMessage = t.passwordTooShort;
+          } else {
+            errorMessage = backendError;
+          }
+        }
+      } else if (err.response?.data?.message) {
+        const backendMessage = err.response.data.message;
+        // Обработка других сообщений с backend
+        if (backendMessage.includes('already exists')) {
+          errorMessage = t.userExists;
+        } else {
+          errorMessage = backendMessage;
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -214,9 +261,7 @@ const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setF
               autoComplete="email"
               disabled={isLoading}
             />
-          </div>
-
-          <div className="form-group">
+          </div>          <div className="form-group">
             <label htmlFor="password">{t.password}</label>
             <input
               type="password"
@@ -227,7 +272,11 @@ const Register = ({ language, onNavigate, onLogin }) => {  const [formData, setF
               required
               autoComplete="new-password"
               disabled={isLoading}
-            />
+            />            <div className="password-requirements">
+              <small style={{color: '#666', fontSize: '12px'}}>
+                {t.passwordRequirements}
+              </small>
+            </div>
           </div>
 
           <div className="form-group">

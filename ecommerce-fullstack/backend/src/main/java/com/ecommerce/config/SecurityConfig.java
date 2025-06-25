@@ -33,13 +33,21 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-              // Security headers
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))            // Security headers
             .headers(headers -> headers
                 .frameOptions(frameOptions -> frameOptions.deny())
-                .contentTypeOptions(contentTypeOptions -> {})                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+                .contentTypeOptions(contentTypeOptions -> {})
+                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
                     .maxAgeInSeconds(31536000)
                 )
+                // Добавляем дополнительные заголовки безопасности
+                .addHeaderWriter((request, response) -> {
+                    response.setHeader("X-Content-Type-Options", "nosniff");
+                    response.setHeader("X-XSS-Protection", "1; mode=block");
+                    response.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+                    response.setHeader("Content-Security-Policy", 
+                        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';");
+                })
             )
             
             .authorizeHttpRequests(authz -> authz
@@ -60,12 +68,15 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
+    }    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        // SECURITY FIX: Ограничиваем CORS только доверенными доменами
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:3000", 
+            "http://localhost:3001",
+            "https://yourdomain.com" // TODO: Заменить на реальный домен
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
