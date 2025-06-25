@@ -48,42 +48,36 @@ public class JwtUtil {
     }
       public String getUserIdFromToken(String token) {
         try {
-            System.out.println("Extracting user ID from token");
             Claims claims = Jwts.parser()
-                    .verifyWith(getSigningKey())
+                    .setSigningKey(getSigningKey())
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                    .parseClaimsJws(token)
+                    .getBody();
             
-            String userId = claims.getSubject();
-            System.out.println("Extracted user ID: " + userId);
-            return userId;
+            return claims.getSubject();
         } catch (Exception e) {
-            System.out.println("Error extracting user ID from token: " + e.getMessage());
-            throw e;
+            throw new RuntimeException("Error extracting user ID from token", e);
         }
     }
     
     public String getEmailFromToken(String token) {
         Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
+                .setSigningKey(getSigningKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
         
         return claims.get("email", String.class);
     }
-      public boolean validateToken(String token) {
+    
+    public boolean validateToken(String token) {
         try {
-            System.out.println("Validating token: " + token.substring(0, Math.min(20, token.length())) + "...");
             Jwts.parser()
-                .verifyWith(getSigningKey())
+                .setSigningKey(getSigningKey())
                 .build()
-                .parseSignedClaims(token);
-            System.out.println("Token validation successful");
+                .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            System.out.println("Token validation failed: " + e.getMessage());
             return false;
         }
     }
@@ -91,10 +85,10 @@ public class JwtUtil {
     public boolean isTokenExpired(String token) {
         try {
             Claims claims = Jwts.parser()
-                    .verifyWith(getSigningKey())
+                    .setSigningKey(getSigningKey())
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                    .parseClaimsJws(token)
+                    .getBody();
             
             return claims.getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {

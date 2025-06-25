@@ -19,7 +19,6 @@ com\ecommerce\EcommerceApplication.class
 com\ecommerce\config\SecurityConfig.class
 com\ecommerce\dto\OrderCreatedResponse.class
 com\ecommerce\model\UserRole.class
-com\ecommerce\util\JwtUtil.class
 com\ecommerce\config\AppProperties$Security.class
 com\ecommerce\dto\LoginRequest.class
 com\ecommerce\repository\ReceiptRepository.class
@@ -55,8 +54,6 @@ com\ecommerce\model\UserDiscount.class
 com\ecommerce\model\ReturnReason.class
 com\ecommerce\security\RateLimitService$ClientRequest.class
 com\ecommerce\config\CorsConfig.class
-com\ecommerce\service\OrderService.class
-com\ecommerce\controller\UserController.class
 com\ecommerce\service\ReviewService.class
 com\ecommerce\security\RateLimitFilter.class
 com\ecommerce\repository\OrderRepository.class
@@ -71,7 +68,6 @@ com\ecommerce\repository\UserRepository.class
 com\ecommerce\dto\RegisterRequest.class
 com\ecommerce\security\DataSanitizer.class
 com\ecommerce\model\User.class
-com\ecommerce\controller\OrderController.class
 com\ecommerce\model\Receipt.class
 com\ecommerce\service\ReturnService.class
 com\ecommerce\model\DiscountType.class

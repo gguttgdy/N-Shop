@@ -1,4 +1,4 @@
-# Frontend Integration Guide
+# Руководство по интеграции Frontend
 
 ## Интеграция React Frontend с Backend API
 
@@ -175,7 +175,7 @@ const Login = ({ onLogin, onNavigate }) => {
       onLogin(response.user);
       // Перенаправление на главную или профиль
     } catch (error) {
-      setError(error.response?.data?.message || 'Login failed');
+      setError(error.response?.data?.message || 'Не удалось войти');
     } finally {
       setLoading(false);
     }
@@ -192,14 +192,14 @@ const Login = ({ onLogin, onNavigate }) => {
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>Login</h2>
+        <h2>Вход</h2>
         
         {error && <div className="error-message">{error}</div>}
         
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="Электронная почта"
           value={formData.email}
           onChange={handleChange}
           required
@@ -208,7 +208,7 @@ const Login = ({ onLogin, onNavigate }) => {
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Пароль"
           value={formData.password}
           onChange={handleChange}
           required
@@ -221,16 +221,16 @@ const Login = ({ onLogin, onNavigate }) => {
             checked={formData.rememberMe}
             onChange={handleChange}
           />
-          Remember me
+          Запомнить меня
         </label>
         
         <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Вход...' : 'Войти'}
         </button>
         
         <div className="auth-links">
           <button type="button" onClick={() => onNavigate('register')}>
-            Don't have an account? Register
+            Нет аккаунта? Зарегистрироваться
           </button>
         </div>
       </form>
@@ -266,7 +266,7 @@ const Register = ({ onLogin, onNavigate }) => {
     setError('');
     
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError('Пароли не совпадают');
       setLoading(false);
       return;
     }
@@ -276,7 +276,7 @@ const Register = ({ onLogin, onNavigate }) => {
       onLogin(response.user);
       // Перенаправление на главную или профиль
     } catch (error) {
-      setError(error.response?.data?.message || 'Registration failed');
+      setError(error.response?.data?.message || 'Не удалось зарегистрироваться');
     } finally {
       setLoading(false);
     }
@@ -293,14 +293,14 @@ const Register = ({ onLogin, onNavigate }) => {
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>Register</h2>
+        <h2>Регистрация</h2>
         
         {error && <div className="error-message">{error}</div>}
         
         <input
           type="text"
           name="firstName"
-          placeholder="First Name"
+          placeholder="Имя"
           value={formData.firstName}
           onChange={handleChange}
           required
@@ -309,7 +309,7 @@ const Register = ({ onLogin, onNavigate }) => {
         <input
           type="text"
           name="lastName"
-          placeholder="Last Name"
+          placeholder="Фамилия"
           value={formData.lastName}
           onChange={handleChange}
           required
@@ -318,7 +318,7 @@ const Register = ({ onLogin, onNavigate }) => {
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="Электронная почта"
           value={formData.email}
           onChange={handleChange}
           required
@@ -327,7 +327,7 @@ const Register = ({ onLogin, onNavigate }) => {
         <input
           type="tel"
           name="phoneNumber"
-          placeholder="Phone Number (optional)"
+          placeholder="Номер телефона (необязательно)"
           value={formData.phoneNumber}
           onChange={handleChange}
         />
@@ -335,7 +335,7 @@ const Register = ({ onLogin, onNavigate }) => {
         <input
           type="password"
           name="password"
-          placeholder="Password (min 6 characters)"
+          placeholder="Пароль (мин. 6 символов)"
           value={formData.password}
           onChange={handleChange}
           required
@@ -345,19 +345,19 @@ const Register = ({ onLogin, onNavigate }) => {
         <input
           type="password"
           name="confirmPassword"
-          placeholder="Confirm Password"
+          placeholder="Подтвердите пароль"
           value={formData.confirmPassword}
           onChange={handleChange}
           required
         />
         
         <button type="submit" disabled={loading}>
-          {loading ? 'Registering...' : 'Register'}
+          {loading ? 'Регистрация...' : 'Зарегистрироваться'}
         </button>
         
         <div className="auth-links">
           <button type="button" onClick={() => onNavigate('login')}>
-            Already have an account? Login
+            Уже есть аккаунт? Войти
           </button>
         </div>
       </form>
@@ -387,7 +387,7 @@ function App() {
           const userProfile = await authService.getProfile();
           setUser(userProfile);
         } catch (error) {
-          console.error('Error loading user profile:', error);
+          console.error('Ошибка загрузки профиля:', error);
           authService.logout();
         }
       }
@@ -406,12 +406,12 @@ function App() {
       await authService.logout();
       setUser(null);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Ошибка выхода:', error);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Загрузка...</div>;
   }
 
   return (
@@ -456,7 +456,7 @@ const UserProfile = () => {
         billingPostalCode: profile.billingPostalCode || ''
       });
     } catch (error) {
-      console.error('Error loading profile:', error);
+      console.error('Ошибка загрузки профиля:', error);
     } finally {
       setLoading(false);
     }
@@ -469,73 +469,73 @@ const UserProfile = () => {
       setUser(updatedUser);
       setEditing(false);
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('Ошибка обновления профиля:', error);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Загрузка...</div>;
 
   return (
     <div className="profile-container">
-      <h2>My Profile</h2>
+      <h2>Мой профиль</h2>
       
       {!editing ? (
         <div className="profile-view">
-          <p><strong>Name:</strong> {user.fullName}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Phone:</strong> {user.phoneNumber || 'Not set'}</p>
-          <p><strong>Billing City:</strong> {user.billingCity || 'Not set'}</p>
-          <p><strong>Billing Country:</strong> {user.billingCountry || 'Not set'}</p>
-          <button onClick={() => setEditing(true)}>Edit Profile</button>
+          <p><strong>Имя:</strong> {user.fullName}</p>
+          <p><strong>Электронная почта:</strong> {user.email}</p>
+          <p><strong>Телефон:</strong> {user.phoneNumber || 'Не указан'}</p>
+          <p><strong>Город:</strong> {user.billingCity || 'Не указан'}</p>
+          <p><strong>Страна:</strong> {user.billingCountry || 'Не указана'}</p>
+          <button onClick={() => setEditing(true)}>Редактировать профиль</button>
         </div>
       ) : (
         <form onSubmit={handleUpdate} className="profile-form">
           <input
             type="text"
-            placeholder="First Name"
+            placeholder="Имя"
             value={formData.firstName}
             onChange={(e) => setFormData({...formData, firstName: e.target.value})}
           />
           <input
             type="text"
-            placeholder="Last Name"
+            placeholder="Фамилия"
             value={formData.lastName}
             onChange={(e) => setFormData({...formData, lastName: e.target.value})}
           />
           <input
             type="tel"
-            placeholder="Phone Number"
+            placeholder="Номер телефона"
             value={formData.phoneNumber}
             onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
           />
           <input
             type="text"
-            placeholder="Billing Address"
+            placeholder="Адрес для выставления счета"
             value={formData.billingAddress}
             onChange={(e) => setFormData({...formData, billingAddress: e.target.value})}
           />
           <input
             type="text"
-            placeholder="City"
+            placeholder="Город"
             value={formData.billingCity}
             onChange={(e) => setFormData({...formData, billingCity: e.target.value})}
           />
           <input
             type="text"
-            placeholder="Country"
+            placeholder="Страна"
             value={formData.billingCountry}
             onChange={(e) => setFormData({...formData, billingCountry: e.target.value})}
           />
           <input
             type="text"
-            placeholder="Postal Code"
+            placeholder="Почтовый индекс"
             value={formData.billingPostalCode}
             onChange={(e) => setFormData({...formData, billingPostalCode: e.target.value})}
           />
           
           <div className="form-buttons">
-            <button type="submit">Save Changes</button>
-            <button type="button" onClick={() => setEditing(false)}>Cancel</button>
+            <button type="submit">Сохранить изменения</button>
+            <button type="button" onClick={() => setEditing(false)}>Отмена</button>
           </div>
         </form>
       )}
@@ -617,8 +617,8 @@ const MyComponent = () => {
   
   return (
     <div>
-      <h1>Welcome, {user.fullName}!</h1>
-      <button onClick={logout}>Logout</button>
+      <h1>Добро пожаловать, {user.fullName}!</h1>
+      <button onClick={logout}>Выход</button>
     </div>
   );
 };

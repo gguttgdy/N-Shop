@@ -1,4 +1,4 @@
-# E-Commerce Fullstack Security Audit Report
+# Отчет аудита безопасности E-Commerce Fullstack проекта
 
 ## Дата аудита: 25 декабря 2025
 
@@ -99,7 +99,7 @@
    </properties>
    ```
 
-### Кратосрочные действия (в течение недели)
+### Краткосрочные действия (в течение недели)
 
 1. **Настроить автоматические обновления безопасности**
 2. **Интегрировать OWASP Dependency Check в CI/CD**
@@ -113,31 +113,31 @@
 
 ## Текущие меры безопасности (реализованы)
 
-✅ **Аутентификация и авторизация**
+**Аутентификация и авторизация**
 - JWT токены с надежным секретом
 - BCrypt хеширование паролей (cost 12)
 - Ограничение публичных эндпоинтов
 
-✅ **Защита от атак**
+**Защита от атак**
 - CSRF защита
 - XSS защита (CSP, X-XSS-Protection)
 - Clickjacking защита (X-Frame-Options)
 - Rate limiting
 - Input validation и sanitization
 
-✅ **Безопасные заголовки**
+**Безопасные заголовки**
 - HSTS (HTTP Strict Transport Security)
 - Content Security Policy
 - X-Content-Type-Options: nosniff
 
-✅ **Тестирование**
+**Тестирование**
 - Unit тесты (24 теста)
 - Integration тесты
 - Покрытие кода (JaCoCo)
 
 ## CI/CD Security Pipeline
 
-✅ **Настроены следующие этапы**
+**Настроены следующие этапы**
 - Автоматическое тестирование
 - OWASP Dependency Check
 - Trivy vulnerability scanning
@@ -146,7 +146,7 @@
 
 ## Мониторинг и логирование
 
-✅ **Реализовано**
+**Реализовано**
 - Структурированное логирование
 - Actuator health checks
 - Security event logging
