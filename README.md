@@ -1,4 +1,4 @@
-# 🛒 E-commerce Fullstack Application
+# E-commerce Fullstack Application
 
 A modern, full-featured e-commerce platform built with Spring Boot (backend) and React (frontend), featuring comprehensive security, testing, and CI/CD pipeline.
 
@@ -8,63 +8,63 @@ A modern, full-featured e-commerce platform built with Spring Boot (backend) and
 ![MongoDB](https://img.shields.io/badge/MongoDB-latest-green)
 ![Docker](https://img.shields.io/badge/Docker-supported-blue)
 
-## 🚀 Key Features
+## Key Features
 
-### 👤 User Management
+### User Management
 - **Authentication & Authorization** with JWT tokens
 - **User Profile** with order history, reviews, and complaints
 - **Discount System** and personalized offers
 - **Return Management** for products
 
-### 🛍️ Catalog & Shopping
+### Catalog & Shopping
 - **Product Catalog** with advanced filters and search
 - **Shopping Cart** and checkout process
 - **Order Management System** with status tracking
 - **Multi-currency Support**
 - **Review & Rating System** for products
 
-### 🔧 Admin Panel
+### Admin Panel
 - **Admin Dashboard** for managing products and users
 - **Order Management** and status updates
 - **Sales Analytics** and user activity insights
 - **Complaint System** and processing
 
-### 🔐 Security
+### Security
 - **Enhanced Security** with input validation
 - **CORS Configuration** and CSP headers
 - **OWASP Top 10** vulnerability protection
 - **SSL/TLS Support**
 
-### 🧪 Code Quality
+### Code Quality
 - **Comprehensive Testing** - Unit tests, integration tests
 - **Code Coverage** with JaCoCo (>80%)
 - **API Documentation** with Swagger/OpenAPI
 - **Static Code Analysis** with SonarQube
 
-## 🏗️ Project Architecture
+## Project Architecture
 
 ```
 ecommerce-fullstack/
-├── 🗄️ backend/              # Spring Boot REST API
+├── backend/              # Spring Boot REST API
 │   ├── src/main/java/       # Java source code
 │   ├── src/test/java/       # Tests
 │   ├── pom.xml              # Maven configuration
 │   └── ssl.properties       # SSL settings
-├── 🎨 frontend/             # React.js SPA
+├── frontend/             # React.js SPA
 │   ├── src/                 # React source code
 │   ├── public/              # Static files
 │   └── package.json         # NPM configuration
-├── 🐳 docker/               # Docker containers
+├── docker/               # Docker containers
 │   ├── docker-compose.dev.yml
 │   ├── docker-compose.prod.yml
 │   ├── Dockerfile.backend
 │   └── Dockerfile.frontend
-├── 📚 docs/                 # Documentation
-├── 🔧 scripts/              # Build and deploy scripts
-└── 📊 Security and audit reports
+├── docs/                 # Documentation
+├── scripts/              # Build and deploy scripts
+└── Security and audit reports
 ```
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Backend (Spring Boot)
 - **Spring Boot 3.3.5** - Main application framework
@@ -92,7 +92,7 @@ ecommerce-fullstack/
 - **Trivy** - Vulnerability scanning
 - **MongoDB** - NoSQL database
 
-## 🚦 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -145,7 +145,7 @@ The frontend will start on `http://localhost:3000`
 #### 4. Database Setup
 Make sure MongoDB is running on `localhost:27017` or update the connection string in `application.yml`.
 
-## 🧪 Testing
+## Testing
 
 ### Backend Tests
 
@@ -194,7 +194,7 @@ npm test -- --coverage
   - `UserControllerIntegrationTest.java` - User management endpoints
   - `ProductControllerIntegrationTest.java` - Product catalog endpoints
 
-## 📚 API Documentation
+## API Documentation
 
 ### Swagger UI
 Once the backend is running, access the interactive API documentation at:
@@ -224,7 +224,7 @@ Once the backend is running, access the interactive API documentation at:
 - `POST /api/orders` - Create new order
 - `GET /api/orders` - Get user orders
 
-## 🔒 Security Features
+## Security Features
 
 ### Implemented Security Measures
 - **JWT Authentication** with secure token generation
@@ -242,7 +242,7 @@ Once the backend is running, access the interactive API documentation at:
 - Session management: Stateless with JWT
 - Password policy: Minimum 8 characters with complexity requirements
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ### Development Environment
 ```bash
@@ -263,7 +263,7 @@ docker build -f docker/Dockerfile.backend -t ecommerce-backend .
 docker build -f docker/Dockerfile.frontend -t ecommerce-frontend .
 ```
 
-## 🔄 CI/CD Pipeline
+## CI/CD Pipeline
 
 The project uses GitHub Actions for automated testing and deployment:
 
@@ -285,7 +285,7 @@ Configure these secrets in your GitHub repository:
 - `DOCKER_PASSWORD` - Docker Hub password
 - `JWT_SECRET` - JWT signing secret (generated automatically)
 
-## 📊 Code Quality
+## Code Quality
 
 ### Coverage Goals
 - **Backend**: Minimum 70% line coverage
@@ -296,7 +296,7 @@ Configure these secrets in your GitHub repository:
 - **Frontend**: ESLint configuration with React best practices
 - **Testing**: Comprehensive test coverage for critical business logic
 
-## 🌍 Environment Configuration
+## Environment Configuration
 
 ### Backend Configuration (`application.yml`)
 ```yaml
@@ -322,7 +322,7 @@ REACT_APP_API_URL=http://localhost:8080/api
 REACT_APP_ENVIRONMENT=development
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -336,17 +336,17 @@ REACT_APP_ENVIRONMENT=development
 - Update documentation for API changes
 - Ensure all tests pass before submitting PR
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## Support
 
 - **Documentation**: Check the `/docs` folder for detailed guides
 - **Issues**: Report bugs via GitHub Issues
 - **API Reference**: Use Swagger UI for interactive API exploration
 
-## 🔮 Roadmap
+## Roadmap
 
 - [ ] Real-time notifications with WebSocket
 - [ ] Payment gateway integration (Stripe, PayPal)
