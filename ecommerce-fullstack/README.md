@@ -1,38 +1,74 @@
-# E-commerce Fullstack Application
+# 🛒 E-commerce Fullstack Application
 
-A modern e-commerce platform built with Spring Boot backend and React frontend, featuring comprehensive security, testing, and CI/CD pipeline.
+A modern, full-featured e-commerce platform built with Spring Boot (backend) and React (frontend), featuring comprehensive security, testing, and CI/CD pipeline.
 
-## 🚀 Features
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-green)
+![React](https://img.shields.io/badge/React-18.2.0-blue)
+![MongoDB](https://img.shields.io/badge/MongoDB-latest-green)
+![Docker](https://img.shields.io/badge/Docker-supported-blue)
 
-- **User Authentication & Authorization** with JWT tokens
-- **Product Catalog** with advanced filtering and search
-- **Shopping Cart & Checkout** functionality
-- **Order Management** system
-- **User Profile Management**
+## 🚀 Key Features
+
+### 👤 User Management
+- **Authentication & Authorization** with JWT tokens
+- **User Profile** with order history, reviews, and complaints
+- **Discount System** and personalized offers
+- **Return Management** for products
+
+### 🛍️ Catalog & Shopping
+- **Product Catalog** with advanced filters and search
+- **Shopping Cart** and checkout process
+- **Order Management System** with status tracking
 - **Multi-currency Support**
-- **Admin Dashboard** for product and user management
-- **Security Hardened** with input validation, CORS, CSP headers
-- **Comprehensive Testing** - Unit tests, Integration tests
-- **API Documentation** with Swagger/OpenAPI
-- **CI/CD Pipeline** with GitHub Actions
-- **Docker Support** for containerized deployment
+- **Review & Rating System** for products
 
-## 🏗️ Architecture
+### 🔧 Admin Panel
+- **Admin Dashboard** for managing products and users
+- **Order Management** and status updates
+- **Sales Analytics** and user activity insights
+- **Complaint System** and processing
+
+### 🔐 Security
+- **Enhanced Security** with input validation
+- **CORS Configuration** and CSP headers
+- **OWASP Top 10** vulnerability protection
+- **SSL/TLS Support**
+
+### 🧪 Code Quality
+- **Comprehensive Testing** - Unit tests, integration tests
+- **Code Coverage** with JaCoCo (>80%)
+- **API Documentation** with Swagger/OpenAPI
+- **Static Code Analysis** with SonarQube
+
+## 🏗️ Project Architecture
 
 ```
 ecommerce-fullstack/
-├── backend/          # Spring Boot REST API
-├── frontend/         # React.js SPA
-├── docker/           # Docker configuration files
-├── docs/             # Documentation
-└── .github/          # CI/CD workflows
+├── 🗄️ backend/              # Spring Boot REST API
+│   ├── src/main/java/       # Java source code
+│   ├── src/test/java/       # Tests
+│   ├── pom.xml              # Maven configuration
+│   └── ssl.properties       # SSL settings
+├── 🎨 frontend/             # React.js SPA
+│   ├── src/                 # React source code
+│   ├── public/              # Static files
+│   └── package.json         # NPM configuration
+├── 🐳 docker/               # Docker containers
+│   ├── docker-compose.dev.yml
+│   ├── docker-compose.prod.yml
+│   ├── Dockerfile.backend
+│   └── Dockerfile.frontend
+├── 📚 docs/                 # Documentation
+├── 🔧 scripts/              # Build and deploy scripts
+└── 📊 Security and audit reports
 ```
 
 ## 🛠️ Technology Stack
 
-### Backend
-- **Spring Boot 3.x** - Application framework
-- **Spring Security** - Authentication & authorization
+### Backend (Spring Boot)
+- **Spring Boot 3.3.5** - Main application framework
+- **Spring Security 6.3.4** - Authentication and authorization
 - **Spring Data MongoDB** - Database integration
 - **JWT** - Token-based authentication
 - **Maven** - Dependency management
@@ -40,14 +76,16 @@ ecommerce-fullstack/
 - **Testcontainers** - Integration testing
 - **Swagger/OpenAPI** - API documentation
 - **JaCoCo** - Code coverage
+- **Java 17** - Language version
 
-### Frontend
-- **React 18** - UI framework
+### Frontend (React)
+- **React 18.2.0** - UI framework
 - **React Router** - Client-side routing
-- **Axios** - HTTP client
+- **Axios 1.10.0** - HTTP client
 - **CSS3** - Styling
+- **ESLint & Prettier** - Code quality
 
-### DevOps & Security
+### DevOps & Infrastructure
 - **GitHub Actions** - CI/CD pipeline
 - **Docker** - Containerization
 - **OWASP Dependency Check** - Security scanning
