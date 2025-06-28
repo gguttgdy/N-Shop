@@ -32,7 +32,7 @@ class EcommerceApplicationTests {
     @Test
     void contextLoads() {
         // Verify that key beans are present
-        assertThat(applicationContext.containsBean("securityConfigEnhanced")).isTrue();
+        assertThat(applicationContext.containsBean("securityConfig")).isTrue();
         assertThat(applicationContext.containsBean("passwordEncoder")).isTrue();
         assertThat(applicationContext.containsBean("corsConfigurationSourceEnhanced")).isTrue();
     }

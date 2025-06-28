@@ -72,6 +72,7 @@ C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\jav
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\repository\UserRepository.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\security\DataSanitizer.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\security\InputValidator.java
+C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\security\JwtAuthenticationFilter.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\security\RateLimitFilter.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\security\RateLimitService.java
 C:\Users\A\Desktop\New folder (2)\Store\ecommerce-fullstack\backend\src\main\java\com\ecommerce\service\AdminService.java

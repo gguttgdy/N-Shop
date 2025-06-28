@@ -34,12 +34,17 @@ public class JwtUtil {
     }
     
     public String generateToken(String userId, String email) {
+        return generateToken(userId, email, "CUSTOMER");
+    }
+    
+    public String generateToken(String userId, String email, String role) {
         long currentTime = System.currentTimeMillis();
         Date expiryDate = new Date(currentTime + appProperties.getJwt().getExpiration());
         
         return Jwts.builder()
                 .subject(userId)
                 .claim("email", email)
+                .claim("role", role)
                 .claim("iat", currentTime / 1000) // Issued at time in seconds
                 .issuedAt(new Date(currentTime))
                 .expiration(expiryDate)
@@ -49,10 +54,10 @@ public class JwtUtil {
       public String getUserIdFromToken(String token) {
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey(getSigningKey())
+                    .verifyWith(getSigningKey())
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                    .parseSignedClaims(token)
+                    .getPayload();
             
             return claims.getSubject();
         } catch (Exception e) {
@@ -62,20 +67,30 @@ public class JwtUtil {
     
     public String getEmailFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(getSigningKey())
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
         
         return claims.get("email", String.class);
+    }
+    
+    public String getRoleFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        
+        return claims.get("role", String.class);
     }
     
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .setSigningKey(getSigningKey())
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token);
+                .parseSignedClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
@@ -85,10 +100,10 @@ public class JwtUtil {
     public boolean isTokenExpired(String token) {
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey(getSigningKey())
+                    .verifyWith(getSigningKey())
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                    .parseSignedClaims(token)
+                    .getPayload();
             
             return claims.getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {

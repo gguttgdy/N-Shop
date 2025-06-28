@@ -71,7 +71,7 @@ public class UserService {
         User savedUser = userRepository.save(user);
         
         // Generate JWT token
-        String token = jwtUtil.generateToken(savedUser.getId(), savedUser.getEmail());
+        String token = jwtUtil.generateToken(savedUser.getId(), savedUser.getEmail(), savedUser.getRole().name());
         
         // Create response
         UserResponse userResponse = convertToUserResponse(savedUser);
@@ -100,7 +100,7 @@ public class UserService {
         userRepository.save(user);
         
         // Generate JWT token
-        String token = jwtUtil.generateToken(user.getId(), user.getEmail());
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole().name());
         
         // Create response
         UserResponse userResponse = convertToUserResponse(user);
