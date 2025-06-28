@@ -20,8 +20,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@Primary
-public class SecurityConfigEnhanced {
+public class SecurityConfig {
 
     @Value("${app.cors.allowed-origins:http://localhost:3000}")
     private List<String> allowedOrigins;
